@@ -8,15 +8,15 @@ import lejos.hardware.port.Port;
 import lejos.hardware.sensor.*;
 import lejos.robotics.SampleProvider;
 
-public class Lab4 {
+public class generalClass {
 
 	// Static Resources:
 	// Left motor connected to output A
 	// Right motor connected to output D
 	// Ultrasonic sensor port connected to input S1
 	// Color sensor port connected to input S2
-	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
-	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
+	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
+	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPort = LocalEV3.get().getPort("S2");		
 	//hi
@@ -77,17 +77,20 @@ public class Lab4 {
 			USLocalizer usl = new USLocalizer(odo, navi, usValue, usData, USLocalizer.LocalizationType.FALLING_EDGE);
 			usl.doLocalization();
 			
+			while(true){
+				//buttonChoice = Button.waitForAnyPress();
+				if (usl.isLocalized) {
+					LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
+					lsl.doLocalization(odo, navi, colorValue, colorData);
+					break;
+				}
+			}
+			new wallObstacle(odo, navi, usValue, usData).activate();
+			
 		}
 		
 		// perform the light sensor localization upon pressing the up arrow
-		while(true){
-			buttonChoice = Button.waitForAnyPress();
-			if (buttonChoice == Button.ID_UP) {
-				LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
-				lsl.doLocalization(odo, navi, colorValue, colorData);
-				break;
-			}
-		}
+		
 												
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
 			System.exit(0);		

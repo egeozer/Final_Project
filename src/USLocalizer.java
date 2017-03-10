@@ -18,7 +18,7 @@ public class USLocalizer {
 	private double noiseDistFE = 0.0;			// experimentally determined noise margin (falling edge)
 	private double noiseDistRE = 2.0;			// experimentally determined noise margin (rising edge)
 	private double prevDist  = 0;
-	
+	public boolean isLocalized = false;
 	public USLocalizer(Odometer odo, Navigation navi, SampleProvider usSensor, float[] usData, LocalizationType locType) {
 		this.odo = odo;
 		this.navi = navi;
@@ -94,6 +94,11 @@ public class USLocalizer {
 			// update the odometer position
 			odo.setPosition(new double [] {0.0, 0.0, heading}, new boolean [] {true, true, true});
 			navi.turnTo(0, true);
+			isLocalized = true;
+			
+			
+			
+			
 		}
 		// rising edge mode
 		else{				
