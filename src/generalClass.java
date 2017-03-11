@@ -90,7 +90,16 @@ public class generalClass {
 			}
 			wall.start();
 			
-			navi.travelTo(30,30);
+			//navi.travelTo(30,30);
+			if(!odo.isTravelling)
+			navi.travelTo(60,0);
+			if(!odo.isTravelling)
+			navi.travelTo(60,60);
+			if(!odo.isTravelling)
+			navi.travelTo(0,60);
+			if(!odo.isTravelling)
+			navi.travelTo(0,0);
+			
 			while(true){
 				if(odo.collisionAvoided && !odo.collision){
 					odo.collisionAvoided=false;
