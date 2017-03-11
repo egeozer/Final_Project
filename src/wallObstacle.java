@@ -1,28 +1,53 @@
 
+import lejos.hardware.Sound;
+import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
 
-public class wallObstacle {
+public class wallObstacle extends Thread {
 	private Odometer odo;
 	private Navigation navi;
 	private SampleProvider usSensor;
 	private float[] usData;
 	private double prevDist  = 0;
+	EV3LargeRegulatedMotor leftMotor;
+	EV3LargeRegulatedMotor rightMotor;
+	 boolean isObstacle;
 	
 	
-	public wallObstacle (Odometer odo, Navigation navi, SampleProvider usSensor, float[] usData) {
+	public wallObstacle (EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, Odometer odo, Navigation navi, SampleProvider usSensor, float[] usData ) {
 		this.odo = odo;
 		this.navi = navi;
 		this.usSensor = usSensor;
 		this.usData = usData;
+		this.leftMotor = leftMotor;
+		this.rightMotor = rightMotor;
+		//leftMotor.setSpeed(450);
+		//rightMotor.setSpeed(500);
 		
 	}
 	
-	public void activate(){
-		
+
+	public void run(){
 		while(true){
 			try {
 				Thread.sleep(10);
-				System.out.println(getFilteredData());
+				//System.out.println(getFilteredData());
+				
+				if(getFilteredData()<10){
+					odo.collision = true;
+					navi.goBackward(5);
+					navi.turnImm(85);
+					navi.goForward(30);
+					
+					//navi.turnImm(-85);
+					odo.collisionAvoided = true;
+					odo.collision = false;
+				}
+				else{
+					odo.collision = false;
+					
+				}
+				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

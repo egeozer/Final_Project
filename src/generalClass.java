@@ -19,9 +19,10 @@ public class generalClass {
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPort = LocalEV3.get().getPort("S2");		
-	//hi
+	
 	
 	public static void main(String[] args) {
+		
 		
 		//Setup ultrasonic sensor
 		// 1. Create a port object attached to a physical port (done above)
@@ -43,10 +44,12 @@ public class generalClass {
 		SampleProvider colorValue = colorSensor.getMode("Red");			// colorValue provides samples from this instance
 		float[] colorData = new float[colorValue.sampleSize()];			// colorData is the buffer in which data are returned
 				
+		
 		// setup the odometer and display
 		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true);
 		Navigation navi = new Navigation(odo);
 		final TextLCD t = LocalEV3.get().getTextLCD();
+		wallObstacle wall =new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
 				
 		// start interface
 		int buttonChoice;
@@ -85,8 +88,18 @@ public class generalClass {
 					break;
 				}
 			}
-			new wallObstacle(odo, navi, usValue, usData).activate();
+			wall.start();
 			
+			navi.travelTo(30,30);
+			while(true){
+				if(odo.collisionAvoided && !odo.collision){
+					odo.collisionAvoided=false;
+					navi.travelTo(60,60);
+					
+				}
+				
+				
+			}
 		}
 		
 		// perform the light sensor localization upon pressing the up arrow

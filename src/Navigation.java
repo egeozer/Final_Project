@@ -20,6 +20,8 @@ public class Navigation {
 		this.leftMotor.setAcceleration(ACCELERATION);
 		this.rightMotor.setAcceleration(ACCELERATION);
 	}
+	
+	
 
 	/*
 	 * Functions to set the motor speeds jointly
@@ -66,14 +68,18 @@ public class Navigation {
 	 */
 	public void travelTo(double x, double y) {
 		double minAng;
-		while (Math.abs(x - odometer.getX()) > CM_ERR || Math.abs(y - odometer.getY()) > CM_ERR) {
+		outer:while (Math.abs(x - odometer.getX()) > CM_ERR || Math.abs(y - odometer.getY()) > CM_ERR) {
+			if(odometer.collision)
+				break outer;
 			minAng = (Math.atan2(y - odometer.getY(), x - odometer.getX())) * (180.0 / Math.PI);
 			if (minAng < 0)
 				minAng += 360.0;
 			this.turnTo(minAng, false);
 			this.setSpeeds(FAST, FAST);
 		}
-		this.setSpeeds(0, 0);
+		//this.setSpeeds(0, 0);
+		leftMotor.stop();
+		rightMotor.stop();
 	}
 
 	/*
@@ -84,8 +90,13 @@ public class Navigation {
 
 		double error = angle - this.odometer.getAng();
 
-		while (Math.abs(error) > DEG_ERR) {
-
+		outer:while (Math.abs(error) > DEG_ERR) {
+			if(odometer.collision){
+				leftMotor.stop();
+				rightMotor.stop();
+				break outer;
+				
+			}
 			error = angle - this.odometer.getAng();
 
 			if (error < -180.0) {
@@ -100,12 +111,15 @@ public class Navigation {
 		}
 
 		if (stop) {
-			this.setSpeeds(0, 0);
+			//this.setSpeeds(0, 0);
+			leftMotor.stop();
+			rightMotor.stop();
 		}
 	}
 	public void turnImm(double angle) {
 		
-
+		leftMotor.setSpeed(SLOW);
+		rightMotor.setSpeed(SLOW);
 		leftMotor.rotate(convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), true);
 		rightMotor.rotate(-convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), false);
 	}
@@ -116,7 +130,8 @@ public class Navigation {
 	 */
 	public void goForward(double distance) {
 		
-		
+		leftMotor.setSpeed(SLOW);
+		rightMotor.setSpeed(SLOW);
 		
 		
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
@@ -126,7 +141,8 @@ public class Navigation {
 	}
 	public void goBackward(double distance) {
 		
-		
+		leftMotor.setSpeed(SLOW);
+		rightMotor.setSpeed(SLOW);
 		leftMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), false);
 	
