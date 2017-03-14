@@ -90,8 +90,7 @@ public class generalClass {
 			}
 			wall.start();
 			navi.travelTo(60,0);
-			
-<<<<<<< HEAD
+
 		
 		//	navi.travelTo(60,60);
 			//odo.isTravelling=false;
@@ -132,6 +131,9 @@ public class generalClass {
 			}
 			
 			
+=======
+			navi.travelTo(30,30);
+>>>>>>> parent of 0138558... work in progress for square track
 =======
 			navi.travelTo(30,30);
 >>>>>>> parent of 0138558... work in progress for square track
