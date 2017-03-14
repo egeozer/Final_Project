@@ -67,8 +67,6 @@ public class Navigation {
 	 * constantly updating it's heading
 	 */
 	public void travelTo(double x, double y) {
-		if(!odometer.isTravelling){
-			odometer.isTravelling=true;
 		double minAng;
 		while (Math.abs(x - odometer.getX()) > CM_ERR || Math.abs(y - odometer.getY()) > CM_ERR) {
 			//if(odometer.collision)
@@ -79,16 +77,23 @@ public class Navigation {
 			this.turnTo(minAng, false);
 			this.setSpeeds(FAST, FAST);
 		}
+<<<<<<< HEAD
 		
+=======
+>>>>>>> parent of 0138558... work in progress for square track
 		//this.setSpeeds(0, 0);
 		odometer.isTravelling=false;
 		leftMotor.stop();
 		rightMotor.stop();
 		
 	}
+<<<<<<< HEAD
 		
 		
 	}
+=======
+
+>>>>>>> parent of 0138558... work in progress for square track
 	/*
 	 * TurnTo function which takes an angle and boolean as arguments The boolean controls whether or not to stop the
 	 * motors when the turn is completed
