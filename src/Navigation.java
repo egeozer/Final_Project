@@ -70,20 +70,24 @@ public class Navigation {
 		if(!odometer.isTravelling){
 			odometer.isTravelling=true;
 		double minAng;
-		outer:while (Math.abs(x - odometer.getX()) > CM_ERR || Math.abs(y - odometer.getY()) > CM_ERR) {
-			if(odometer.collision)
-				break outer;
+		while (Math.abs(x - odometer.getX()) > CM_ERR || Math.abs(y - odometer.getY()) > CM_ERR) {
+			//if(odometer.collision)
+				//break outer;
 			minAng = (Math.atan2(y - odometer.getY(), x - odometer.getX())) * (180.0 / Math.PI);
 			if (minAng < 0)
 				minAng += 360.0;
 			this.turnTo(minAng, false);
 			this.setSpeeds(FAST, FAST);
 		}
-		odometer.isTravelling=false;
+		
 		//this.setSpeeds(0, 0);
+		odometer.isTravelling=false;
 		leftMotor.stop();
 		rightMotor.stop();
+		
 	}
+		
+		
 	}
 	/*
 	 * TurnTo function which takes an angle and boolean as arguments The boolean controls whether or not to stop the
@@ -93,13 +97,13 @@ public class Navigation {
 
 		double error = angle - this.odometer.getAng();
 
-		outer:while (Math.abs(error) > DEG_ERR) {
-			if(odometer.collision){
-				leftMotor.stop();
-				rightMotor.stop();
-				break outer;
+		while (Math.abs(error) > DEG_ERR) {
+			//if(odometer.collision){
+				//leftMotor.stop();
+				//rightMotor.stop();
+				//break ;
 				
-			}
+			//}
 			error = angle - this.odometer.getAng();
 
 			if (error < -180.0) {

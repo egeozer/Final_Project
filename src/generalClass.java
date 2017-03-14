@@ -89,16 +89,47 @@ public class generalClass {
 				}
 			}
 			wall.start();
-			
-			//navi.travelTo(30,30);
-			if(!odo.isTravelling)
 			navi.travelTo(60,0);
-			if(!odo.isTravelling)
-			navi.travelTo(60,60);
-			if(!odo.isTravelling)
-			navi.travelTo(0,60);
-			if(!odo.isTravelling)
-			navi.travelTo(0,0);
+			
+		
+		//	navi.travelTo(60,60);
+			//odo.isTravelling=false;
+			//navi.travelTo(30,30);
+			/*outer:while(true){
+				if(!odo.isTravelling){
+					navi.travelTo(60,60);
+					
+				break outer;
+				}
+				
+			}
+			/*outer:while(true){
+				if(!odo.isTravelling){
+					navi.travelTo(0,60);
+				break outer;
+				}
+			}
+			/*
+			while(true){
+				if(!odo.isTravelling){
+					navi.travelTo(60,60);
+				break;
+				}
+			}
+			
+			while(true){
+				if(!odo.isTravelling){
+					navi.travelTo(0,60);
+				break;
+				}
+			}
+			while(true){
+				if(!odo.isTravelling){
+					navi.travelTo(0,0);
+				break;
+				}
+			}
+			
 			
 			while(true){
 				if(odo.collisionAvoided && !odo.collision){
@@ -109,6 +140,7 @@ public class generalClass {
 				
 				
 			}
+			*/
 		}
 		
 		// perform the light sensor localization upon pressing the up arrow
