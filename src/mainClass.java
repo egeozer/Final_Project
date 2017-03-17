@@ -50,6 +50,7 @@ public class mainClass {
 		Navigation navi = new Navigation(odo);
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		wallObstacle wall =new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
+		TestMotors launch = new TestMotors();
 				
 		// start interface
 		int buttonChoice;
@@ -98,28 +99,7 @@ public class mainClass {
 				
 			}
 			
-			navi.turnTo(90,true);
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.turnTo(180,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.turnTo(270,true);
 			
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			//wall.start();
 			navi.travelTo(15,15);
 			navi.turnTo(0,true);
@@ -133,39 +113,10 @@ public class mainClass {
 			
 			
 			navi.travelTo(60,0);
+			launch.launcher();
 
 			//navi.turnTo(90,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.travelTo(60,60);
-			//navi.turnTo(90,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.travelTo(0,60);
-			//navi.turnTo(90,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.travelTo(0,0);
-			navi.turnTo(0,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			
 			
 			/*outer:while(true){
 				if(odo.collisionAvoided && !odo.collision){

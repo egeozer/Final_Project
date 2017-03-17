@@ -17,10 +17,10 @@ public class TestMotors {
 	// Instance the text display
 	public static int buttonC;
 	
-	final static TextLCD t = LocalEV3.get().getTextLCD();
+	//final static TextLCD t = LocalEV3.get().getTextLCD();
 		
-		public static void main(String[] args) 
-		{
+		public  void launcher(){
+		
 			
 			winchMotor.setAcceleration(300);
 			loadingMotor.setAcceleration(300);
@@ -93,14 +93,7 @@ public class TestMotors {
 			do {
 				
 				// clear the display
-				t.clear();
-
-				// ask the user whether the target is to the left, the right or in the center
-				t.drawString("< Left | Right >", 0, 0);
-				t.drawString("       |        ", 0, 1);
-				t.drawString(" ______|_______ ", 0, 2);
-				t.drawString("  ---  UP  ---  ", 0, 3);
-				t.drawString("      DOWN      ", 0, 4);
+				
 
 				buttonChoice = Button.waitForAnyPress();
 			} while (buttonChoice != Button.ID_LEFT
