@@ -126,6 +126,27 @@ public class Odometer implements TimerListener {
 				theta = position[2];
 		}
 	}
+	
+	// set just x
+		public void setX(double position){
+			synchronized (this) {
+				x = position;
+			}
+		}
+		
+		// set just y
+		public void setY(double position){
+			synchronized (this) {
+				y = position;
+			}
+		}
+		
+		// set just theta
+		public void setTheta(double position){
+			synchronized (this) {
+				theta = position;
+			}
+		}
 
 	// return x,y,theta
 	public void getPosition(double[] position) {

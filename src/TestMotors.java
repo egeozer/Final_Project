@@ -1,28 +1,34 @@
-package motorTest;
+
+
 
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.Button;
+import lejos.hardware.Sound;
 import lejos.hardware.lcd.TextLCD;
 
 public class TestMotors {
 	
-	public static final EV3LargeRegulatedMotor slowMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
-	// Left motor is connected to output A
-	public static final EV3LargeRegulatedMotor fastMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
-	// Right motor is connected to output D
-	public static int buttonC;
+	// Loading motor is connected to output B
+	public static final EV3LargeRegulatedMotor loadingMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
+	// Gear motor is connected to output C
+	public static final EV3LargeRegulatedMotor winchMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
+	
 	// Instance the text display
+	public static int buttonC;
+	
 	final static TextLCD t = LocalEV3.get().getTextLCD();
 		
 		public static void main(String[] args) 
 		{
 			
-			slowMotor.setAcceleration(300);
-			fastMotor.setAcceleration(300);
+			winchMotor.setAcceleration(300);
+			loadingMotor.setAcceleration(300);
 			
-			slowMotor.setSpeed(500);
-			fastMotor.setSpeed(fastMotor.getMaxSpeed());
+			winchMotor.setSpeed(300);
+			loadingMotor.setSpeed(400);
+			
+			Sound.setVolume(40);
 			
 			while(true)
 			{
@@ -30,18 +36,48 @@ public class TestMotors {
 				// Get the position of the target from the user
 				buttonC = getButtonChoise();
 			
-			
+				if (buttonC == Button.ID_UP){
+					
+					// TODO: get in front of the dispenser
+					
+					// ready the loading arm to receive the ball
+					loadingMotor.rotate(-150);
+					
+					// beep, and wait 5 seconds to receive the ball
+					Sound.beep();
+					try {
+					    Thread.sleep(5000);
+					} catch(InterruptedException ex) {
+					    Thread.currentThread().interrupt();
+					}
+					
+					// pull back the elastic to the desired position
+					winchMotor.rotate(-630);
+										
+					// load the ball into the launcher and hold the elastic in position
+					loadingMotor.rotate(150);
+					
+					// TODO: navigate to the firing line and turn to the firing position
+					
+					// unwind the winch to ensure the launcher can fire at full power
+					winchMotor.rotate(630);
+					
+					// release the ball
+					loadingMotor.rotate(50);
+					
+				}
+									
 				if (buttonC == Button.ID_LEFT)
-					slowMotor.rotate(-450);
+					winchMotor.rotate(-450);
 				
 				if (buttonC == Button.ID_RIGHT)
-					slowMotor.rotate(450);
+					winchMotor.rotate(450);
 				
-				if (buttonC == Button.ID_UP)
-					fastMotor.rotate(-150);
+				//if (buttonC == Button.ID_UP)
+					//loadingMotor.rotate(-150);
 					
 				if (buttonC == Button.ID_DOWN)
-					fastMotor.rotate(90);
+					loadingMotor.rotate(90);
 					
 				if (buttonC == Button.ID_ESCAPE)
 					return;
