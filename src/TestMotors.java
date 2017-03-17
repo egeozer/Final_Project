@@ -41,7 +41,7 @@ public class TestMotors {
 					// TODO: get in front of the dispenser
 					
 					// ready the loading arm to receive the ball
-					loadingMotor.rotate(-150);
+					loadingMotor.rotate(150);
 					
 					// beep, and wait 5 seconds to receive the ball
 					Sound.beep();
@@ -52,15 +52,15 @@ public class TestMotors {
 					}
 					
 					// pull back the elastic to the desired position
-					winchMotor.rotate(-1440);
+					winchMotor.rotate(1440);
 										
 					// load the ball into the launcher and hold the elastic in position
-					loadingMotor.rotate(150);
+					loadingMotor.rotate(-150);
 					
 					// TODO: navigate to the firing line and turn to the firing position
 					
 					// unwind the winch to ensure the launcher can fire at full power
-					winchMotor.rotate(1440);
+					winchMotor.rotate(-1440);
 					
 					// release the ball
 					loadingMotor.rotate(50);
