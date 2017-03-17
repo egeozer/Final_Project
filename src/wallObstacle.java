@@ -11,7 +11,7 @@ public class wallObstacle extends Thread {
 	private double prevDist  = 0;
 	EV3LargeRegulatedMotor leftMotor;
 	EV3LargeRegulatedMotor rightMotor;
-	 boolean isObstacle;
+	
 	
 	
 	public wallObstacle (EV3LargeRegulatedMotor leftMotor, EV3LargeRegulatedMotor rightMotor, Odometer odo, Navigation navi, SampleProvider usSensor, float[] usData ) {
