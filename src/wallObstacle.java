@@ -37,7 +37,7 @@ public class wallObstacle extends Thread {
 					odo.collision = true;
 					navi.goBackward(5);
 					navi.turnImm(85);
-					navi.goForward(30);
+					navi.goForward(15);
 					
 					//navi.turnImm(-85);
 					odo.collisionAvoided = true;

@@ -6,7 +6,7 @@ import lejos.robotics.SampleProvider;
 
 public class USLocalizer {
 	public enum LocalizationType { FALLING_EDGE, RISING_EDGE };
-	public static int ROTATION_SPEED = 100;
+	public static int ROTATION_SPEED = 200;
 
 	private Odometer odo;
 	private Navigation navi;

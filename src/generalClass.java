@@ -78,75 +78,50 @@ public class generalClass {
 		} else { 
 			// perform the ultrasonic localization using Falling Edge
 			USLocalizer usl = new USLocalizer(odo, navi, usValue, usData, USLocalizer.LocalizationType.FALLING_EDGE);
-			usl.doLocalization();
+			//usl.doLocalization();
 			
 			while(true){
 				//buttonChoice = Button.waitForAnyPress();
 				if (usl.isLocalized) {
 					LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
-					lsl.doLocalization(odo, navi, colorValue, colorData);
+					//lsl.doLocalization(odo, navi, colorValue, colorData);
 					break;
 				}
+				break;
 			}
+			
+			
+			
 			wall.start();
+			navi.travelTo(3,3);
+			navi.turnTo(90,true);
+			
+			
+			
 			navi.travelTo(60,0);
-
+			navi.turnTo(90,true);
+			navi.travelTo(60,60);
+			navi.turnTo(90,true);
+			navi.travelTo(0,60);
+			navi.turnTo(90,true);
+			navi.travelTo(0,0);
+			navi.turnTo(90,true);
+			
 		
-		//	navi.travelTo(60,60);
-			//odo.isTravelling=false;
-			//navi.travelTo(30,30);
-			/*outer:while(true){
-				if(!odo.isTravelling){
-					navi.travelTo(60,60);
-					
-				break outer;
-				}
-				
-			}
-			/*outer:while(true){
-				if(!odo.isTravelling){
-					navi.travelTo(0,60);
-				break outer;
-				}
-			}
-			/*
-			while(true){
-				if(!odo.isTravelling){
-					navi.travelTo(60,60);
-				break;
-				}
-			}
-			
-			while(true){
-				if(!odo.isTravelling){
-					navi.travelTo(0,60);
-				break;
-				}
-			}
-			while(true){
-				if(!odo.isTravelling){
-					navi.travelTo(0,0);
-				break;
-				}
-			}
 			
 			
-=======
-			navi.travelTo(30,30);
->>>>>>> parent of 0138558... work in progress for square track
-=======
-			navi.travelTo(30,30);
->>>>>>> parent of 0138558... work in progress for square track
+
+			
 			while(true){
 				if(odo.collisionAvoided && !odo.collision){
 					odo.collisionAvoided=false;
-					navi.travelTo(60,60);
+					navi.travelTo(60,30);
+					
 					
 				}
-				
-				
 			}
-			*/
+		
+		
 		}
 		
 		// perform the light sensor localization upon pressing the up arrow

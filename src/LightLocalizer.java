@@ -38,8 +38,8 @@ public class LightLocalizer {
 		double pointA = 0;		//distances that we need to record for the calculation of 0,0
 		double pointB = 0;
 		
-		leftMotor.setSpeed(100);
-		rightMotor.setSpeed(100);
+		leftMotor.setSpeed(200);
+		rightMotor.setSpeed(200);
 		
 		leftMotor.forward();		//robot goes forward until it sees a black line
 		rightMotor.forward();
