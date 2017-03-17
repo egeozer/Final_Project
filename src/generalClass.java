@@ -134,7 +134,7 @@ public class generalClass {
 			
 			navi.travelTo(60,0);
 
-			navi.turnTo(90,true);
+			//navi.turnTo(90,true);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -142,7 +142,7 @@ public class generalClass {
 				e.printStackTrace();
 			}
 			navi.travelTo(60,60);
-			navi.turnTo(90,true);
+			//navi.turnTo(90,true);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -150,7 +150,7 @@ public class generalClass {
 				e.printStackTrace();
 			}
 			navi.travelTo(0,60);
-			navi.turnTo(90,true);
+			//navi.turnTo(90,true);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
@@ -158,7 +158,7 @@ public class generalClass {
 				e.printStackTrace();
 			}
 			navi.travelTo(0,0);
-			navi.turnTo(90,true);
+			navi.turnTo(0,true);
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {
