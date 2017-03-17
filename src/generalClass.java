@@ -78,16 +78,24 @@ public class generalClass {
 		} else { 
 			// perform the ultrasonic localization using Falling Edge
 			USLocalizer usl = new USLocalizer(odo, navi, usValue, usData, USLocalizer.LocalizationType.FALLING_EDGE);
-			//usl.doLocalization();
+			usl.doLocalization();
 			
-			while(true){
+			outer:while(true){
 				//buttonChoice = Button.waitForAnyPress();
 				if (usl.isLocalized) {
 					LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
-					//lsl.doLocalization(odo, navi, colorValue, colorData);
-					break;
+					lsl.doLocalization(odo, navi, colorValue, colorData);
+					try {
+						Sound.beep();
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					Sound.beep();
+					break outer;
 				}
-				break;
+				
 			}
 			
 			
@@ -99,6 +107,7 @@ public class generalClass {
 			
 			
 			navi.travelTo(60,0);
+
 			navi.turnTo(90,true);
 			navi.travelTo(60,60);
 			navi.turnTo(90,true);
@@ -106,16 +115,13 @@ public class generalClass {
 			navi.turnTo(90,true);
 			navi.travelTo(0,0);
 			navi.turnTo(90,true);
-			
-		
-			
-			
 
 			
-			while(true){
+			outer:while(true){
 				if(odo.collisionAvoided && !odo.collision){
 					odo.collisionAvoided=false;
 					navi.travelTo(60,30);
+					break outer;
 					
 					
 				}

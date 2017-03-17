@@ -140,8 +140,8 @@ public class Navigation {
 	 */
 	public void goForward(double distance) {
 		
-		leftMotor.setSpeed(FAST);
-		rightMotor.setSpeed(FAST);
+		leftMotor.setSpeed(SLOW);
+		rightMotor.setSpeed(SLOW);
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
 	
@@ -149,8 +149,8 @@ public class Navigation {
 	}
 	public void goBackward(double distance) {
 		
-		leftMotor.setSpeed(FAST);
-		rightMotor.setSpeed(FAST);
+		leftMotor.setSpeed(SLOW);
+		rightMotor.setSpeed(SLOW);
 		leftMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), false);
 	
