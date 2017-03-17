@@ -112,7 +112,14 @@ public class mainClass {
 			
 			
 			
-			navi.travelTo(60,0);
+			navi.travelTo(30.48,0);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			navi.turnTo(90,true);
 			launch.launcher();
 
 			//navi.turnTo(90,true);

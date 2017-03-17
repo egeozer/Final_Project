@@ -54,11 +54,23 @@ public class LightLocalizer {
 			if(colorData[0]<0.3){	//if the robot crosses the black line, it will get the distance, pointA(X value from center to black line)
 				Sound.beep();
 				navi.goForward(lightSensorDist);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			
 				leftMotor.stop();
 				rightMotor.stop();
 				pointA = odo.getX();
-				navi.goBackward(pointA);	//once the first distance is recorded, it goes back where it started 
+				navi.goBackward(pointA);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}//once the first distance is recorded, it goes back where it started 
 				break;
 
 			}
@@ -80,6 +92,12 @@ public class LightLocalizer {
 			if(colorData[0]<0.3){
 				Sound.beep();
 				navi.goForward(lightSensorDist);
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			
 				leftMotor.stop();
 				rightMotor.stop();

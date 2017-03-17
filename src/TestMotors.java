@@ -30,13 +30,10 @@ public class TestMotors {
 			
 			Sound.setVolume(40);
 			
-			while(true)
-			{
+			
 				
 				// Get the position of the target from the user
-				buttonC = getButtonChoise();
-			
-				if (buttonC == Button.ID_DOWN){
+				
 					
 					// TODO: get in front of the dispenser
 					
@@ -63,9 +60,11 @@ public class TestMotors {
 					winchMotor.rotate(-1440);
 					
 					// release the ball
-					loadingMotor.rotate(50);
+					loadingMotor.setAcceleration(4000);
+					loadingMotor.setSpeed(500);
+					loadingMotor.rotate(150);
 					
-				}
+				
 									
 				if (buttonC == Button.ID_LEFT)
 					winchMotor.rotate(-450);
@@ -81,7 +80,7 @@ public class TestMotors {
 					
 				if (buttonC == Button.ID_ESCAPE)
 					return;
-			}
+			
 		}
 		
 		public static int getButtonChoise()
