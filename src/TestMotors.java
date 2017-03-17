@@ -36,7 +36,7 @@ public class TestMotors {
 				// Get the position of the target from the user
 				buttonC = getButtonChoise();
 			
-				if (buttonC == Button.ID_UP){
+				if (buttonC == Button.ID_DOWN){
 					
 					// TODO: get in front of the dispenser
 					
@@ -52,7 +52,7 @@ public class TestMotors {
 					}
 					
 					// pull back the elastic to the desired position
-					winchMotor.rotate(-630);
+					winchMotor.rotate(-1440);
 										
 					// load the ball into the launcher and hold the elastic in position
 					loadingMotor.rotate(150);
@@ -60,7 +60,7 @@ public class TestMotors {
 					// TODO: navigate to the firing line and turn to the firing position
 					
 					// unwind the winch to ensure the launcher can fire at full power
-					winchMotor.rotate(630);
+					winchMotor.rotate(1440);
 					
 					// release the ball
 					loadingMotor.rotate(50);
@@ -76,8 +76,8 @@ public class TestMotors {
 				//if (buttonC == Button.ID_UP)
 					//loadingMotor.rotate(-150);
 					
-				if (buttonC == Button.ID_DOWN)
-					loadingMotor.rotate(90);
+				//if (buttonC == Button.ID_DOWN)
+				//	loadingMotor.rotate(90);
 					
 				if (buttonC == Button.ID_ESCAPE)
 					return;
