@@ -23,7 +23,7 @@ public class generalClass {
 	
 	public static void main(String[] args) {
 		
-		
+		leftMotor.synchronizeWith(new EV3LargeRegulatedMotor[] {rightMotor});
 		//Setup ultrasonic sensor
 		// 1. Create a port object attached to a physical port (done above)
 		// 2. Create a sensor instance and attach to port
@@ -98,26 +98,76 @@ public class generalClass {
 				
 			}
 			
-			
-			
-			wall.start();
-			navi.travelTo(3,3);
 			navi.turnTo(90,true);
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			navi.turnTo(180,true);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			navi.turnTo(270,true);
+			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			//wall.start();
+			navi.travelTo(15,15);
+			navi.turnTo(0,true);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 			
 			
 			navi.travelTo(60,0);
 
 			navi.turnTo(90,true);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			navi.travelTo(60,60);
 			navi.turnTo(90,true);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			navi.travelTo(0,60);
 			navi.turnTo(90,true);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			navi.travelTo(0,0);
 			navi.turnTo(90,true);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 			
-			outer:while(true){
+			/*outer:while(true){
 				if(odo.collisionAvoided && !odo.collision){
 					odo.collisionAvoided=false;
 					navi.travelTo(60,30);
@@ -126,7 +176,7 @@ public class generalClass {
 					
 				}
 			}
-		
+		*/
 		
 		}
 		

@@ -5,7 +5,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.RegulatedMotor;
 
 public class Navigation {
-	final static int FAST = 200, SLOW = 100, ACCELERATION = 6000;
+	final static int FAST = 160, SLOW = 100, ACCELERATION = 6000;
 	final static double DEG_ERR = 3.0, CM_ERR = 1.0;
 	private Odometer odometer;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
@@ -28,6 +28,9 @@ public class Navigation {
 	 * Functions to set the motor speeds jointly
 	 */
 	public void setSpeeds(float lSpd, float rSpd) {
+		leftMotor.startSynchronization();
+						
+		
 		this.leftMotor.setSpeed(lSpd);
 		this.rightMotor.setSpeed(rSpd);
 		if (lSpd < 0)
@@ -38,6 +41,9 @@ public class Navigation {
 			this.rightMotor.backward();
 		else
 			this.rightMotor.forward();
+	
+		
+		leftMotor.endSynchronization();
 	}
 
 	public void setSpeeds(int lSpd, int rSpd) {
@@ -86,8 +92,14 @@ public class Navigation {
 		}
 
 		//this.setSpeeds(0, 0);
+		leftMotor.startSynchronization();
+		
+	
 		leftMotor.stop();
 		rightMotor.stop();
+		
+		
+		leftMotor.endSynchronization();
 		odometer.isTravelling=false;
 	}
 	}
@@ -102,8 +114,14 @@ public class Navigation {
 
 		outer:while (Math.abs(error) > DEG_ERR) {
 			if(odometer.collision){
+				leftMotor.startSynchronization();
+				
+				
 				leftMotor.stop();
 				rightMotor.stop();
+				
+				
+				leftMotor.endSynchronization();
 				break outer ;
 				
 			}
@@ -128,10 +146,16 @@ public class Navigation {
 	}
 	public void turnImm(double angle) {
 		
-		leftMotor.setSpeed(FAST);
-		rightMotor.setSpeed(FAST);
+		leftMotor.setSpeed(SLOW);
+		rightMotor.setSpeed(SLOW);
+		leftMotor.startSynchronization();
+		
+		
 		leftMotor.rotate(convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), true);
 		rightMotor.rotate(-convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), false);
+		
+		
+		leftMotor.endSynchronization();
 	}
 	
 	

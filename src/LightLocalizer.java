@@ -40,19 +40,26 @@ public class LightLocalizer {
 		
 		leftMotor.setSpeed(100);
 		rightMotor.setSpeed(100);
+		leftMotor.startSynchronization();
 		
+	
 		leftMotor.forward();		//robot goes forward until it sees a black line
 		rightMotor.forward();
 		
+		
+		leftMotor.endSynchronization();
 		while(true){
 			
 			colorSensor.fetchSample(colorData, 0);
 			if(colorData[0]<0.3){	//if the robot crosses the black line, it will get the distance, pointA(X value from center to black line)
 				Sound.beep();
 				navi.goForward(lightSensorDist);
-			
+				leftMotor.startSynchronization();
+				
 				leftMotor.stop();
 				rightMotor.stop();
+				
+				leftMotor.endSynchronization();
 				pointA = odo.getX();
 				navi.goBackward(pointA);	//once the first distance is recorded, it goes back where it started 
 				break;
@@ -60,11 +67,16 @@ public class LightLocalizer {
 			}
 		
 		}
-		navi.turnTo(83,false);	//we have an offset of approximately 7 degrees, due to our track being wider
+		navi.turnTo(90,false);	//we have an offset of approximately 7 degrees, due to our track being wider
 	
+		leftMotor.startSynchronization();
 		
+	
 		leftMotor.forward();
 		rightMotor.forward();
+	
+		
+		leftMotor.endSynchronization();
 	while(true){
 			
 			colorSensor.fetchSample(colorData, 0);	//second part where it first got pointA, now pointB will be obtained(Y value from center to black line)
@@ -72,8 +84,12 @@ public class LightLocalizer {
 				Sound.beep();
 				navi.goForward(lightSensorDist);
 			
+				leftMotor.startSynchronization();
+				
 				leftMotor.stop();
 				rightMotor.stop();
+				
+				leftMotor.endSynchronization();
 				pointB = odo.getY();
 				navi.goBackward(pointB);
 				break;
