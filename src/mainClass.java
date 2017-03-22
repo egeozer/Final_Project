@@ -1,5 +1,11 @@
 
 
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.Map;
+
+import org.json.simple.parser.ParseException;
+
 import lejos.hardware.*;
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.lcd.TextLCD;
@@ -20,9 +26,46 @@ public class mainClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPort = LocalEV3.get().getPort("S2");		
 	
-	
+	private static final String SERVER_IP = "192.168.2.6";
+	private static final int TEAM_NUMBER = 9;
+
+	// Enable/disable printing of debug info from the WiFi class
+	private static final boolean ENABLE_DEBUG_WIFI_PRINT = true;
+	static int bx;
+	static int by;
+	static int startPos;
 	public static void main(String[] args) {
+		WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
 		
+try {
+			
+			Map data = conn.getData();
+
+			// Example 1: Print out all received data
+			System.out.println("Map:\n" + data);
+
+			// Example 2 : Print out specific values
+			int fwdTeam = ((Long) data.get("FWD_TEAM")).intValue();
+			System.out.println("Forward Team: " + fwdTeam);
+
+			int w1 = ((Long) data.get("w1")).intValue();
+			System.out.println("Defender zone size w1: " + w1);
+			bx = ((Long) data.get("bx")).intValue();
+			by = ((Long) data.get("by")).intValue();
+			startPos = ((Long) data.get("FWD_CORNER")).intValue();
+		//	Odometer odo = new Odometer(leftMotor, rightMotor, 30, true);
+			// Example 3: Compare value
+			String orientation = (String) data.get("omega");
+			if (orientation.equals("N")) {
+				System.out.println("Orientation is North");
+			}
+			else {
+				System.out.println("Orientation is not North");
+			}
+
+		} catch (Exception e) {
+			System.err.println("Error: " + e.getMessage());
+		}
 		leftMotor.synchronizeWith(new EV3LargeRegulatedMotor[] {rightMotor});
 		//Setup ultrasonic sensor
 		// 1. Create a port object attached to a physical port (done above)
@@ -46,7 +89,7 @@ public class mainClass {
 				
 		
 		// setup the odometer and display
-		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true);
+		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true, startPos);
 		Navigation navi = new Navigation(odo);
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		wallObstacle wall =new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
@@ -70,6 +113,26 @@ public class mainClass {
 				
 		//initialize display
 		LCDInfo lcd = new LCDInfo(odo);
+		
+		
+
+		// Connect to server and get the data, catching any errors that might
+		// occur
+		//try {
+			/*
+			 * getData() will connect to the server and wait until the user/TA
+			 * presses the "Start" button in the GUI on their laptop with the
+			 * data filled in. Once it's waiting, you can kill it by
+			 * pressing the upper left hand corner button (back/escape) on the EV3.
+			 * getData() will throw exceptions if it can't connect to the server
+			 * (e.g. wrong IP address, server not running on laptop, not connected
+			 * to WiFi router, etc.). It will also throw an exception if it connects 
+			 * but receives corrupted data or a message from the server saying something 
+			 * went wrong. For example, if TEAM_NUMBER is set to 1 above but the server expects
+			 * teams 17 and 5, this robot will receive a message saying an invalid team number 
+			 * was specified and getData() will throw an exception letting you know.
+			 */
+		
 				
 		if (buttonChoice == Button.ID_LEFT) {
 			// perform the ultrasonic localization using Rising Edge
@@ -101,7 +164,7 @@ public class mainClass {
 			
 			
 			//wall.start();
-			navi.travelTo(15,15);
+			navi.travelTo(bx,by);
 			navi.turnTo(0,true);
 			try {
 				Thread.sleep(1000);

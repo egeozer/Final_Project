@@ -8,7 +8,7 @@ import lejos.hardware.port.Port;
 import lejos.hardware.sensor.*;
 import lejos.robotics.SampleProvider;
 
-public class generalClass {
+public class turn90 {
 
 	// Static Resources:
 	// Left motor connected to output A
@@ -46,10 +46,11 @@ public class generalClass {
 				
 		
 		// setup the odometer and display
-		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true,1);
+		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true, 1);
 		Navigation navi = new Navigation(odo);
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		wallObstacle wall =new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
+		TestMotors launch = new TestMotors();
 				
 		// start interface
 		int buttonChoice;
@@ -63,126 +64,30 @@ public class generalClass {
 			t.drawString("  Rising | Falling ", 0, 2);
 			t.drawString("   Edge  |  Edge   ", 0, 3);
 			t.drawString("         |         ", 0, 4);
-
+			leftMotor.setSpeed(100);
+			rightMotor.setSpeed(100);
+while(true){
 			buttonChoice = Button.waitForAnyPress();
-		} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-				
-		//initialize display
-		LCDInfo lcd = new LCDInfo(odo);
-				
-		if (buttonChoice == Button.ID_LEFT) {
-			// perform the ultrasonic localization using Rising Edge
-			USLocalizer usl = new USLocalizer(odo, navi, usValue, usData, USLocalizer.LocalizationType.RISING_EDGE);
-			usl.doLocalization();																						
-			
-		} else { 
-			// perform the ultrasonic localization using Falling Edge
-			USLocalizer usl = new USLocalizer(odo, navi, usValue, usData, USLocalizer.LocalizationType.FALLING_EDGE);
-			usl.doLocalization();
-			
-			outer:while(true){
-				//buttonChoice = Button.waitForAnyPress();
-				if (usl.isLocalized) {
-					LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
-					lsl.doLocalization(odo, navi, colorValue, colorData);
-					try {
-						Sound.beep();
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					Sound.beep();
-					break outer;
-				}
-				
-			}
-			//wall.start();
-			
-			
-			navi.turnTo(90,true);
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.turnTo(180,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.turnTo(270,true);
-			
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			//wall.start();
-			//navi.travelTo(15,15);
-			navi.turnTo(0,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			
-			
-			navi.travelTo(60,0);
 
-			//navi.turnTo(90,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.travelTo(60,60);
-			//navi.turnTo(90,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.travelTo(0,60);
-			//navi.turnTo(90,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.travelTo(0,0);
-			navi.turnTo(0,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
+			if(buttonChoice==Button.ID_RIGHT)
+				navi.turnTo(90,true);
+			else if(buttonChoice==Button.ID_LEFT)
+				navi.turnTo(180,true);
+			else if(buttonChoice==Button.ID_DOWN)
+				navi.turnTo(270,true);
+			else if(buttonChoice==Button.ID_UP)
+				navi.turnTo(0,true);
 			
-			/*outer:while(true){
-				if(odo.collisionAvoided && !odo.collision){
-					odo.collisionAvoided=false;
-					navi.travelTo(60,30);
-					break outer;
+			else if(buttonChoice==Button.ID_ESCAPE)
+				break;
+
+
+}
 					
-					
-				}
+				
 			}
-		*/
+			
 		
-		}
-		
-		// perform the light sensor localization upon pressing the up arrow
 		
 												
 		while (Button.waitForAnyPress() != Button.ID_ESCAPE);

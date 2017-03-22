@@ -49,7 +49,7 @@ public class Navigation {
 	public void setSpeeds(int lSpd, int rSpd) {
 		
 		this.leftMotor.synchronizeWith(new RegulatedMotor[]{this.rightMotor});
-		this.leftMotor.startSynchronization();
+		//this.leftMotor.startSynchronization();
 		this.leftMotor.setSpeed(lSpd);
 		this.rightMotor.setSpeed(rSpd);
 		if (lSpd < 0)
@@ -60,7 +60,7 @@ public class Navigation {
 			this.rightMotor.backward();
 		else
 			this.rightMotor.forward();
-		this.leftMotor.endSynchronization();
+		//this.leftMotor.endSynchronization();
 	}
 
 	/*
@@ -111,7 +111,12 @@ public class Navigation {
 	public void turnTo(double angle, boolean stop) {
 
 		double error = angle - this.odometer.getAng();
-
+		
+		//System.out.println("Err: " + Math.abs(error));
+		//System.out.println("Ang: " + Math.abs(angle));
+		
+		if(Math.abs(error) >350 && Math.abs(error)<360)
+				error = 1;
 		outer:while (Math.abs(error) > DEG_ERR) {
 			if(odometer.collision){
 				leftMotor.startSynchronization();
