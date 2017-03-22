@@ -153,7 +153,6 @@ public class mainClass {
 					Sound.beep();
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				Sound.beep();
