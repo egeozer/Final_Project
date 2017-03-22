@@ -23,8 +23,6 @@ public class LightLocalizer {
 		this.colorSensor = colorSensor;
 		this.colorData = colorData;
 		Sound.setVolume(50);
-
-		
 	}
 	
 	public void doLocalization(Odometer odo, Navigation navi, SampleProvider colorSensor, float[] colorData) {
@@ -57,35 +55,34 @@ public class LightLocalizer {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			
 				leftMotor.stop();
 				rightMotor.stop();
 				pointA = odo.getX();
+				
+				//once the first distance is recorded, it goes back where it started 
 				navi.goBackward(pointA);
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}//once the first distance is recorded, it goes back where it started 
+				}
 				break;
-
 			}
-		
 		}
-		navi.turnTo(90,false);	//we have an offset of approximately 7 degrees, due to our track being wider
+		
+		navi.turnTo(90,false);	//we have an offset of approximately 0 degrees, due to our track being amazingly accurate
 	
 		leftMotor.startSynchronization();
-		
-	
+			
 		leftMotor.forward();
 		rightMotor.forward();
-	
-		
+			
 		leftMotor.endSynchronization();
+		
+		
 	while(true){
 			
 			colorSensor.fetchSample(colorData, 0);	//second part where it first got pointA, now pointB will be obtained(Y value from center to black line)
@@ -95,21 +92,25 @@ public class LightLocalizer {
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			
 				leftMotor.stop();
 				rightMotor.stop();
 				pointB = odo.getY();
+				
+				//once the first distance is recorded, it goes back where it started
 				navi.goBackward(pointB);
 				break;
 
 			}		
 		
 		}
-	//once everything is collected, the odometer is set to the updated position and now we can call it to go to 0,0,0 without any problem
+	// TODO:
+	// TODO: This is where we set our coordinate system and turn to face the right direction to start the round
+	// TODO: 
 	
+	//once everything is collected, the odometer is set to the updated position and now we can call it to go to 0,0,0 without any problem
 	odo.setPosition(new double [] {-(pointA+pointB)/2, -(pointB+pointA)/2, odo.getAng()}, new boolean [] {true, true, true});
 	
 	navi.travelTo(0,0);
@@ -117,6 +118,12 @@ public class LightLocalizer {
 	navi.turnTo(90,true);
 	else if(odo.startPos==2)
 		navi.turnTo(0,true);
+	
+	/*
+	 * 
+	 * Instead of changing where it turns to, we could just change what angle it sets it's heading at
+	 * 
+	 */
 	
 	odo.setPosition(new double [] {odo.getX(), odo.getY(), odo.getAng()}, new boolean [] {true, true, true});
 	//odo.setTheta();

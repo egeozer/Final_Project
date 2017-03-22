@@ -35,9 +35,26 @@ public class mainClass {
 	static int by;
 	static int startPos;
 	public static void main(String[] args) {
+				
+		/*
+		 * getData() will connect to the server and wait until the user/TA
+		 * presses the "Start" button in the GUI on their laptop with the
+		 * data filled in. Once it's waiting, you can kill it by
+		 * pressing the upper left hand corner button (back/escape) on the EV3.
+		 * getData() will throw exceptions if it can't connect to the server
+		 * (e.g. wrong IP address, server not running on laptop, not connected
+		 * to WiFi router, etc.). It will also throw an exception if it connects 
+		 * but receives corrupted data or a message from the server saying something 
+		 * went wrong. For example, if TEAM_NUMBER is set to 1 above but the server expects
+		 * teams 17 and 5, this robot will receive a message saying an invalid team number 
+		 * was specified and getData() will throw an exception letting you know.
+		 */
+		
 		WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
 		
-try {
+		// Connect to server and get the data, catching any errors that might occur
+		
+		try {
 			
 			Map data = conn.getData();
 
@@ -53,7 +70,7 @@ try {
 			bx = ((Long) data.get("bx")).intValue();
 			by = ((Long) data.get("by")).intValue();
 			startPos = ((Long) data.get("FWD_CORNER")).intValue();
-		//	Odometer odo = new Odometer(leftMotor, rightMotor, 30, true);
+			//	Odometer odo = new Odometer(leftMotor, rightMotor, 30, true);
 			// Example 3: Compare value
 			String orientation = (String) data.get("omega");
 			if (orientation.equals("N")) {
@@ -66,7 +83,10 @@ try {
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
 		}
+
+		//Setup synchronized motors
 		leftMotor.synchronizeWith(new EV3LargeRegulatedMotor[] {rightMotor});
+		
 		//Setup ultrasonic sensor
 		// 1. Create a port object attached to a physical port (done above)
 		// 2. Create a sensor instance and attach to port
@@ -87,15 +107,14 @@ try {
 		SampleProvider colorValue = colorSensor.getMode("Red");			// colorValue provides samples from this instance
 		float[] colorData = new float[colorValue.sampleSize()];			// colorData is the buffer in which data are returned
 				
-		
 		// setup the odometer and display
 		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true, startPos);
 		Navigation navi = new Navigation(odo);
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		wallObstacle wall =new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
 		TestMotors launch = new TestMotors();
-				
-		// start interface
+		
+		/* start interface
 		int buttonChoice;
 		do {
 			// clear the display
@@ -110,96 +129,75 @@ try {
 
 			buttonChoice = Button.waitForAnyPress();
 		} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
+		**/
 				
 		//initialize display
 		LCDInfo lcd = new LCDInfo(odo);
+		int buttonChoice;
+		Sound.setVolume(40);
 		
 		
-
-		// Connect to server and get the data, catching any errors that might
-		// occur
-		//try {
-			/*
-			 * getData() will connect to the server and wait until the user/TA
-			 * presses the "Start" button in the GUI on their laptop with the
-			 * data filled in. Once it's waiting, you can kill it by
-			 * pressing the upper left hand corner button (back/escape) on the EV3.
-			 * getData() will throw exceptions if it can't connect to the server
-			 * (e.g. wrong IP address, server not running on laptop, not connected
-			 * to WiFi router, etc.). It will also throw an exception if it connects 
-			 * but receives corrupted data or a message from the server saying something 
-			 * went wrong. For example, if TEAM_NUMBER is set to 1 above but the server expects
-			 * teams 17 and 5, this robot will receive a message saying an invalid team number 
-			 * was specified and getData() will throw an exception letting you know.
-			 */
+		// Robot will beep once it has received the Wifi instructions and setup the sensors and display
+		Sound.beep();
 		
-				
-		if (buttonChoice == Button.ID_LEFT) {
-			// perform the ultrasonic localization using Rising Edge
-			USLocalizer usl = new USLocalizer(odo, navi, usValue, usData, USLocalizer.LocalizationType.RISING_EDGE);
-			usl.doLocalization();																						
-			
-		} else { 
-			// perform the ultrasonic localization using Falling Edge
-			USLocalizer usl = new USLocalizer(odo, navi, usValue, usData, USLocalizer.LocalizationType.FALLING_EDGE);
-			usl.doLocalization();
-			
-			outer:while(true){
-				//buttonChoice = Button.waitForAnyPress();
-				if (usl.isLocalized) {
-					LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
-					lsl.doLocalization(odo, navi, colorValue, colorData);
-					try {
-						Sound.beep();
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+		// perform the ultrasonic localization using Falling Edge
+		USLocalizer usl = new USLocalizer(odo, navi, usValue, usData, USLocalizer.LocalizationType.FALLING_EDGE);
+		usl.doLocalization();
+		
+		outer:while(true){
+			//buttonChoice = Button.waitForAnyPress();
+			if (usl.isLocalized) {
+				LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
+				lsl.doLocalization(odo, navi, colorValue, colorData);
+				try {
 					Sound.beep();
-					break outer;
+					Thread.sleep(5000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				
+				Sound.beep();
+				break outer;
 			}
 			
-			
-			//wall.start();
-			navi.travelTo(bx,by);
-			navi.turnTo(0,true);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		}
 			
 			
-			
-			navi.travelTo(30.48,0);
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			navi.turnTo(90,true);
-			launch.launcher();
+		//wall.start();
+		navi.travelTo(bx,by);
+		navi.turnTo(0,true);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+		navi.travelTo(30.48,0);
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		navi.turnTo(90,true);
+		launch.launcher();
 
-			//navi.turnTo(90,true);
-			
-			
-			/*outer:while(true){
-				if(odo.collisionAvoided && !odo.collision){
-					odo.collisionAvoided=false;
-					navi.travelTo(60,30);
-					break outer;
+		//navi.turnTo(90,true);
+		
+		
+		/*outer:while(true){
+			if(odo.collisionAvoided && !odo.collision){
+				odo.collisionAvoided=false;
+				navi.travelTo(60,30);
+				break outer;
 					
 					
 				}
 			}
 		*/
 		
-		}
+		//}	******end of else block for falling edge*******
 		
 		// perform the light sensor localization upon pressing the up arrow
 		
