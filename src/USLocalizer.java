@@ -6,7 +6,7 @@ import lejos.robotics.SampleProvider;
 
 public class USLocalizer {
 	public enum LocalizationType { FALLING_EDGE, RISING_EDGE };
-	public static int ROTATION_SPEED = 100;
+	public static int ROTATION_SPEED = 125;
 
 	private Odometer odo;
 	private Navigation navi;
@@ -43,8 +43,10 @@ public class USLocalizer {
 		if (locType == LocalizationType.FALLING_EDGE) {			
 			
 			// rotate the robot until it sees no wall
+			leftMotor.startSynchronization();
 			leftMotor.forward();
 			rightMotor.backward();
+			leftMotor.endSynchronization();
 		
 			while(true){
 				if(getFilteredData() > critDist){
@@ -56,15 +58,25 @@ public class USLocalizer {
 			while(true){
 				if(getFilteredData() <= critDist){
 					angleA = odo.getAng();
+					leftMotor.startSynchronization();
 					leftMotor.stop();
 					rightMotor.stop();
+					leftMotor.endSynchronization();
 					break;
 				}
 			}
 			
-			// switch direction and wait until it sees no wall
+			// pause, then switch direction and wait until it sees no wall
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+			leftMotor.startSynchronization();
 			leftMotor.backward();
 			rightMotor.forward();
+			leftMotor.endSynchronization();
 		
 			while(true){
 				if(getFilteredData() > critDist){
@@ -76,8 +88,10 @@ public class USLocalizer {
 			while(true){
 				if(getFilteredData() <= critDist){
 					angleB = odo.getAng();
+					leftMotor.startSynchronization();
 					leftMotor.stop();
 					rightMotor.stop();
+					leftMotor.endSynchronization();
 					break;
 				}
 			}
@@ -91,7 +105,14 @@ public class USLocalizer {
 			}
 			
 			heading = deltaAngle + angleB;
-				
+			
+			// pause
+			try {
+				Thread.sleep(250);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
 			// update the odometer position
 			odo.setPosition(new double [] {0.0, 0.0, heading}, new boolean [] {true, true, true});
 			navi.turnTo(0, true);

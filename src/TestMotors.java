@@ -22,10 +22,12 @@ public class TestMotors {
 		public  void launcher(){
 		
 			
+			// set winchMotor acceleration and speed
 			winchMotor.setAcceleration(300);
-			loadingMotor.setAcceleration(300);
-			
 			winchMotor.setSpeed(300);
+			
+			// set loadingMotor initial acceleration and speed
+			loadingMotor.setAcceleration(300);
 			loadingMotor.setSpeed(400);
 			
 			Sound.setVolume(40);
@@ -57,12 +59,18 @@ public class TestMotors {
 					// TODO: navigate to the firing line and turn to the firing position
 					
 					// unwind the winch to ensure the launcher can fire at full power
-					winchMotor.rotate(-1440);
+					winchMotor.rotate(-900); 		// full unwind is (-1440), (-1000) = still slightly too far, (-900)
 					
-					// release the ball
+					// set the loading arm to firing acceleration and speed, then release the ball
 					loadingMotor.setAcceleration(4000);
 					loadingMotor.setSpeed(500);
 					loadingMotor.rotate(150);
+					
+					// reset the arm acceleration, speed and position
+					loadingMotor.setAcceleration(300);
+					loadingMotor.setSpeed(400);
+					loadingMotor.rotate(-150);
+		
 					
 				
 									

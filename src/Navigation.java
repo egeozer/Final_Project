@@ -145,8 +145,10 @@ public class Navigation {
 
 		if (stop) {
 			//this.setSpeeds(0, 0);
+			leftMotor.startSynchronization();
 			leftMotor.stop();
 			rightMotor.stop();
+			leftMotor.endSynchronization();
 		}
 	}
 	public void turnImm(double angle) {
@@ -171,18 +173,20 @@ public class Navigation {
 		
 		leftMotor.setSpeed(SLOW);
 		rightMotor.setSpeed(SLOW);
+		leftMotor.startSynchronization();
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
-	
+		leftMotor.endSynchronization();
 
 	}
 	public void goBackward(double distance) {
 		
 		leftMotor.setSpeed(SLOW);
 		rightMotor.setSpeed(SLOW);
+		leftMotor.startSynchronization();
 		leftMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), false);
-	
+		leftMotor.endSynchronization();
 
 	}
 	

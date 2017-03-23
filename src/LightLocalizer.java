@@ -36,13 +36,15 @@ public class LightLocalizer {
 		double pointA = 0;		//distances that we need to record for the calculation of 0,0
 		double pointB = 0;
 		
-		leftMotor.setSpeed(100);
-		rightMotor.setSpeed(100);
+		leftMotor.setSpeed(150);
+		rightMotor.setSpeed(150);
 		
 		
-	
-		leftMotor.forward();		//robot goes forward until it sees a black line
+		//robot goes forward until it sees a black line
+		leftMotor.startSynchronization();
+		leftMotor.forward();		
 		rightMotor.forward();
+		leftMotor.endSynchronization();
 		
 		
 		
@@ -50,22 +52,21 @@ public class LightLocalizer {
 			
 			colorSensor.fetchSample(colorData, 0);
 			if(colorData[0]<0.3){	//if the robot crosses the black line, it will get the distance, pointA(X value from center to black line)
-				Sound.beep();
-				navi.goForward(lightSensorDist);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			
+				//Sound.beep();
+				//navi.goForward(lightSensorDist);
+				
+				leftMotor.startSynchronization();
 				leftMotor.stop();
 				rightMotor.stop();
+				leftMotor.endSynchronization();
+				
+				// records the x distance between starting position and the y-axis
 				pointA = odo.getX();
 				
-				//once the first distance is recorded, it goes back where it started 
-				navi.goBackward(pointA);
+				//once the first distance is recorded, it goes back half that distance 
+				navi.goBackward(pointA/2);
 				try {
-					Thread.sleep(1000);
+					Thread.sleep(500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -76,10 +77,8 @@ public class LightLocalizer {
 		navi.turnTo(90,false);	//we have an offset of approximately 0 degrees, due to our track being amazingly accurate
 	
 		leftMotor.startSynchronization();
-			
 		leftMotor.forward();
 		rightMotor.forward();
-			
 		leftMotor.endSynchronization();
 		
 		
@@ -87,20 +86,18 @@ public class LightLocalizer {
 			
 			colorSensor.fetchSample(colorData, 0);	//second part where it first got pointA, now pointB will be obtained(Y value from center to black line)
 			if(colorData[0]<0.3){
-				Sound.beep();
+				//Sound.beep();
 				navi.goForward(lightSensorDist);
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			
+				leftMotor.startSynchronization();
 				leftMotor.stop();
 				rightMotor.stop();
+				leftMotor.endSynchronization();
+				
+				// records the y distance between starting position and the x-axis
 				pointB = odo.getY();
 				
 				//once the first distance is recorded, it goes back where it started
-				navi.goBackward(pointB);
+				//navi.goBackward(pointB);
 				break;
 
 			}		
@@ -111,13 +108,16 @@ public class LightLocalizer {
 	// TODO: 
 	
 	//once everything is collected, the odometer is set to the updated position and now we can call it to go to 0,0,0 without any problem
-	odo.setPosition(new double [] {-(pointA+pointB)/2, -(pointB+pointA)/2, odo.getAng()}, new boolean [] {true, true, true});
+	odo.setPosition(new double [] {-(pointA+lightSensorDist), 0, odo.getAng()}, new boolean [] {true, true, true});
 	
 	navi.travelTo(0,0);
 	if(odo.startPos==1)
-	navi.turnTo(90,true);
-	else if(odo.startPos==2)
-		navi.turnTo(0,true);
+	navi.turnTo(0,true);			// changed from 90 to 0
+	Sound.beep();
+	
+	
+	//else if(odo.startPos==2)
+		//navi.turnTo(0,true);
 	
 	/*
 	 * 

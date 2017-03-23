@@ -14,7 +14,7 @@ import lejos.hardware.port.Port;
 import lejos.hardware.sensor.*;
 import lejos.robotics.SampleProvider;
 
-public class mainClass {
+public class mainDemoClass {
 
 	// Static Resources:
 	// Left motor connected to output A
@@ -26,7 +26,7 @@ public class mainClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPort = LocalEV3.get().getPort("S2");		
 	
-	private static final String SERVER_IP = "192.168.2.6";
+	private static final String SERVER_IP = "192.168.2.15";			//  Ege: 192.168.2.6
 	private static final int TEAM_NUMBER = 9;
 
 	// Enable/disable printing of debug info from the WiFi class
@@ -150,12 +150,11 @@ public class mainClass {
 				LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
 				lsl.doLocalization(odo, navi, colorValue, colorData);
 				try {
-					Sound.beep();
-					Thread.sleep(5000);
+					Thread.sleep(2500);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				Sound.beep();
+				//Sound.beep();
 				break outer;
 			}
 			
@@ -163,8 +162,8 @@ public class mainClass {
 			
 			
 		//wall.start();
-		navi.travelTo(bx,by);
-		navi.turnTo(0,true);
+		//navi.travelTo(bx,by);
+		//navi.turnTo(0,true);
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -173,13 +172,14 @@ public class mainClass {
 		
 		
 		
-		navi.travelTo(30.48,0);
+		navi.travelTo(5*30,1*30);
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		navi.turnTo(90,true);
+		navi.turnTo(0,true);
 		launch.launcher();
 
 		//navi.turnTo(90,true);
@@ -201,7 +201,7 @@ public class mainClass {
 		// perform the light sensor localization upon pressing the up arrow
 		
 												
-		while (Button.waitForAnyPress() != Button.ID_ESCAPE);
-			System.exit(0);		
+		//while (Button.waitForAnyPress() != Button.ID_ESCAPE);
+			//System.exit(0);		
 	}
 }
