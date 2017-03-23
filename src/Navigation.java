@@ -93,12 +93,8 @@ public class Navigation {
 
 		//this.setSpeeds(0, 0);
 		leftMotor.startSynchronization();
-		
-	
 		leftMotor.stop();
 		rightMotor.stop();
-		
-		
 		leftMotor.endSynchronization();
 		odometer.isTravelling=false;
 	}
@@ -116,16 +112,12 @@ public class Navigation {
 		//System.out.println("Ang: " + Math.abs(angle));
 		
 		if(Math.abs(error) >350 && Math.abs(error)<360)
-				error = 1;
+				error = error-360;
 		outer:while (Math.abs(error) > DEG_ERR) {
 			if(odometer.collision){
 				leftMotor.startSynchronization();
-				
-				
 				leftMotor.stop();
 				rightMotor.stop();
-				
-				
 				leftMotor.endSynchronization();
 				break outer ;
 				
@@ -151,17 +143,19 @@ public class Navigation {
 			leftMotor.endSynchronization();
 		}
 	}
+	
+	public void travelToXY(double x, double y) {
+		travelTo(x,0);
+		travelTo(x,y);
+		
+	}
 	public void turnImm(double angle) {
 		
 		leftMotor.setSpeed(SLOW);
 		rightMotor.setSpeed(SLOW);
 		leftMotor.startSynchronization();
-		
-		
 		leftMotor.rotate(convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), true);
 		rightMotor.rotate(-convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), false);
-		
-		
 		leftMotor.endSynchronization();
 	}
 	

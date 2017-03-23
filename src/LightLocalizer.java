@@ -76,22 +76,26 @@ public class LightLocalizer {
 		
 		navi.turnTo(90,false);	//we have an offset of approximately 0 degrees, due to our track being amazingly accurate
 	
-		leftMotor.startSynchronization();
+		//leftMotor.startSynchronization();
 		leftMotor.forward();
 		rightMotor.forward();
-		leftMotor.endSynchronization();
+		//leftMotor.endSynchronization();
 		
 		
 	while(true){
 			
 			colorSensor.fetchSample(colorData, 0);	//second part where it first got pointA, now pointB will be obtained(Y value from center to black line)
 			if(colorData[0]<0.3){
-				//Sound.beep();
+				Sound.beep();
+				
+				Sound.beep();
 				navi.goForward(lightSensorDist);
-				leftMotor.startSynchronization();
+				Sound.beep();
+				
+				
 				leftMotor.stop();
 				rightMotor.stop();
-				leftMotor.endSynchronization();
+				
 				
 				// records the y distance between starting position and the x-axis
 				pointB = odo.getY();
@@ -103,16 +107,24 @@ public class LightLocalizer {
 			}		
 		
 		}
+	
+	
 	// TODO:
 	// TODO: This is where we set our coordinate system and turn to face the right direction to start the round
 	// TODO: 
 	
+		
+		
+	navi.turnTo(0, false);	
+	navi.goForward((pointA/2)+lightSensorDist);
+	odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
+	
 	//once everything is collected, the odometer is set to the updated position and now we can call it to go to 0,0,0 without any problem
-	odo.setPosition(new double [] {-(pointA+lightSensorDist), 0, odo.getAng()}, new boolean [] {true, true, true});
+	//odo.setPosition(new double [] {-((pointA/2)+lightSensorDist), 0, odo.getAng()}, new boolean [] {true, true, true});
 	
 	navi.travelTo(0,0);
-	if(odo.startPos==1)
-	navi.turnTo(0,true);			// changed from 90 to 0
+	//if(odo.startPos==1)
+	//navi.turnTo(0,true);			// changed from 90 to 0
 	Sound.beep();
 	
 	
@@ -125,7 +137,9 @@ public class LightLocalizer {
 	 * 
 	 */
 	
-	odo.setPosition(new double [] {odo.getX(), odo.getY(), odo.getAng()}, new boolean [] {true, true, true});
+	//odo.setPosition(new double [] {odo.getX(), odo.getY(), odo.getAng()}, new boolean [] {true, true, true});
+	
+	
 	//odo.setTheta();
 	
 	}

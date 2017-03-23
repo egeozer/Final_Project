@@ -59,7 +59,7 @@ public class TestMotors {
 					// TODO: navigate to the firing line and turn to the firing position
 					
 					// unwind the winch to ensure the launcher can fire at full power
-					winchMotor.rotate(-900); 		// full unwind is (-1440), (-1000) = still slightly too far, (-900)
+					winchMotor.rotate(-700); 		// full unwind is (-1440), (-1000),(-900) = still slightly too far, (-800)
 					
 					// set the loading arm to firing acceleration and speed, then release the ball
 					loadingMotor.setAcceleration(4000);
@@ -70,6 +70,9 @@ public class TestMotors {
 					loadingMotor.setAcceleration(300);
 					loadingMotor.setSpeed(400);
 					loadingMotor.rotate(-150);
+					
+					// reset the winch position
+					winchMotor.rotate(-740);		// fully unwind as if it was (-1440)
 		
 					
 				
