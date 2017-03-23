@@ -118,6 +118,7 @@ public class LightLocalizer {
 	else if(odo.startPos==2)
 		navi.turnTo(0,true);
 	
+	odo.setTheta(0);
 	odo.setPosition(new double [] {odo.getX(), odo.getY(), odo.getAng()}, new boolean [] {true, true, true});
 	//odo.setTheta();
 	
