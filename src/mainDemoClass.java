@@ -113,7 +113,7 @@ public class mainDemoClass {
 		Navigation navi = new Navigation(odo);
 		final TextLCD t = LocalEV3.get().getTextLCD();
 		wallObstacle wall =new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
-		TestMotors launch = new TestMotors();
+		demoTestMotors launch = new demoTestMotors();
 		
 	
 				
@@ -122,6 +122,10 @@ public class mainDemoClass {
 		int buttonChoice;
 		Sound.setVolume(40);
 		
+		Sound.beep();
+		launch.load();
+		launch.launcher();
+				
 		
 		// Robot will beep once it has received the Wifi instructions and setup the sensors and display
 		Sound.beep();
