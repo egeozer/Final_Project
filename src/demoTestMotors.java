@@ -51,10 +51,10 @@ public class demoTestMotors {
 					}
 					
 					// pull back the elastic to the desired position
-					winchMotor.rotate(1440);
+					winchMotor.rotate(1500);
 										
 					// load the ball into the launcher and hold the elastic in position
-					loadingMotor.rotate(-90);
+					loadingMotor.rotate(-110);
 					
 					// TODO: navigate to the firing line and turn to the firing position
 			

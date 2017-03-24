@@ -60,7 +60,7 @@ public class LightLocalizer {
 				rightMotor.stop();
 				leftMotor.endSynchronization();
 				
-				navi.goForward(lightSensorDist);
+				navi.goForward(lightSensorDist*2);
 				
 				// records the x distance between starting position and the y-axis
 				pointA = odo.getY();
@@ -75,7 +75,7 @@ public class LightLocalizer {
 				break;
 			}
 		}
-		odo.setWidth(14.1);
+		odo.setWidth(14.2);
 		navi.turnTo(0,true);	//we have an offset of approximately 0 degrees, due to our track being amazingly accurate
 	
 		//leftMotor.startSynchronization();
@@ -120,32 +120,13 @@ public class LightLocalizer {
 		
 	//navi.turnTo(0, false);	
 	//navi.goForward((pointA/2)+lightSensorDist);
-		odo.setLeftRadius(2);
-		odo.setRightRadius(2);
+		odo.setLeftRadius(1.95);
+		odo.setRightRadius(1.95);
 	odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
-	
-	//once everything is collected, the odometer is set to the updated position and now we can call it to go to 0,0,0 without any problem
-	//odo.setPosition(new double [] {-((pointA/2)+lightSensorDist), 0, odo.getAng()}, new boolean [] {true, true, true});
-	
-	//navi.travelTo(0,0);
-	//if(odo.startPos==1)
-	//navi.turnTo(0,true);			// changed from 90 to 0
+			// changed from 90 to 0
 	Sound.beep();
 	
 	
-	//else if(odo.startPos==2)
-		//navi.turnTo(0,true);
-	
-	/*
-	 * 
-	 * Instead of changing where it turns to, we could just change what angle it sets it's heading at
-	 * 
-	 */
-	
-	//odo.setPosition(new double [] {odo.getX(), odo.getY(), odo.getAng()}, new boolean [] {true, true, true});
-	
-	
-	//odo.setTheta();
 	
 	}
 		

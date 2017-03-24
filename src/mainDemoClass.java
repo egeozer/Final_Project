@@ -122,9 +122,8 @@ public class mainDemoClass {
 		int buttonChoice;
 		Sound.setVolume(40);
 		
-		Sound.beep();
-		launch.load();
-		launch.launcher();
+		//Sound.beep();
+		
 				
 		
 		// Robot will beep once it has received the Wifi instructions and setup the sensors and display
@@ -149,7 +148,10 @@ public class mainDemoClass {
 			}
 			
 		}
-			
+			odo.setX(0);
+			odo.setY(0);
+			odo.setTheta(0);
+		
 			
 		//wall.start();
 		//navi.travelTo(bx,by);
@@ -161,8 +163,9 @@ public class mainDemoClass {
 		}
 		
 		
-		
-		navi.travelTo(5*(30.48),1*(30.48));
+		//navi.travelTo(0,0);
+		//navi.travelTo(5*(30.48),1*(30.48));
+		navi.travelTo(15.24, 15.24);
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
@@ -170,6 +173,7 @@ public class mainDemoClass {
 		}
 		navi.turnTo(90,true);
 		//navi.turnTo(0,true);
+		launch.load();
 		launch.launcher();
 
 		//navi.turnTo(90,true);
