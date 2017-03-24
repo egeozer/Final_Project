@@ -115,7 +115,7 @@ public class USLocalizer {
 			
 			// update the odometer position
 			odo.setPosition(new double [] {0.0, 0.0, heading}, new boolean [] {true, true, true});
-			navi.turnTo(0, true);
+			navi.turnTo(90, true);
 			isLocalized = true;
 			
 		}

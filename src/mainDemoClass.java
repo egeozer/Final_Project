@@ -26,7 +26,7 @@ public class mainDemoClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPort = LocalEV3.get().getPort("S2");		
 	
-	private static final String SERVER_IP = "192.168.2.6";			//  Ege: 192.168.2.6
+	private static final String SERVER_IP = "192.168.2.11";			//  Ege: 192.168.2.6
 	private static final int TEAM_NUMBER = 9;
 
 	// Enable/disable printing of debug info from the WiFi class
@@ -50,7 +50,7 @@ public class mainDemoClass {
 		 * was specified and getData() will throw an exception letting you know.
 		 */
 		
-		WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
+		/*WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
 		
 		// Connect to server and get the data, catching any errors that might occur
 		
@@ -83,6 +83,7 @@ public class mainDemoClass {
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
 		}
+		*/
 
 		//Setup synchronized motors
 		leftMotor.synchronizeWith(new EV3LargeRegulatedMotor[] {rightMotor});
@@ -114,22 +115,7 @@ public class mainDemoClass {
 		wallObstacle wall =new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
 		TestMotors launch = new TestMotors();
 		
-		/* start interface
-		int buttonChoice;
-		do {
-			// clear the display
-			t.clear();
-
-			// tell the user to press a button to start the program
-			t.drawString("<  Left  |  Right >", 0, 0);
-			t.drawString("         |         ", 0, 1);
-			t.drawString("  Rising | Falling ", 0, 2);
-			t.drawString("   Edge  |  Edge   ", 0, 3);
-			t.drawString("         |         ", 0, 4);
-
-			buttonChoice = Button.waitForAnyPress();
-		} while (buttonChoice != Button.ID_LEFT && buttonChoice != Button.ID_RIGHT);
-		**/
+	
 				
 		//initialize display
 		LCDInfo lcd = new LCDInfo(odo);
@@ -172,14 +158,14 @@ public class mainDemoClass {
 		
 		
 		
-		navi.travelToXY(5*(30.48),1*(30.48));
+		navi.travelTo(5*(30.48),1*(30.48));
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		navi.turnTo(90,true);
-		navi.turnTo(0,true);
+		//navi.turnTo(0,true);
 		launch.launcher();
 
 		//navi.turnTo(90,true);

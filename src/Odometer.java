@@ -45,6 +45,18 @@ public class Odometer implements TimerListener {
 			this.timer = null;
 	}
 	
+	public void setLeftRadius(double leftRadius) {
+		this.leftRadius = leftRadius;
+	}
+
+	public void setRightRadius(double rightRadius) {
+		this.rightRadius = rightRadius;
+	}
+
+	public void setWidth(double width) {
+		this.width = width;
+	}
+
 	// functions to start/stop the timerlistener
 	public void stop() {
 		if (this.timer != null)
