@@ -52,7 +52,7 @@ public class LightLocalizer {
 			
 			colorSensor.fetchSample(colorData, 0);
 			if(colorData[0]<0.3){	//if the robot crosses the black line, it will get the distance, pointA(X value from center to black line)
-				Sound.beep();
+				//Sound.beep();
 				
 				
 				leftMotor.startSynchronization();
@@ -69,7 +69,7 @@ public class LightLocalizer {
 				
 				//once the first distance is recorded, it goes back half that distance 
 				//navi.goBackward(pointA/2);
-				odo.setWidth(14.1);
+				odo.setWidth(14.2);
 				
 				break;
 			}
@@ -126,9 +126,9 @@ public class LightLocalizer {
 	//navi.goForward((pointA/2)+lightSensorDist);
 		odo.setLeftRadius(2.05);
 		odo.setRightRadius(2.05);
-	odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
+	
 			// changed from 90 to 0
-	Sound.beep();
+	//Sound.beep();
 	
 	
 	

@@ -40,7 +40,7 @@ public class demoTestMotors {
 					// TODO: get in front of the dispenser
 					
 					// ready the loading arm to receive the ball
-					loadingMotor.rotate(90);
+					loadingMotor.rotate(110);
 					
 					// beep, and wait 5 seconds to receive the ball
 					//Sound.beep();
@@ -63,7 +63,7 @@ public class demoTestMotors {
 		public void launcher(){
 			
 			// unwind the winch to ensure the launcher can fire at full power
-			winchMotor.rotate(-850); 		// full unwind is (-1440), (-1000),(-900) = still slightly too far, (-800)
+			winchMotor.rotate(-875); 		// full unwind is (-1440), (-1000),(-900) = still slightly too far, (-800)
 			
 			// set the loading arm to firing acceleration and speed, then release the ball
 			loadingMotor.setAcceleration(4000);
@@ -76,7 +76,7 @@ public class demoTestMotors {
 			loadingMotor.rotate(-150);
 			
 			// reset the winch position
-			winchMotor.rotate(-740);		// fully unwind as if it was (-1440)
+			winchMotor.rotate(-640);		// fully unwind as if it was (-1440)
 		}
 		
 		public static int getButtonChoise()

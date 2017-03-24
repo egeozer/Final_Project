@@ -26,7 +26,7 @@ public class mainDemoClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPort = LocalEV3.get().getPort("S2");		
 	
-	private static final String SERVER_IP = "192.168.2.11";			//  Ege: 192.168.2.6
+	private static final String SERVER_IP = "192.168.2.3";			//  TA Server: 192.168.2.3
 	private static final int TEAM_NUMBER = 9;
 
 	// Enable/disable printing of debug info from the WiFi class
@@ -138,6 +138,7 @@ public class mainDemoClass {
 			if (usl.isLocalized) {
 				LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
 				lsl.doLocalization(odo, navi, colorValue, colorData);
+				//Sound.beep();
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
@@ -151,7 +152,8 @@ public class mainDemoClass {
 			odo.setX(0);
 			odo.setY(0);
 			odo.setTheta(0);
-		
+			odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
+		Sound.beep();
 			
 		//wall.start();
 		//navi.travelTo(bx,by);
@@ -173,6 +175,12 @@ public class mainDemoClass {
 		}
 		navi.turnTo(90,true);
 		//navi.turnTo(0,true);
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		//navi.turnTo(180, true);
 		launch.load();
 		launch.launcher();
 
