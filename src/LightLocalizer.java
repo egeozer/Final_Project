@@ -58,9 +58,11 @@ public class LightLocalizer {
 				leftMotor.startSynchronization();
 				leftMotor.stop();
 				rightMotor.stop();
-				leftMotor.endSynchronization();
 				
 				navi.goForward(lightSensorDist*2);
+				leftMotor.endSynchronization();
+				
+				
 				
 				// records the x distance between starting position and the y-axis
 				pointA = odo.getY();
