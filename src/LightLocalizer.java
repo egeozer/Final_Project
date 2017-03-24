@@ -59,7 +59,7 @@ public class LightLocalizer {
 				leftMotor.stop();
 				rightMotor.stop();
 				
-				navi.goForward(lightSensorDist*2);
+				navi.goForward(lightSensorDist*4);
 				leftMotor.endSynchronization();
 				
 				
@@ -69,15 +69,17 @@ public class LightLocalizer {
 				
 				//once the first distance is recorded, it goes back half that distance 
 				//navi.goBackward(pointA/2);
-				try {
-					Thread.sleep(500);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				odo.setWidth(14.1);
+				
 				break;
 			}
 		}
-		odo.setWidth(14.2);
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
 		navi.turnTo(0,true);	//we have an offset of approximately 0 degrees, due to our track being amazingly accurate
 	
 		//leftMotor.startSynchronization();
@@ -122,8 +124,8 @@ public class LightLocalizer {
 		
 	//navi.turnTo(0, false);	
 	//navi.goForward((pointA/2)+lightSensorDist);
-		odo.setLeftRadius(1.95);
-		odo.setRightRadius(1.95);
+		odo.setLeftRadius(2.05);
+		odo.setRightRadius(2.05);
 	odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
 			// changed from 90 to 0
 	Sound.beep();

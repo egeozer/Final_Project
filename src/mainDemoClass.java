@@ -50,7 +50,7 @@ public class mainDemoClass {
 		 * was specified and getData() will throw an exception letting you know.
 		 */
 		
-		/*WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
+		WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
 		
 		// Connect to server and get the data, catching any errors that might occur
 		
@@ -83,7 +83,7 @@ public class mainDemoClass {
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
 		}
-		*/
+		
 
 		//Setup synchronized motors
 		leftMotor.synchronizeWith(new EV3LargeRegulatedMotor[] {rightMotor});
@@ -164,8 +164,8 @@ public class mainDemoClass {
 		
 		
 		//navi.travelTo(0,0);
-		//navi.travelTo(5*(30.48),1*(30.48));
-		navi.travelTo(15.24, 15.24);
+		navi.travelTo(5*(30.48),1*(30.48));
+		//navi.travelTo(30.48, 30.48);
 		try {
 			Thread.sleep(1000);
 		} catch (InterruptedException e) {
