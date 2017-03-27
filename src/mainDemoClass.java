@@ -129,7 +129,28 @@ public class mainDemoClass {
 		Sound.setVolume(40);
 		
 		//Sound.beep();
+		launch.load();
+		launch.launcher();
 		
+		Sound.beep();
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		launch.load();
+		launch.launcher();
+		
+		Sound.beep();
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		
+		launch.load();
+		launch.launcher();
 				
 		
 		// Robot will beep once it has received the Wifi instructions and setup the sensors and display
