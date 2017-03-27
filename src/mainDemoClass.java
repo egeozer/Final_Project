@@ -28,6 +28,7 @@ public class mainDemoClass {
 	private static final Port colorPortLeft = LocalEV3.get().getPort("S3");		
 	private static final String SERVER_IP = "192.168.2.3";			//  TA Server: 192.168.2.3
 	private static final int TEAM_NUMBER = 9;
+	
 
 	// Enable/disable printing of debug info from the WiFi class
 	private static final boolean ENABLE_DEBUG_WIFI_PRINT = true;
@@ -50,11 +51,11 @@ public class mainDemoClass {
 		 * was specified and getData() will throw an exception letting you know.
 		 */
 		
-		WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
+		//WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
 		
 		// Connect to server and get the data, catching any errors that might occur
 		
-		try {
+		/*try {
 			
 			Map data = conn.getData();
 
@@ -83,10 +84,10 @@ public class mainDemoClass {
 		} catch (Exception e) {
 			System.err.println("Error: " + e.getMessage());
 		}
-		
+		*/
 
 		//Setup synchronized motors
-		leftMotor.synchronizeWith(new EV3LargeRegulatedMotor[] {rightMotor});
+		//leftMotor.synchronizeWith(new EV3LargeRegulatedMotor[] {rightMotor});
 		
 		//Setup ultrasonic sensor
 		// 1. Create a port object attached to a physical port (done above)
@@ -117,8 +118,11 @@ public class mainDemoClass {
 		wallObstacle wall =new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
 		demoTestMotors launch = new demoTestMotors();
 		
-	
 				
+		//lightRight right = new lightRight(colorSensorRight, colorDataRight, odo,left );
+		lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
+		lightRight right = new lightRight(colorSensorRight, colorDataRight, odo );
+		
 		//initialize display
 		LCDInfo lcd = new LCDInfo(odo);
 		int buttonChoice;
@@ -151,12 +155,17 @@ public class mainDemoClass {
 			}
 			
 		}
+		
+	//left.start();
+	//right.start();
+		
 			odo.setX(0);
 			odo.setY(0);
 			odo.setTheta(0);
 			odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
 		Sound.beep();
-			
+			leftMotor.forward();
+			rightMotor.forward();
 		//wall.start();
 		//navi.travelTo(bx,by);
 		//navi.turnTo(0,true);
@@ -168,7 +177,7 @@ public class mainDemoClass {
 		
 		
 		//navi.travelTo(0,0);
-		navi.travelTo(5*(30.48),1*(30.48));
+		//navi.travelToXY(5*(30.48),1*(30.48));
 		//navi.travelTo(30.48, 30.48);
 		try {
 			Thread.sleep(1000);
@@ -183,6 +192,10 @@ public class mainDemoClass {
 			e.printStackTrace();
 		}
 		//navi.turnTo(180, true);
+		launch.load();
+		launch.launcher();
+		launch.load();
+		launch.launcher();
 		launch.load();
 		launch.launcher();
 

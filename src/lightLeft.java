@@ -9,7 +9,7 @@ public class lightLeft extends Thread {
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	boolean havePassed = false;
 	boolean scanLine = false;
-	
+	//lightRight right;
 	
 	lightLeft(SampleProvider colorSensorLeft,  float[] colorDataLeft,Odometer odo ){
 		
@@ -18,19 +18,26 @@ public class lightLeft extends Thread {
 		EV3LargeRegulatedMotor[] motors = odo.getMotors();
 		this.leftMotor = motors[0];
 		this.rightMotor = motors[1];
-	
+		//this.right = right;
 	}
 	
 	
 	public void run(){
 while(true){
+	try{
+	Thread.sleep(10);
 	if(scanLine){
 			
 		colorSensorLeft.fetchSample(colorDataLeft, 0);
 			if(colorDataLeft[0]<0.3){	//if the robot crosses the black line, it will get the distance, pointA(X value from center to black line)
 				havePassed = true;
-				rightMotor.stop();
+				leftMotor.stop();
 				Sound.beep();
+				while(true){
+					//if(this.right.havePassed)
+						break;
+					
+				}
 				
 		
 				
@@ -38,7 +45,10 @@ while(true){
 			}
 	}
 		}
+	catch(InterruptedException e){
 		
+	}
 		
+}
 	}
 }
