@@ -104,18 +104,19 @@ public class mainDemoClass {
 		// 2. Create a sensor instance and attach to port
 		// 3. Create a sample provider instance for the above and initialize operating mode
 		// 4. Create a buffer for the sensor data
-		@SuppressWarnings("resource")
 		SensorModes colorSensorRight = new EV3ColorSensor(colorPortRight);
 		SensorModes colorSensorLeft = new EV3ColorSensor(colorPortLeft);
 		SampleProvider colorValueRight = colorSensorRight.getMode("Red");			// colorValue provides samples from this instance
 		SampleProvider colorValueLeft = colorSensorLeft.getMode("Red");
 		float[] colorDataRight = new float[colorValueRight.sampleSize()];			// colorData is the buffer in which data are returned
 		float[] colorDataLeft = new float[colorValueLeft.sampleSize()];
+	
+		
 		// setup the odometer and display
 		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true, startPos);
 		Navigation navi = new Navigation(odo);
-		final TextLCD t = LocalEV3.get().getTextLCD();
-		wallObstacle wall =new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
+		//final TextLCD t = LocalEV3.get().getTextLCD();
+		wallObstacle wall = new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
 		demoTestMotors launch = new demoTestMotors();
 		
 				
@@ -129,42 +130,34 @@ public class mainDemoClass {
 		Sound.setVolume(40);
 		
 		//Sound.beep();
-		launch.load();
-		launch.launcher();
-		
+		//LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
+		//lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
 		Sound.beep();
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		launch.load();
-		launch.launcher();
-		
 		Sound.beep();
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		launch.load();
-		launch.launcher();
 				
+		launch.load(odo, navi);
 		
+		Sound.beep();
+		Sound.beep();
+				
+		launch.launcher3();
+		
+		Sound.beep();
+		Sound.beep();
+		
+				
 		// Robot will beep once it has received the Wifi instructions and setup the sensors and display
 		Sound.beep();
 		
 		// perform the ultrasonic localization using Falling Edge
 		USLocalizer usl = new USLocalizer(odo, navi, usValue, usData, USLocalizer.LocalizationType.FALLING_EDGE);
-		usl.doLocalization();
+		//usl.doLocalization();
 		
 		outer:while(true){
 			//buttonChoice = Button.waitForAnyPress();
 			if (usl.isLocalized) {
 				LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);		
-				lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
+				//lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
 				//Sound.beep();
 				try {
 					Thread.sleep(5000);
@@ -213,12 +206,12 @@ public class mainDemoClass {
 			e.printStackTrace();
 		}
 		//navi.turnTo(180, true);
-		launch.load();
-		launch.launcher();
-		launch.load();
-		launch.launcher();
-		launch.load();
-		launch.launcher();
+		launch.load(odo, navi);
+		launch.launcher(odo, navi);
+		launch.load(odo, navi);
+		launch.launcher(odo, navi);
+		launch.load(odo, navi);
+		launch.launcher(odo, navi);
 
 		//navi.turnTo(90,true);
 		

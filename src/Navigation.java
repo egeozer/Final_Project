@@ -20,6 +20,10 @@ public class Navigation {
 		// set acceleration
 		this.leftMotor.setAcceleration(ACCELERATION);
 		this.rightMotor.setAcceleration(ACCELERATION);
+		
+		// set speed
+		this.leftMotor.setSpeed(FAST);
+		this.rightMotor.setSpeed(FAST);
 	}
 	
 	
@@ -92,10 +96,10 @@ public class Navigation {
 		}
 
 		//this.setSpeeds(0, 0);
-	//	leftMotor.startSynchronization();
+		leftMotor.startSynchronization();
 		leftMotor.stop();
 		rightMotor.stop();
-		//leftMotor.endSynchronization();
+		leftMotor.endSynchronization();
 		odometer.isTravelling=false;
 	}
 	}
@@ -115,10 +119,10 @@ public class Navigation {
 				error = error-360;
 		outer:while (Math.abs(error) > DEG_ERR) {
 			if(odometer.collision){
-				//leftMotor.startSynchronization();
+				leftMotor.startSynchronization();
 				leftMotor.stop();
 				rightMotor.stop();
-				//leftMotor.endSynchronization();
+				leftMotor.endSynchronization();
 				break outer ;
 				
 			}
@@ -137,10 +141,10 @@ public class Navigation {
 
 		if (stop) {
 			//this.setSpeeds(0, 0);
-		//	leftMotor.startSynchronization();
+			leftMotor.startSynchronization();
 			leftMotor.stop();
 			rightMotor.stop();
-			//leftMotor.endSynchronization();
+			leftMotor.endSynchronization();
 		}
 	}
 	
@@ -153,10 +157,10 @@ public class Navigation {
 		
 		leftMotor.setSpeed(SLOW);
 		rightMotor.setSpeed(SLOW);
-	//	leftMotor.startSynchronization();
+		leftMotor.startSynchronization();
 		leftMotor.rotate(convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), true);
 		rightMotor.rotate(-convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), false);
-		//leftMotor.endSynchronization();
+		leftMotor.endSynchronization();
 	}
 	
 	
@@ -167,20 +171,20 @@ public class Navigation {
 		
 		leftMotor.setSpeed(SLOW);
 		rightMotor.setSpeed(SLOW);
-		//leftMotor.startSynchronization();
+		leftMotor.startSynchronization();
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
-		//leftMotor.endSynchronization();
+		leftMotor.endSynchronization();
 
 	}
 	public void goBackward(double distance) {
 		
 		leftMotor.setSpeed(SLOW);
 		rightMotor.setSpeed(SLOW);
-		//leftMotor.startSynchronization();
+		leftMotor.startSynchronization();
 		leftMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), false);
-		//leftMotor.endSynchronization();
+		leftMotor.endSynchronization();
 
 	}
 	

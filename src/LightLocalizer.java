@@ -48,8 +48,10 @@ public class LightLocalizer {
 		lightRight right = new lightRight(colorSensorRight, colorDataRight, odo );
 		lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
 		
+		leftMotor.startSynchronization();
 		leftMotor.forward();
 		rightMotor.forward();
+		leftMotor.endSynchronization();
 		right.start();
 		left.start();
 	
@@ -65,7 +67,13 @@ public class LightLocalizer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
+		right.scanLine=false;
+		left.scanLine=false;
+		
+		navi.goForward(lightSensorDist*2);
+		navi.turnTo(0,true);
+		pointA=odo.getY();
+		navi.goForward(pointA);
 		
 	
 	

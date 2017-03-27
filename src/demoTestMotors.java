@@ -14,88 +14,171 @@ public class demoTestMotors {
 	// Gear motor is connected to output C
 	public static final EV3LargeRegulatedMotor winchMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 	
-	// Instance the text display
-	public static int buttonC;
+	private Odometer odo;
+	private Navigation navi;
 	
 	//final static TextLCD t = LocalEV3.get().getTextLCD();
 		
-		public  void load(){
+		public void load(Odometer odo, Navigation navi){
 		
+			this.odo = odo;
+			this.navi = navi;
 			
 			// set winchMotor acceleration and speed
 			winchMotor.setAcceleration(300);
 			winchMotor.setSpeed(300);
 			
 			// set loadingMotor initial acceleration and speed
-			loadingMotor.setAcceleration(400);
-			loadingMotor.setSpeed(500);
+			loadingMotor.setAcceleration(600);
+			loadingMotor.setSpeed(150);
+			
+			// desired distance from the dispenser
+			double clearDist = 15.0;			// 20 too far
 			
 			Sound.setVolume(40);
 			
+			// TODO: implement light localization before picking up the ball to ensure we are at the correct heading
+							
+			// Get the position of the target from the user
+							
+			// TODO: get in front of the dispenser
+				
+			// ready the loading arm to receive the ball
+			loadingMotor.rotate(130);
+								
+			// back up to get underneath the dispenser
+			navi.goBackward(clearDist);
 			
+			// beep, and wait 5 seconds to receive the ball
+			Sound.beep();
+			Sound.beep();
+			Sound.beep();
+			
+			try {
+			    Thread.sleep(5000);
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+			
+			// pull back the elastic until the arm can prevent it from firing
+			winchMotor.rotate(1440);
+								
+			// go forward to clear the dispenser
+			navi.goForward(clearDist);
+			
+			try {
+			    Thread.sleep(3000);
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+			
+			// bring the loading arm almost back to it's initial position
+			//loadingMotor.rotate(-100);
+			
+			// load the ball into the launcher and hold the elastic in position
+			loadingMotor.setAcceleration(650);				// with elastic, was 650 accel, 250 spd
+			loadingMotor.setSpeed(250);
+			loadingMotor.rotate(-130);		// -20 extra degrees to account for the wait of the balls
+			
+			// TODO: navigate to the firing line and turn to the firing position
+			Sound.beep();
+		}
+		
+		public void launcher3(){
+			
+		/*
+		 * Balls 1 and 2
+		 */
+		
+			for(int balls = 2; balls > 0; balls--){
+			
+				// unwind the winch to ensure the launcher can fire at full power
+				winchMotor.rotate(-900); 		// full unwind is (-1440), (-1000),(-900) = still slightly too far, (-800)
 				
-				// Get the position of the target from the user
+				// set the loading arm to firing acceleration and speed, then release the ball
+				loadingMotor.setAcceleration(4000);
+				loadingMotor.setSpeed(300);
+				loadingMotor.rotate(80);
 				
-					
-					// TODO: get in front of the dispenser
-					
-					// ready the loading arm to receive the ball
-					loadingMotor.rotate(120);
-					
-					// beep, and wait 5 seconds to receive the ball
-					//Sound.beep();
-					try {
-					    Thread.sleep(5000);
-					} catch(InterruptedException ex) {
-					    Thread.currentThread().interrupt();
-					}
-					
-					// pull back the elastic to the desired position
-					winchMotor.rotate(1500);
-										
-					// load the ball into the launcher and hold the elastic in position
-					loadingMotor.rotate(-120);
-					
-					// TODO: navigate to the firing line and turn to the firing position
+				// wait 3 sec, then reset the arm acceleration, speed and position
+				try {
+				    Thread.sleep(3000);
+				} catch(InterruptedException ex) {
+				    Thread.currentThread().interrupt();
+				}
+				
+				// rewind the winch to fire
+				winchMotor.rotate(900);		// (1500-875)
+				
+				// reset the winch position
+				//winchMotor.rotate(-625);		// fully unwind as if it was (-1440)
+				
+				// load another ball into the launcher
+				loadingMotor.setAcceleration(800);
+				loadingMotor.setSpeed(250);
+				loadingMotor.rotate(-80);			
+						
+			}
+			
+		/*
+		 * Ball 3, less weight so lower acceleration and speed
+		 */
+			
+			// unwind the winch to ensure the launcher can fire at full power
+			winchMotor.rotate(-900); 		// full unwind is (-1440), (-1000),(-900) = still slightly too far, (-800)
+			
+			// set the loading arm to firing acceleration and speed, then release the ball
+			loadingMotor.setAcceleration(4000);
+			loadingMotor.setSpeed(250);
+			loadingMotor.rotate(80);
+			
+			// wait 3 sec, then reset the arm acceleration, speed and position
+			try {
+			    Thread.sleep(3000);
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+			
+			// rewind the winch to fire
+			winchMotor.rotate(900);		// (1500-875)
+			
+			// reset the winch position
+			//winchMotor.rotate(-625);		// fully unwind as if it was (-1440)
+			
+			// load another ball into the launcher
+			loadingMotor.setAcceleration(600);
+			loadingMotor.setSpeed(200);
+			loadingMotor.rotate(-80);	
+			
+			// reset the loading arm and winch position
+			loadingMotor.rotate(50);
+			winchMotor.rotate(-1440);		// fully unwind as if it was (-1440)
+			loadingMotor.rotate(-50);
 			
 		}
 		
-		public void launcher(){
+		public void launcher(Odometer odo, Navigation navi){
 			
 			// unwind the winch to ensure the launcher can fire at full power
 			winchMotor.rotate(-875); 		// full unwind is (-1440), (-1000),(-900) = still slightly too far, (-800)
 			
 			// set the loading arm to firing acceleration and speed, then release the ball
-			loadingMotor.setAcceleration(4000);
-			loadingMotor.setSpeed(500);
-			loadingMotor.rotate(120);
+			loadingMotor.setAcceleration(2000);
+			loadingMotor.setSpeed(400);
+			loadingMotor.rotate(100);
 			
-			// reset the arm acceleration, speed and position
+			// wait 3 sec, then reset the arm acceleration, speed and position
+			try {
+			    Thread.sleep(3000);
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
 			loadingMotor.setAcceleration(400);
 			loadingMotor.setSpeed(100);
-			loadingMotor.rotate(-120);
+			loadingMotor.rotate(-100);
 			
 			// reset the winch position
 			winchMotor.rotate(-625);		// fully unwind as if it was (-1440)
 		}
 		
-		public static int getButtonChoise()
-		{	
-			// holds the user's button choice
-			int buttonChoice;
-			
-			// poll the button input until either the up, left or right button is pressed
-			do {
-				
-				// clear the display
-				
-
-				buttonChoice = Button.waitForAnyPress();
-			} while (buttonChoice != Button.ID_LEFT
-					&& buttonChoice != Button.ID_RIGHT && buttonChoice != Button.ID_UP && buttonChoice!= Button.ID_DOWN
-					&& buttonChoice != Button.ID_ESCAPE);
-			
-			// return the button pressed by the user
-			return buttonChoice;
-		}
 }
