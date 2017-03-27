@@ -83,8 +83,8 @@ public class generalClass {
 			outer:while(true){
 				//buttonChoice = Button.waitForAnyPress();
 				if (usl.isLocalized) {
-					LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
-					lsl.doLocalization(odo, navi, colorValue, colorData);
+					//LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
+				//	lsl.doLocalization(odo, navi, colorValue, colorData);
 					try {
 						Sound.beep();
 						Thread.sleep(5000);

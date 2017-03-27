@@ -8,8 +8,8 @@ import lejos.robotics.SampleProvider;
 public class LightLocalizer {
 	private Odometer odo;
 	private Navigation navi;
-	private SampleProvider colorSensor;
-	private float[] colorData;
+	private SampleProvider colorSensorRight,colorSensorLeft;
+	private float[] colorDataRight,colorDataLeft;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	double lightSensorDist = 3.0; 		//distance added to compensate the distance from the center and to the lightSensor
 	double x, y, xTheta, yTheta;
@@ -17,19 +17,23 @@ public class LightLocalizer {
 	int axisCounter;
 	
 	
-	public LightLocalizer(Odometer odo, Navigation navi, SampleProvider colorSensor, float[] colorData) {
+	public LightLocalizer(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft) {
 		this.odo = odo;
 		this.navi = navi;
-		this.colorSensor = colorSensor;
-		this.colorData = colorData;
+		this.colorSensorRight = colorSensorRight;
+		this.colorDataRight = colorDataRight;
+		this.colorSensorLeft = colorSensorLeft;
+		this.colorDataLeft = colorDataLeft;
 		Sound.setVolume(50);
 	}
 	
-	public void doLocalization(Odometer odo, Navigation navi, SampleProvider colorSensor, float[] colorData) {
+	public void doLocalization(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft) {
 		this.odo = odo;
 		this.navi = navi;
-		this.colorSensor = colorSensor;
-		this.colorData = colorData;
+		this.colorSensorRight = colorSensorRight;
+		this.colorDataRight = colorDataRight;
+		this.colorSensorLeft = colorSensorLeft;
+		this.colorDataLeft = colorDataLeft;
 		EV3LargeRegulatedMotor[] motors = this.odo.getMotors();
 		this.leftMotor = motors[0];
 		this.rightMotor = motors[1];
@@ -50,8 +54,8 @@ public class LightLocalizer {
 		
 		while(true){
 			
-			colorSensor.fetchSample(colorData, 0);
-			if(colorData[0]<0.3){	//if the robot crosses the black line, it will get the distance, pointA(X value from center to black line)
+			colorSensorRight.fetchSample(colorDataRight, 0);
+			if(colorDataRight[0]<0.3){	//if the robot crosses the black line, it will get the distance, pointA(X value from center to black line)
 				//Sound.beep();
 				
 				
@@ -59,7 +63,7 @@ public class LightLocalizer {
 				leftMotor.stop();
 				rightMotor.stop();
 				
-				navi.goForward(lightSensorDist*4);
+				navi.goForward(lightSensorDist*2);
 				leftMotor.endSynchronization();
 				
 				

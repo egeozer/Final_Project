@@ -24,8 +24,8 @@ public class mainDemoClass {
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
-	private static final Port colorPort = LocalEV3.get().getPort("S2");		
-	
+	private static final Port colorPortRight = LocalEV3.get().getPort("S2");		
+	private static final Port colorPortLeft = LocalEV3.get().getPort("S3");		
 	private static final String SERVER_IP = "192.168.2.3";			//  TA Server: 192.168.2.3
 	private static final int TEAM_NUMBER = 9;
 
@@ -104,10 +104,12 @@ public class mainDemoClass {
 		// 3. Create a sample provider instance for the above and initialize operating mode
 		// 4. Create a buffer for the sensor data
 		@SuppressWarnings("resource")
-		SensorModes colorSensor = new EV3ColorSensor(colorPort);
-		SampleProvider colorValue = colorSensor.getMode("Red");			// colorValue provides samples from this instance
-		float[] colorData = new float[colorValue.sampleSize()];			// colorData is the buffer in which data are returned
-				
+		SensorModes colorSensorRight = new EV3ColorSensor(colorPortRight);
+		SensorModes colorSensorLeft = new EV3ColorSensor(colorPortLeft);
+		SampleProvider colorValueRight = colorSensorRight.getMode("Red");			// colorValue provides samples from this instance
+		SampleProvider colorValueLeft = colorSensorLeft.getMode("Red");
+		float[] colorDataRight = new float[colorValueRight.sampleSize()];			// colorData is the buffer in which data are returned
+		float[] colorDataLeft = new float[colorValueLeft.sampleSize()];
 		// setup the odometer and display
 		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true, startPos);
 		Navigation navi = new Navigation(odo);
@@ -136,8 +138,8 @@ public class mainDemoClass {
 		outer:while(true){
 			//buttonChoice = Button.waitForAnyPress();
 			if (usl.isLocalized) {
-				LightLocalizer lsl = new LightLocalizer(odo, navi, colorValue, colorData);		
-				lsl.doLocalization(odo, navi, colorValue, colorData);
+				LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);		
+				lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
 				//Sound.beep();
 				try {
 					Thread.sleep(5000);
