@@ -33,9 +33,7 @@ while(true){
 				havePassed = true;
 				leftMotor.stop();
 				Sound.beep();
-				while(true){
-					//if(this.right.havePassed)
-						break;
+				break;
 					
 				}
 				
@@ -44,7 +42,7 @@ while(true){
 				//break;
 			}
 	}
-		}
+		
 	catch(InterruptedException e){
 		
 	}

@@ -43,20 +43,28 @@ public class LightLocalizer {
 		leftMotor.setSpeed(150);
 		rightMotor.setSpeed(150);
 		
-		lightRight right = null;
-		lightLeft left = null;
-		 right = new lightRight(colorSensorRight, colorDataRight, odo );
-		 left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
+		//lightRight right = null;
+	//	lightLeft left = null;
+		lightRight right = new lightRight(colorSensorRight, colorDataRight, odo );
+		lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
 		
 		leftMotor.forward();
 		rightMotor.forward();
 		right.start();
 		left.start();
+	
+		
 		
 		right.scanLine=true;
 		left.scanLine=true;
 		
-		
+		try {
+			right.join();
+			left.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	
 		
 	
