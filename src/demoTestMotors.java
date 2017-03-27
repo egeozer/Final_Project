@@ -28,7 +28,7 @@ public class demoTestMotors {
 			
 			// set loadingMotor initial acceleration and speed
 			loadingMotor.setAcceleration(400);
-			loadingMotor.setSpeed(400);
+			loadingMotor.setSpeed(500);
 			
 			Sound.setVolume(40);
 			
@@ -40,7 +40,7 @@ public class demoTestMotors {
 					// TODO: get in front of the dispenser
 					
 					// ready the loading arm to receive the ball
-					loadingMotor.rotate(150);
+					loadingMotor.rotate(120);
 					
 					// beep, and wait 5 seconds to receive the ball
 					//Sound.beep();
@@ -54,7 +54,7 @@ public class demoTestMotors {
 					winchMotor.rotate(1500);
 										
 					// load the ball into the launcher and hold the elastic in position
-					loadingMotor.rotate(-150);
+					loadingMotor.rotate(-120);
 					
 					// TODO: navigate to the firing line and turn to the firing position
 			
@@ -68,12 +68,12 @@ public class demoTestMotors {
 			// set the loading arm to firing acceleration and speed, then release the ball
 			loadingMotor.setAcceleration(4000);
 			loadingMotor.setSpeed(500);
-			loadingMotor.rotate(150);
+			loadingMotor.rotate(120);
 			
 			// reset the arm acceleration, speed and position
-			loadingMotor.setAcceleration(300);
-			loadingMotor.setSpeed(400);
-			loadingMotor.rotate(-150);
+			loadingMotor.setAcceleration(400);
+			loadingMotor.setSpeed(100);
+			loadingMotor.rotate(-120);
 			
 			// reset the winch position
 			winchMotor.rotate(-625);		// fully unwind as if it was (-1440)
