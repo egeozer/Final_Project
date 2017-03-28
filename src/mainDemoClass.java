@@ -179,6 +179,7 @@ public class mainDemoClass {
 		
 		// Mitchell's testing lines, aka trash code
 		
+		navi.lsTravelTo(1*squareSize, 3*squareSize, odo, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		//launch.load(odo, navi, omega, initAng);
 		//launch.launcher3();
 		

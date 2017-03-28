@@ -1,8 +1,11 @@
 
 
 
+import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
+import lejos.hardware.sensor.BaseSensor;
 import lejos.robotics.RegulatedMotor;
+import lejos.robotics.SampleProvider;
 
 public class Navigation {
 	final static int FAST = 160, SLOW = 100, clawTurnSpeed = 150, ACCELERATION = 6000;
@@ -81,6 +84,109 @@ public class Navigation {
 	 * TurnTo function which takes an angle and boolean as arguments The boolean controls whether or not to stop the
 	 * motors when the turn is completed
 	 */
+	public void lsTravelTo(double x, double y, Odometer odo, SampleProvider colorSensorRight, float[] colorDataRight, 
+			SampleProvider colorSensorLeft, float[] colorDataLeft){
+		
+		double lightSensorDist = 6.0;
+		double heading = Math.atan2(y, x);			// changed to account for different 0 degrees / coord-systems
+		
+		
+		// x direction navigation
+		if( (x-odo.getX()) >= 0){
+			turnTo(0, true);
+		}
+		outer:while (Math.abs(x - odo.getX()) > CM_ERR){
+				if(odo.collision)
+					break outer;
+				
+				// ensure we are in the right color mode
+				((BaseSensor) colorSensorRight).setCurrentMode("Red");			// colorValue provides samples from this instance
+				((BaseSensor) colorSensorLeft).setCurrentMode("Red");
+				
+				lightRight right = new lightRight(colorSensorRight, colorDataRight, odo );
+				lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
+				
+				leftMotor.startSynchronization();
+				leftMotor.forward();
+				rightMotor.forward();
+				leftMotor.endSynchronization();
+				
+				right.start();		// stops right motor when right sensor sees a black line, then beeps
+				left.start();		// stops left motor when left sensor sees a black line, then beeps
+				
+				right.scanLine=true;
+				left.scanLine=true;
+				
+				try {
+					right.join();
+					left.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				right.scanLine=false;
+				left.scanLine=false;
+				
+				Sound.beep();
+				Sound.beep();
+				Sound.beep();
+				Sound.beep();
+				
+				// go to the zero on the x-axis
+				leftMotor.startSynchronization();
+				leftMotor.rotate(convertDistance(odometer.getLeftRadius(), lightSensorDist), true);
+				rightMotor.rotate(convertDistance(odometer.getLeftRadius(), lightSensorDist), false);
+				leftMotor.endSynchronization();
+			}
+		
+		// y direction navigation
+		if( (y-odo.getY()) >= 0){
+			turnTo(90, true);
+		}
+		outer:while (Math.abs(y - odo.getY()) > CM_ERR){
+				if(odo.collision)
+					break outer;
+				
+				// ensure we are in the right color mode
+				((BaseSensor) colorSensorRight).setCurrentMode("Red");			// colorValue provides samples from this instance
+				((BaseSensor) colorSensorLeft).setCurrentMode("Red");
+				
+				lightRight right = new lightRight(colorSensorRight, colorDataRight, odo );
+				lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
+				
+				leftMotor.startSynchronization();
+				leftMotor.forward();
+				rightMotor.forward();
+				leftMotor.endSynchronization();
+				
+				right.start();		// stops right motor when right sensor sees a black line, then beeps
+				left.start();		// stops left motor when left sensor sees a black line, then beeps
+				
+				right.scanLine=true;
+				left.scanLine=true;
+				
+				try {
+					right.join();
+					left.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				
+				right.scanLine=false;
+				left.scanLine=false;
+				
+				//Sound.beep();
+				//Sound.beep();
+				
+				// go to the zero on the x-axis
+				goForward(lightSensorDist);
+						
+		}
+	}
+	
+	
+	
+	
 	public void turnTo(double angle, boolean stop) {
 
 		double error = angle - this.odometer.getAng();
