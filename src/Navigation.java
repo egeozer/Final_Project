@@ -5,7 +5,7 @@ import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.RegulatedMotor;
 
 public class Navigation {
-	final static int FAST = 160, SLOW = 100, ACCELERATION = 6000;
+	final static int FAST = 160, SLOW = 100, clawTurnSpeed = 150, ACCELERATION = 6000;
 	final static double DEG_ERR = 3.0, CM_ERR = 1.0;
 	private Odometer odometer;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
@@ -109,6 +109,46 @@ public class Navigation {
 				this.setSpeeds(SLOW, -SLOW);
 			} else {
 				this.setSpeeds(-SLOW, SLOW);
+			}
+		}
+
+		if (stop) {
+			//this.setSpeeds(0, 0);
+			leftMotor.startSynchronization();
+			leftMotor.stop();
+			rightMotor.stop();
+			leftMotor.endSynchronization();
+		}
+	}
+	
+	public void clawTurnTo(double angle, boolean stop) {
+
+		double error = angle - this.odometer.getAng();
+		
+		//System.out.println("Err: " + Math.abs(error));
+		//System.out.println("Ang: " + Math.abs(angle));
+		
+		if(Math.abs(error) >350 && Math.abs(error)<360)
+				error = error-360;
+		outer:while (Math.abs(error) > DEG_ERR) {
+			if(odometer.collision){
+				leftMotor.startSynchronization();
+				leftMotor.stop();
+				rightMotor.stop();
+				leftMotor.endSynchronization();
+				break outer ;
+				
+			}
+			error = angle - this.odometer.getAng();
+
+			if (error < -180.0) {
+				this.setSpeeds(-clawTurnSpeed, clawTurnSpeed);
+			} else if (error < 0.0) {
+				this.setSpeeds(clawTurnSpeed, -clawTurnSpeed);
+			} else if (error > 180.0) {
+				this.setSpeeds(clawTurnSpeed, -clawTurnSpeed);
+			} else {
+				this.setSpeeds(-clawTurnSpeed, clawTurnSpeed);
 			}
 		}
 

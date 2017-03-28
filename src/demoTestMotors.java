@@ -19,10 +19,12 @@ public class demoTestMotors {
 	
 	//final static TextLCD t = LocalEV3.get().getTextLCD();
 		
-		public void load(Odometer odo, Navigation navi){
+		public void load(Odometer odo, Navigation navi, int omega, double initAng){
 		
 			this.odo = odo;
 			this.navi = navi;
+			
+			
 			
 			// set winchMotor acceleration and speed
 			winchMotor.setAcceleration(300);
@@ -53,7 +55,10 @@ public class demoTestMotors {
 			loadingMotor.rotate(20);
 								
 			// back up to get underneath the dispenser
-			navi.goBackward(clearDist);
+			//navi.goBackward(clearDist);
+		
+			// turn to receive balls from the dispenser
+			navi.clawTurnTo(omega, true);
 			
 			// beep, and wait 5 seconds to receive the ball
 			Sound.beep();
@@ -70,7 +75,10 @@ public class demoTestMotors {
 			winchMotor.rotate(1440);
 								
 			// go forward to clear the dispenser
-			navi.goForward(clearDist);
+			//navi.goForward(clearDist);
+			
+			// turn away from the dispenser
+			navi.clawTurnTo(initAng, true);
 			
 			try {
 			    Thread.sleep(5000);

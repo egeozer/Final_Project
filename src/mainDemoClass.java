@@ -89,7 +89,7 @@ public class mainDemoClass {
 		// initialize the light sensor classes
 		lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
 		lightRight right = new lightRight(colorSensorRight, colorDataRight, odo );
-		
+		lightCorrector corrector = new lightCorrector(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);	
 		// initialize display
 		LCDInfo lcd = new LCDInfo(odo);
 		int buttonChoice;
@@ -147,6 +147,8 @@ public class mainDemoClass {
 			w2 = ((Long) data.get("w2")).intValue();
 			
 			// Ball dispenser variables:
+			int omega = 0;
+			int initTheta = 0;
 			bx = ((Long) data.get("bx")).intValue();
 			by = ((Long) data.get("by")).intValue();
 			dispOrientation = (String) data.get("omega");			
@@ -164,26 +166,41 @@ public class mainDemoClass {
 		Sound.setVolume(60);
 		Sound.beep();
 		
-		// Mitchell's testing lines, aka trash code
+		// important constants for dispenser and ball launcher
+		int omega = 0;
+		double initAng = 0;
 		dispOrientation = "E";
 		bx = -1;
-		by = 3;
+		by = 2;
+		
+		int targetX = 5;
+		d1 = 8;
+		int targetY = 10-d1;
+		
+		// Mitchell's testing lines, aka trash code
+		
+		//launch.load(odo, navi, omega, initAng);
+		//launch.launcher3();
+		
 		//Sound.beep();
 		//LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
 		//lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
-		launch.load(odo, navi);
-		launch.launcher3();
-		
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
+		//launch.load(odo, navi);
+		//launch.launcher3();
+		//navi.clawTurnTo(0, true);
+		//Sound.beep();
+		//navi.clawTurnTo(180,true);
+		//Sound.beep();
+		//navi.clawTurnTo(90, true);
+		//Sound.beep();
 		
 		try {
-			Thread.sleep(10000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+			Thread.sleep(5000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-						
+			
 		// Robot will beep once it has received the Wifi instructions and is ready to localize
 		Sound.beep();
 		
@@ -198,46 +215,70 @@ public class mainDemoClass {
 			if (usl.isLocalized) {
 				LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);		
 				lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
-				//Sound.beep();
+				Sound.beep();
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				//Sound.beep();
+				Sound.beep();
 				break outer;
 			}
 			
 		}
 		
-		// set position to (0,0,0), and then beep
+		// set position to (0,0,0), and then beep twice
 		odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
 		Sound.beep();
 		Sound.beep();
 		
 		// start driving towards the ball dispenser
+		//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		if(dispOrientation.equals("E")){
+			
 			Sound.beep();
-			navi.travelToXY((bx + 2.5)*squareSize, by*squareSize, odo);
-			navi.turnTo(0,true);
+			navi.travelToXY((bx + 1.35)*squareSize, (by-0.5)*squareSize, odo);
+			corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+			//odo.setPosition(new double [] {0,0,90}, new boolean [] {false, false, true});
+			
+			omega = 0;
+			initAng= odo.getAng();
+			launch.load(odo, navi, omega, initAng);
+			//navi.turnTo(0,true);
 			Sound.beep();
+
 		}
 		else if(dispOrientation.equals("W")){
-			navi.travelToXY((bx - 2.5)*squareSize, by*squareSize, odo);
+			navi.travelToXY((bx - 1.33)*squareSize, by*squareSize, odo);
 			navi.turnTo(180,true);
 		}
 		else if(dispOrientation.equals("N")){
-			navi.travelToXY(bx*squareSize, (by + 2.5)*squareSize, odo);
+			navi.travelToXY(bx*squareSize, (by + 1.33)*squareSize, odo);
 			navi.turnTo(90,true);
 		}
 		else if(dispOrientation.equals("S")){
-			navi.travelToXY(bx*squareSize, (by - 2.5)*squareSize, odo);
+			navi.travelToXY(bx*squareSize, (by - 1.33)*squareSize, odo);
 			navi.turnTo(270,true);
 		}
-			
+		
+		////////////////////////////////////////////
+		// Mitchell's preliminary code for getting to the firing line and shooting
+		
+		// travel to lauching position, with an offset to allow for localization
+		//navi.travelToXY(targetX - (0.5*squareSize), targetY - (0.5*squareSize), odo);
+		
+		// redo localization at launching position
+		//LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);		
+		//lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
+		//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+		//launch.launcher3();
+		
+  	  	/////////////////////////////////////////////
 		
 		
-  	  	//left.start();
+		
+		
+		//left.start();
 		//right.start();
 		
 		//odo.setX(0);
@@ -249,34 +290,37 @@ public class mainDemoClass {
 		//rightMotor.forward();
 		//leftMotor.endSynchronization();
 		//wall.start();
-		//navi.travelTo(bx,by);
+		//navi.travelTo(0,60);
+		
+		//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		//navi.turnTo(0,true);
 		
-		try {
-			Thread.sleep(1000);
+		/* try {
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		
 		
-		//navi.travelTo(0,0);
+		navi.travelTo(60,60);
 		//navi.travelToXY(5*(30.48),1*(30.48));
 		//navi.travelTo(30.48, 30.48);
 		try {
-			Thread.sleep(1000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		//navi.turnTo(90,true);
 		//navi.turnTo(0,true);
+		navi.travelTo(60,0);
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		//navi.turnTo(180, true);
 		//navi.turnTo(90,true);
-		
+		navi.travelTo(0,0);
 		
 		/*outer:while(true){
 			if(odo.collisionAvoided && !odo.collision){
@@ -295,6 +339,6 @@ public class mainDemoClass {
 		
 												
 		//while (Button.waitForAnyPress() != Button.ID_ESCAPE);
-		//System.exit(0);		
+		//System.exit(0); */
 	}
 }
