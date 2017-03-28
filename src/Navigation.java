@@ -140,18 +140,18 @@ public class Navigation {
 	 * Go foward a set distance in cm
 	 */
 	public void goForward(double distance) {
-		leftMotor.startSynchronization();
 		leftMotor.setSpeed(SLOW);
 		rightMotor.setSpeed(SLOW);
+		leftMotor.startSynchronization();
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
 		leftMotor.endSynchronization();
 
 	}
 	public void goBackward(double distance) {
-		leftMotor.startSynchronization();
 		leftMotor.setSpeed(SLOW);
-		rightMotor.setSpeed(SLOW);		
+		rightMotor.setSpeed(SLOW);
+		leftMotor.startSynchronization();
 		leftMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), false);
 		leftMotor.endSynchronization();

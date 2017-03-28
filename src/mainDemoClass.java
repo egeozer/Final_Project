@@ -26,7 +26,7 @@ public class mainDemoClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPortRight = LocalEV3.get().getPort("S2");		
 	private static final Port colorPortLeft = LocalEV3.get().getPort("S3");		
-	private static final String SERVER_IP = "192.168.2.29";			//  TA Server: 192.168.2.3
+	private static final String SERVER_IP = "192.168.2.10";			//  TA Server: 192.168.2.3
 	private static final int TEAM_NUMBER = 9;
 	
 
@@ -167,12 +167,22 @@ public class mainDemoClass {
 		// Mitchell's testing lines, aka trash code
 		dispOrientation = "E";
 		bx = -1;
-		by = 2;
+		by = 3;
 		//Sound.beep();
 		//LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
 		//lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
-		//launch.load(odo, navi);
-		//launch.launcher3();
+		launch.load(odo, navi);
+		launch.launcher3();
+		
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+		
+		try {
+			Thread.sleep(10000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 						
 		// Robot will beep once it has received the Wifi instructions and is ready to localize
 		Sound.beep();
@@ -208,20 +218,20 @@ public class mainDemoClass {
 		// start driving towards the ball dispenser
 		if(dispOrientation.equals("E")){
 			Sound.beep();
-			navi.travelToXY((bx + 1.5)*squareSize, by*squareSize, odo);
+			navi.travelToXY((bx + 2.5)*squareSize, by*squareSize, odo);
 			navi.turnTo(0,true);
 			Sound.beep();
 		}
 		else if(dispOrientation.equals("W")){
-			navi.travelToXY((bx - 1.5)*squareSize, by*squareSize, odo);
+			navi.travelToXY((bx - 2.5)*squareSize, by*squareSize, odo);
 			navi.turnTo(180,true);
 		}
 		else if(dispOrientation.equals("N")){
-			navi.travelToXY(bx*squareSize, (by + 1.5)*squareSize, odo);
+			navi.travelToXY(bx*squareSize, (by + 2.5)*squareSize, odo);
 			navi.turnTo(90,true);
 		}
 		else if(dispOrientation.equals("S")){
-			navi.travelToXY(bx*squareSize, (by - 1.5)*squareSize, odo);
+			navi.travelToXY(bx*squareSize, (by - 2.5)*squareSize, odo);
 			navi.turnTo(270,true);
 		}
 			

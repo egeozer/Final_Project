@@ -33,7 +33,7 @@ public class demoTestMotors {
 			loadingMotor.setSpeed(150);
 			
 			// desired distance from the dispenser
-			double clearDist = 15.0;			// 20 too far
+			double clearDist = 20.0;			// 20 too far
 			
 			Sound.setVolume(40);
 			
@@ -43,8 +43,14 @@ public class demoTestMotors {
 							
 			// TODO: get in front of the dispenser
 				
-			// ready the loading arm to receive the ball
-			loadingMotor.rotate(130);
+			// ready the loading arm to receive the ball, and make sure it doesn't hit the floor
+			loadingMotor.rotate(110);
+			try {
+			    Thread.sleep(2000);
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+			loadingMotor.rotate(20);
 								
 			// back up to get underneath the dispenser
 			navi.goBackward(clearDist);
@@ -93,7 +99,7 @@ public class demoTestMotors {
 			for(int balls = 2; balls > 0; balls--){
 			
 				// unwind the winch to ensure the launcher can fire at full power
-				winchMotor.rotate(-900); 		// full unwind is (-1440), (-1000),(-900) = still slightly too far, (-800)
+				winchMotor.rotate(-1440); 		// full unwind is (-1440), (-1000),(-900) = still slightly too far, (-800)
 				
 				// set the loading arm to firing acceleration and speed, then release the ball
 				loadingMotor.setAcceleration(4000);
@@ -108,7 +114,7 @@ public class demoTestMotors {
 				}
 				
 				// rewind the winch to fire
-				winchMotor.rotate(900);		// (1500-875)
+				winchMotor.rotate(1440);		// (1500-875)
 				
 				// reset the winch position
 				//winchMotor.rotate(-625);		// fully unwind as if it was (-1440)
@@ -125,11 +131,11 @@ public class demoTestMotors {
 		 */
 			
 			// unwind the winch to ensure the launcher can fire at full power
-			winchMotor.rotate(-900); 		// full unwind is (-1440), (-1000),(-900) = still slightly too far, (-800)
+			winchMotor.rotate(-1440); 		// full unwind is (-1440), (-1000),(-900) = still slightly too far, (-800)
 			
 			// set the loading arm to firing acceleration and speed, then release the ball
 			loadingMotor.setAcceleration(4000);
-			loadingMotor.setSpeed(250);
+			loadingMotor.setSpeed(300);
 			loadingMotor.rotate(80);
 			
 			// wait 3 sec, then reset the arm acceleration and speed
@@ -138,11 +144,12 @@ public class demoTestMotors {
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
-			loadingMotor.setAcceleration(400);
-			loadingMotor.setSpeed(200);			
-			
+
 			// reset the loading arm and winch position
-			winchMotor.rotate(-540);		// fully unwind as if it was (-1440)
+			loadingMotor.setAcceleration(400);
+			loadingMotor.setSpeed(200);	
+			
+			winchMotor.rotate(-0);		// fully unwind as if it was (-1440)
 			loadingMotor.rotate(-80);
 			
 		}
