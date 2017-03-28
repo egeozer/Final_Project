@@ -29,9 +29,10 @@ public class Navigation {
 	
 
 	/*
-	 * Functions to set the motor speeds jointly
+	 * Function to set the motor speeds jointly
 	 */
-	public void setSpeeds(float lSpd, float rSpd) {
+	public void setSpeeds(int lSpd, int rSpd) {
+		
 		leftMotor.startSynchronization();
 						
 		
@@ -50,33 +51,6 @@ public class Navigation {
 		leftMotor.endSynchronization();
 	}
 
-	public void setSpeeds(int lSpd, int rSpd) {
-		
-		//this.leftMotor.synchronizeWith(new RegulatedMotor[]{this.rightMotor});
-		//this.leftMotor.startSynchronization();
-		this.leftMotor.setSpeed(lSpd);
-		this.rightMotor.setSpeed(rSpd);
-		if (lSpd < 0)
-			this.leftMotor.backward();
-		else
-			this.leftMotor.forward();
-		if (rSpd < 0)
-			this.rightMotor.backward();
-		else
-			this.rightMotor.forward();
-		//this.leftMotor.endSynchronization();
-	}
-
-	/*
-	 * Float the two motors jointly
-	 */
-	public void setFloat() {
-		this.leftMotor.stop();
-		this.rightMotor.stop();
-		this.leftMotor.flt(true);
-		this.rightMotor.flt(true);
-	}
-
 	/*
 	 * TravelTo function which takes as arguments the x and y position in cm Will travel to designated position, while
 	 * constantly updating it's heading
@@ -84,24 +58,23 @@ public class Navigation {
 	public void travelTo(double x, double y) {
 		if(!odometer.isTravelling){
 			odometer.isTravelling=true;
-		double minAng;
-		outer:while (Math.abs(x - odometer.getX()) > CM_ERR || Math.abs(y - odometer.getY()) > CM_ERR) {
-			if(odometer.collision)
-				break outer;
-			minAng = (Math.atan2(y - odometer.getY(), x - odometer.getX())) * (180.0 / Math.PI);
-			if (minAng < 0)
-				minAng += 360.0;
-			this.turnTo(minAng, false);
-			this.setSpeeds(FAST, FAST);
-		}
+			double minAng;
+			outer:while (Math.abs(x - odometer.getX()) > CM_ERR || Math.abs(y - odometer.getY()) > CM_ERR) {
+				if(odometer.collision)
+					break outer;
+				minAng = (Math.atan2(y - odometer.getY(), x - odometer.getX())) * (180.0 / Math.PI);
+				if (minAng < 0)
+					minAng += 360.0;
+				this.turnTo(minAng, false);
+				this.setSpeeds(FAST, FAST);
+			}
 
-		//this.setSpeeds(0, 0);
 		leftMotor.startSynchronization();
 		leftMotor.stop();
 		rightMotor.stop();
 		leftMotor.endSynchronization();
 		odometer.isTravelling=false;
-	}
+		}
 	}
 
 	/*
@@ -148,16 +121,15 @@ public class Navigation {
 		}
 	}
 	
-	public void travelToXY(double x, double y) {
-		travelTo(x,0);
+	public void travelToXY(double x, double y, Odometer odo) {
+		travelTo(x,odo.getY());
 		travelTo(x,y);
 		
 	}
 	public void turnImm(double angle) {
-		
+		leftMotor.startSynchronization();
 		leftMotor.setSpeed(SLOW);
 		rightMotor.setSpeed(SLOW);
-		leftMotor.startSynchronization();
 		leftMotor.rotate(convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), true);
 		rightMotor.rotate(-convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), false);
 		leftMotor.endSynchronization();
@@ -168,20 +140,18 @@ public class Navigation {
 	 * Go foward a set distance in cm
 	 */
 	public void goForward(double distance) {
-		
+		leftMotor.startSynchronization();
 		leftMotor.setSpeed(SLOW);
 		rightMotor.setSpeed(SLOW);
-		leftMotor.startSynchronization();
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
 		leftMotor.endSynchronization();
 
 	}
 	public void goBackward(double distance) {
-		
-		leftMotor.setSpeed(SLOW);
-		rightMotor.setSpeed(SLOW);
 		leftMotor.startSynchronization();
+		leftMotor.setSpeed(SLOW);
+		rightMotor.setSpeed(SLOW);		
 		leftMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), false);
 		leftMotor.endSynchronization();

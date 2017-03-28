@@ -67,7 +67,7 @@ public class demoTestMotors {
 			navi.goForward(clearDist);
 			
 			try {
-			    Thread.sleep(3000);
+			    Thread.sleep(5000);
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
@@ -132,28 +132,18 @@ public class demoTestMotors {
 			loadingMotor.setSpeed(250);
 			loadingMotor.rotate(80);
 			
-			// wait 3 sec, then reset the arm acceleration, speed and position
+			// wait 3 sec, then reset the arm acceleration and speed
 			try {
 			    Thread.sleep(3000);
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
-			
-			// rewind the winch to fire
-			winchMotor.rotate(900);		// (1500-875)
-			
-			// reset the winch position
-			//winchMotor.rotate(-625);		// fully unwind as if it was (-1440)
-			
-			// load another ball into the launcher
-			loadingMotor.setAcceleration(600);
-			loadingMotor.setSpeed(200);
-			loadingMotor.rotate(-80);	
+			loadingMotor.setAcceleration(400);
+			loadingMotor.setSpeed(200);			
 			
 			// reset the loading arm and winch position
-			loadingMotor.rotate(50);
-			winchMotor.rotate(-1440);		// fully unwind as if it was (-1440)
-			loadingMotor.rotate(-50);
+			winchMotor.rotate(-540);		// fully unwind as if it was (-1440)
+			loadingMotor.rotate(-80);
 			
 		}
 		

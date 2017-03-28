@@ -11,7 +11,7 @@ public class LightLocalizer {
 	private SampleProvider colorSensorRight,colorSensorLeft;
 	private float[] colorDataRight,colorDataLeft;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
-	double lightSensorDist = 3.0; 		//distance added to compensate the distance from the center and to the lightSensor
+	double lightSensorDist = 6.00; 		//distance added to compensate for the distance from the wheelbase to the lightSensor, was 3.5cm
 	double x, y, xTheta, yTheta;
 	double eucDistance, heading;
 	int axisCounter;
@@ -37,25 +37,30 @@ public class LightLocalizer {
 		EV3LargeRegulatedMotor[] motors = this.odo.getMotors();
 		this.leftMotor = motors[0];
 		this.rightMotor = motors[1];
-		double pointA = 0;		//distances that we need to record for the calculation of 0,0
-		double pointB = 0;
+		double pointA = 0;		//distance that we need to record for the calculation of 0,0
 		
 		leftMotor.setSpeed(150);
 		rightMotor.setSpeed(150);
 		
 		//lightRight right = null;
-	//	lightLeft left = null;
+		//lightLeft left = null;
 		lightRight right = new lightRight(colorSensorRight, colorDataRight, odo );
 		lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
 		
+		// when facing the black line, wait 3 seconds, set y position to (0) and then start moving forward
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}		
+		//odo.setPosition(new double [] {0,0,0}, new boolean [] {false, true, false});
 		leftMotor.startSynchronization();
 		leftMotor.forward();
 		rightMotor.forward();
 		leftMotor.endSynchronization();
-		right.start();
-		left.start();
-	
 		
+		right.start();		// stops right motor when right sensor sees a black line, then beeps
+		left.start();		// stops left motor when left sensor sees a black line, then beeps
 		
 		right.scanLine=true;
 		left.scanLine=true;
@@ -64,16 +69,31 @@ public class LightLocalizer {
 			right.join();
 			left.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 		right.scanLine=false;
 		left.scanLine=false;
 		
-		navi.goForward(lightSensorDist*2);
-		navi.turnTo(0,true);
-		pointA=odo.getY();
+		Sound.beep();
+		Sound.beep();
+		
+		navi.goForward(lightSensorDist);
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}		
+		
+		pointA = odo.getY();
+		odo.setPosition(new double [] {0,0,90}, new boolean [] {false, false, true});		
+		
+		navi.turnTo(0, true);
 		navi.goForward(pointA);
+		
+		Sound.beep();
+		Sound.beep();
 		
 	
 	
