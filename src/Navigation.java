@@ -88,14 +88,51 @@ public class Navigation {
 		odometer.isTravelling=false;
 		}
 	}
+	
+	public void travelToXY(double x, double y, Odometer odo) {
+		
+		lightCorrector corrector = new lightCorrector(odometer, this, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
+		
+		double firstX = odo.getX();
+		
+		if(firstX<x)
+			turnTo(0, true);
+		else
+			turnTo(180, true);
+		
+		//travelTo(x,odo.getY());
+		goForward(x-odo.getX());
+		
+		while (Math.abs(x - odometer.getX()) > CM_ERR){
+			if(odometer.collision)
+				break ;
+		}
+		
+		corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+		
+		double firstY = odo.getY();
+		
+		if(firstY<y)
+			turnTo(90, true);
+		else
+			turnTo(270, true);
+		
+		goForward(y-odo.getY());
+		
+		while (Math.abs(y - odometer.getY()) > CM_ERR){
+			if(odometer.collision)
+				break ;		
+		}
+		
+		corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+		//travelTo(x,y);
+		
+	}
 
 	/*
 	 * TurnTo function which takes an angle and boolean as arguments The boolean controls whether or not to stop the
 	 * motors when the turn is completed
 	 */
-	
-	
-	
 	
 	public void turnTo(double angle, boolean stop) {
 
@@ -177,19 +214,6 @@ public class Navigation {
 		}
 	}
 	
-	public void travelToXY(double x, double y, Odometer odo) {
-		double firstX = odo.getX();
-		lightCorrector corrector = new lightCorrector(odometer, this, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);	
-
-		travelTo(x,odo.getY());
-		corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-		if(firstX<x)
-			odo.setTheta(0);
-		else
-			odo.setTheta(180);
-		travelTo(x,y);
-		
-	}
 	public void turnImm(double angle) {
 		//leftMotor.startSynchronization();
 	//	leftMotor.setSpeed(SLOW);

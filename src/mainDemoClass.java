@@ -26,7 +26,7 @@ public class mainDemoClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPortRight = LocalEV3.get().getPort("S2");		
 	private static final Port colorPortLeft = LocalEV3.get().getPort("S3");		
-	private static final String SERVER_IP = "192.168.2.10";			//  TA Server: 192.168.2.3
+	private static final String SERVER_IP = "192.168.2.21";			//  TA Server: 192.168.2.3
 	private static final int TEAM_NUMBER = 9;
 	
 
@@ -241,11 +241,11 @@ public class mainDemoClass {
 			//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 			//odo.setPosition(new double [] {0,0,90}, new boolean [] {false, false, true});
 			navi.travelToXY((2-0.5)*squareSize, (2-0.5)*squareSize, odo);
-			navi.travelToXY(0, 0, odo);
-			omega = 0;
-			initAng= odo.getAng();
-			navi.turnTo(0,true);
-			launch.load(odo, navi, omega, initAng);
+			//navi.travelToXY((1-0.5)*squareSize, (5-0.5)*squareSize, odo);
+			//omega = 0;
+			//initAng= odo.getAng();
+			//navi.turnTo(0,true);
+			//launch.load(odo, navi, omega, initAng);
 			
 			Sound.beep();
 
