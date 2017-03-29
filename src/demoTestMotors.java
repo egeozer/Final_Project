@@ -35,7 +35,7 @@ public class demoTestMotors {
 			loadingMotor.setSpeed(150);
 			
 			// desired distance from the dispenser
-			double clearDist = 20.0;			// 20 too far
+			double clearDist = 10.0;			// 20 too far
 			
 			Sound.setVolume(40);
 			
@@ -55,10 +55,10 @@ public class demoTestMotors {
 			loadingMotor.rotate(20);
 								
 			// back up to get underneath the dispenser
-			//navi.goBackward(clearDist);
+			navi.goBackward(clearDist);
 		
 			// turn to receive balls from the dispenser
-			navi.clawTurnTo(omega, true);
+			//navi.clawTurnTo(omega, true);
 			
 			// beep, and wait 5 seconds to receive the ball
 			Sound.beep();
@@ -72,13 +72,13 @@ public class demoTestMotors {
 			}
 			
 			// pull back the elastic until the arm can prevent it from firing
-			winchMotor.rotate(1440);
+		//	winchMotor.rotate(1440);
 								
 			// go forward to clear the dispenser
-			//navi.goForward(clearDist);
+			navi.goForward(clearDist);
 			
 			// turn away from the dispenser
-			navi.clawTurnTo(initAng, true);
+			//navi.clawTurnTo(initAng, true);
 			
 			try {
 			    Thread.sleep(5000);

@@ -82,7 +82,7 @@ public class mainDemoClass {
 		
 		// Setup the odometer and display
 		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true, forwardStartPos);
-		Navigation navi = new Navigation(odo);
+		Navigation navi = new Navigation(odo,colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
 		wallObstacle wall = new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
 		demoTestMotors launch = new demoTestMotors();
 		
@@ -90,6 +90,8 @@ public class mainDemoClass {
 		lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
 		lightRight right = new lightRight(colorSensorRight, colorDataRight, odo );
 		lightCorrector corrector = new lightCorrector(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);	
+		
+		
 		// initialize display
 		LCDInfo lcd = new LCDInfo(odo);
 		int buttonChoice;
@@ -179,7 +181,7 @@ public class mainDemoClass {
 		
 		// Mitchell's testing lines, aka trash code
 		
-		navi.lsTravelTo(1*squareSize, 3*squareSize, odo, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+		//navi.lsTravelTo(1*squareSize, 3*squareSize, odo, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		//launch.load(odo, navi, omega, initAng);
 		//launch.launcher3();
 		
@@ -195,12 +197,7 @@ public class mainDemoClass {
 		//navi.clawTurnTo(90, true);
 		//Sound.beep();
 		
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		
 			
 		// Robot will beep once it has received the Wifi instructions and is ready to localize
 		Sound.beep();
@@ -235,17 +232,21 @@ public class mainDemoClass {
 		
 		// start driving towards the ball dispenser
 		//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+		//wall.start();
+		
 		if(dispOrientation.equals("E")){
 			
 			Sound.beep();
-			navi.travelToXY((bx + 1.35)*squareSize, (by-0.5)*squareSize, odo);
-			corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+			//navi.travelToXY((bx + 1.7)*squareSize, (by-0.5)*squareSize, odo);
+			//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 			//odo.setPosition(new double [] {0,0,90}, new boolean [] {false, false, true});
-			
+			navi.travelToXY((2-0.5)*squareSize, (2-0.5)*squareSize, odo);
+			navi.travelToXY(0, 0, odo);
 			omega = 0;
 			initAng= odo.getAng();
+			navi.turnTo(0,true);
 			launch.load(odo, navi, omega, initAng);
-			//navi.turnTo(0,true);
+			
 			Sound.beep();
 
 		}
@@ -279,67 +280,5 @@ public class mainDemoClass {
 		
 		
 		
-		//left.start();
-		//right.start();
-		
-		//odo.setX(0);
-		//odo.setY(0);
-		//odo.setTheta(0);
-		
-		//leftMotor.startSynchronization();
-		//leftMotor.forward();
-		//rightMotor.forward();
-		//leftMotor.endSynchronization();
-		//wall.start();
-		//navi.travelTo(0,60);
-		
-		//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-		//navi.turnTo(0,true);
-		
-		/* try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		
-		
-		navi.travelTo(60,60);
-		//navi.travelToXY(5*(30.48),1*(30.48));
-		//navi.travelTo(30.48, 30.48);
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		//navi.turnTo(90,true);
-		//navi.turnTo(0,true);
-		navi.travelTo(60,0);
-		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		//navi.turnTo(180, true);
-		//navi.turnTo(90,true);
-		navi.travelTo(0,0);
-		
-		/*outer:while(true){
-			if(odo.collisionAvoided && !odo.collision){
-				odo.collisionAvoided=false;
-				navi.travelTo(60,30);
-				break outer;
-					
-					
-				}
-			}
-		*/
-		
-		//}	******end of else block for falling edge*******
-		
-		// perform the light sensor localization upon pressing the up arrow
-		
-												
-		//while (Button.waitForAnyPress() != Button.ID_ESCAPE);
-		//System.exit(0); */
 	}
 }

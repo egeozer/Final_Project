@@ -43,8 +43,8 @@ public class lightCorrector {
 		
 		
 		
-		((BaseSensor) colorSensorRight).setCurrentMode("Red");			// colorValue provides samples from this instance
-		((BaseSensor) colorSensorLeft).setCurrentMode("Red");
+		//((BaseSensor) colorSensorRight).setCurrentMode("Red");			// colorValue provides samples from this instance
+		//((BaseSensor) colorSensorLeft).setCurrentMode("Red");
 		//float[] colorDataRight = new float[colorValueRight.sampleSize()];			// colorData is the buffer in which data are returned
 		//float[] colorDataLeft = new float[colorValueLeft.sampleSize()];
 		leftMotor.setSpeed(150);
