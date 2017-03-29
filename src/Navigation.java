@@ -101,14 +101,22 @@ public class Navigation {
 			turnTo(180, true);
 		
 		//travelTo(x,odo.getY());
-		goForward(x-odo.getX());
+		//goForward(x-odo.getX());
 		
 		while (Math.abs(x - odometer.getX()) > CM_ERR){
 			if(odometer.collision)
 				break ;
+		
+			goForward(30.48/2);
+			while(leftMotor.isMoving() || rightMotor.isMoving()){
+				
+				
+			}
+			corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+		
 		}
 		
-		corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+		
 		
 		double firstY = odo.getY();
 		
@@ -122,9 +130,17 @@ public class Navigation {
 		while (Math.abs(y - odometer.getY()) > CM_ERR){
 			if(odometer.collision)
 				break ;		
+			
+			goForward(30.48/2);
+	
+			while(leftMotor.isMoving() || rightMotor.isMoving()){
+				
+				
+			}
+			corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		}
 		
-		corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+		//corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		//travelTo(x,y);
 		
 	}
@@ -228,12 +244,14 @@ public class Navigation {
 	 * Go foward a set distance in cm
 	 */
 	public void goForward(double distance) {
-		leftMotor.setSpeed(SLOW);
-		rightMotor.setSpeed(SLOW);
-		leftMotor.startSynchronization();
+		odometer.isTravelling = true;
+		leftMotor.setSpeed(FAST);
+		rightMotor.setSpeed(FAST);
+		//leftMotor.startSynchronization();
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
-		leftMotor.endSynchronization();
+		//leftMotor.endSynchronization();
+		odometer.isTravelling = false;
 
 	}
 	public void goBackward(double distance) {
