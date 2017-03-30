@@ -48,7 +48,7 @@ public class LightLocalizer {
 		
 		// when facing the black line, wait 3 seconds and then start moving forward
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}		
@@ -83,7 +83,7 @@ public class LightLocalizer {
 		//odo.setPosition(new double [] {0,0,0}, new boolean [] {false, true, false});
 		
 		try {
-			Thread.sleep(2000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}		
@@ -95,7 +95,7 @@ public class LightLocalizer {
 		navi.turnTo(0, true);
 		
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}	

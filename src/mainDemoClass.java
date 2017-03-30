@@ -172,12 +172,14 @@ public class mainDemoClass {
 		int omega = 0;
 		double initAng = 0;
 		dispOrientation = "E";
-		bx = -1;
-		by = 8;
+		bx = 6;
+		by = 3;
+		
+		forwardStartPos = 4;
 		
 		int targetX = 5;
-		d1 = 8;
-		int targetY = 10-d1;
+		d1 = 4;
+		int fireLineY = 6-d1;
 		
 		// Mitchell's testing lines, aka trash code
 		
@@ -227,51 +229,24 @@ public class mainDemoClass {
 			
 		}
 		
-		// set position to (0,0,0), and then beep twice
-		odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
-		Sound.beep();
-		Sound.beep();
+		//////////////////////////////////
+		// set localized position coordinates based on the starting square and then beep twice
+		if( forwardStartPos == 1){
+			odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
+		}else if(forwardStartPos == 2){
+			odo.setPosition(new double [] {6*squareSize,0,90}, new boolean [] {true, true, true});
+		}else if(forwardStartPos == 3){
+			odo.setPosition(new double [] {6*squareSize,6*squareSize,180}, new boolean [] {true, true, true});
+		}else if(forwardStartPos == 4){
+			odo.setPosition(new double [] {0,6*squareSize,270}, new boolean [] {true, true, true});
+		}
+		
+		/////////////////////////////////
 		
 		// start driving towards the ball dispenser
-		//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-		//wall.start();
+		navi.goToDisp(bx, by, fireLineY, dispOrientation);
 		
-		if(dispOrientation.equals("E")){
-			
-			Sound.beep();
-			navi.travelToXY(2*squareSize, 0*squareSize, odo);
-			
-			navi.travelToXY(2*squareSize, 6*squareSize, odo);
-			
-			navi.travelToXY(0*squareSize, 6*squareSize, odo);
-			
-			navi.travelToXY(0*squareSize, 0*squareSize, odo);
-			//navi.travelToXY((bx + 1.7)*squareSize, (by-0.5)*squareSize, odo);
-			//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-			//odo.setPosition(new double [] {0,0,90}, new boolean [] {false, false, true});
-			//navi.travelToXY((bx + 1)*squareSize, (by)*squareSize, odo);
-			//navi.travelToXY((1-0.5)*squareSize, (5-0.5)*squareSize, odo);
-			//omega = 0;
-			//initAng= odo.getAng();
-			//navi.turnTo(0,true);
-			//launch.load(odo, navi, omega, initAng);
-			
-			Sound.beep();
-
-		}
-		else if(dispOrientation.equals("W")){
-			navi.travelToXY((bx - 1.33)*squareSize, by*squareSize, odo);
-			navi.turnTo(180,true);
-		}
-		else if(dispOrientation.equals("N")){
-			navi.travelToXY(bx*squareSize, (by + 1.33)*squareSize, odo);
-			navi.turnTo(90,true);
-		}
-		else if(dispOrientation.equals("S")){
-			navi.travelToXY(bx*squareSize, (by - 1.33)*squareSize, odo);
-			navi.turnTo(270,true);
-		}
-		
+		////////////////////////////////////////////
 		////////////////////////////////////////////
 		// Mitchell's preliminary code for getting to the firing line and shooting
 		

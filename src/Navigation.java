@@ -303,6 +303,56 @@ public class Navigation {
 			leftMotor.endSynchronization();
 		}
 	}
+	public void goToDisp(int bx, int by, int fireLineY , String dispOrientation){
+		
+		
+	if( odometer.getY() > fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) > 1*squareSize){
+		travelToXY(0, (fireLineY-1)*squareSize, odometer);
+		travelToXY(bx*squareSize, (fireLineY-1)*squareSize, odometer);
+		travelToXY(bx*squareSize, by*squareSize, odometer);
+	}
+	else if( odometer.getY() > fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) < 1*squareSize){
+		travelToXY(bx*squareSize, by*squareSize, odometer);
+	}
+	else if( odometer.getY() < fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) > 1*squareSize){
+		travelToXY(bx*squareSize, by*squareSize, odometer);
+	}
+	else if( odometer.getY() < fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) < 1*squareSize){
+		travelToXY(bx*squareSize, by*squareSize, odometer);
+	}
+	
+	
+			
+	if(dispOrientation.equals("E")){
+		turnTo(0, true);
+		//Sound.beep();
+		//navi.travelToXY(2*squareSize, 7*squareSize, odo);
+		//navi.travelToXY((bx + 1.7)*squareSize, (by-0.5)*squareSize, odo);
+		//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+		//odo.setPosition(new double [] {0,0,90}, new boolean [] {false, false, true});
+		//navi.travelToXY((bx + 1)*squareSize, (by)*squareSize, odo);
+		//navi.travelToXY((1-0.5)*squareSize, (5-0.5)*squareSize, odo);
+		//omega = 0;
+		//initAng= odo.getAng();
+		//navi.turnTo(0,true);
+		//launch.load(odo, navi, omega, initAng);
+		
+		Sound.beep();
+
+	}
+	else if(dispOrientation.equals("W")){
+		travelToXY((bx - 1.33)*squareSize, by*squareSize, odometer);
+		turnTo(180,true);
+	}
+	else if(dispOrientation.equals("N")){
+		travelToXY(bx*squareSize, (by + 1.33)*squareSize, odometer);
+		turnTo(90,true);
+	}
+	else if(dispOrientation.equals("S")){
+		travelToXY(bx*squareSize, (by - 1.33)*squareSize, odometer);
+		turnTo(270,true);
+	}
+	}
 	
 	public void turnImm(double angle) {
 		//leftMotor.startSynchronization();
