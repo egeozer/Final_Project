@@ -26,7 +26,7 @@ public class mainDemoClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPortRight = LocalEV3.get().getPort("S2");		
 	private static final Port colorPortLeft = LocalEV3.get().getPort("S3");		
-	private static final String SERVER_IP = "192.168.2.21";			//  TA Server: 192.168.2.3
+	private static final String SERVER_IP = "192.168.2.14";			//  TA Server: 192.168.2.3
 	private static final int TEAM_NUMBER = 9;
 	
 
@@ -173,7 +173,7 @@ public class mainDemoClass {
 		double initAng = 0;
 		dispOrientation = "E";
 		bx = -1;
-		by = 2;
+		by = 8;
 		
 		int targetX = 5;
 		d1 = 8;
@@ -181,6 +181,8 @@ public class mainDemoClass {
 		
 		// Mitchell's testing lines, aka trash code
 		
+		
+		//navi.travelToXY((4-1)*squareSize, (2)*squareSize, odo);
 		//navi.lsTravelTo(1*squareSize, 3*squareSize, odo, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		//launch.load(odo, navi, omega, initAng);
 		//launch.launcher3();
@@ -237,10 +239,17 @@ public class mainDemoClass {
 		if(dispOrientation.equals("E")){
 			
 			Sound.beep();
+			navi.travelToXY(2*squareSize, 0*squareSize, odo);
+			
+			navi.travelToXY(2*squareSize, 6*squareSize, odo);
+			
+			navi.travelToXY(0*squareSize, 6*squareSize, odo);
+			
+			navi.travelToXY(0*squareSize, 0*squareSize, odo);
 			//navi.travelToXY((bx + 1.7)*squareSize, (by-0.5)*squareSize, odo);
 			//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 			//odo.setPosition(new double [] {0,0,90}, new boolean [] {false, false, true});
-			navi.travelToXY((2-0.5)*squareSize, (2-0.5)*squareSize, odo);
+			//navi.travelToXY((bx + 1)*squareSize, (by)*squareSize, odo);
 			//navi.travelToXY((1-0.5)*squareSize, (5-0.5)*squareSize, odo);
 			//omega = 0;
 			//initAng= odo.getAng();

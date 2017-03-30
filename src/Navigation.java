@@ -14,6 +14,9 @@ public class Navigation {
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private SampleProvider colorSensorRight,colorSensorLeft;
 	private float[] colorDataRight,colorDataLeft;
+	
+	// Constants
+	static double squareSize = 30.48;
 
 	public Navigation(Odometer odo,  SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft) {
 		this.odometer = odo;
@@ -89,55 +92,126 @@ public class Navigation {
 		}
 	}
 	
-	public void travelToXY(double x, double y, Odometer odo) {
+	public void travelToXY(double finalX, double finalY, Odometer odo) {
 		
-		lightCorrector corrector = new lightCorrector(odometer, this, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
+		lightCorrector corrector = new lightCorrector(odo, this, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
 		
-		double firstX = odo.getX();
+		// travel in the x-direction
+		double initialX = odo.getX();
+		double initialY = odo.getY();
+		double travelingAngle = 0;
+		double currentX = odo.getX();
+		double odoXCorrect;
+		int squaresTravelledX = 0;
 		
-		if(firstX<x)
+		// COMMENT
+		if(Math.abs(finalX - currentX) <= (CM_ERR*5)){
+			
+		}else if(currentX < finalX){
 			turnTo(0, true);
-		else
+			travelingAngle = 0;
+		}else{
 			turnTo(180, true);
-		
-		//travelTo(x,odo.getY());
-		//goForward(x-odo.getX());
-		
-		while (Math.abs(x - odometer.getX()) > CM_ERR){
-			if(odometer.collision)
-				break ;
-		
-			goForward(30.48/2);
-			while(leftMotor.isMoving() || rightMotor.isMoving()){
-				
-				
-			}
-			corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-		
+			travelingAngle = 180;
 		}
 		
-		
-		
-		double firstY = odo.getY();
-		
-		if(firstY<y)
-			turnTo(90, true);
-		else
-			turnTo(270, true);
-		
-		goForward(y-odo.getY());
-		
-		while (Math.abs(y - odometer.getY()) > CM_ERR){
-			if(odometer.collision)
-				break ;		
+		// COMMENT
+		while (Math.abs(finalX - currentX) > (CM_ERR*5)){
+			if(odo.collision)
+				break;
 			
-			goForward(30.48/2);
-	
-			while(leftMotor.isMoving() || rightMotor.isMoving()){
-				
-				
+			corrector.travelCorrect(odo, this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+			
+			squaresTravelledX++;
+			odoXCorrect = squaresTravelledX*squareSize;
+			
+			if(initialX < finalX){
+				odo.setX(initialX+odoXCorrect);
+			}else{
+				odo.setX(initialX-odoXCorrect);
 			}
-			corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+			
+			odo.setY(initialY);
+			odo.setTheta(travelingAngle);
+			
+			currentX = odo.getX();
+			System.out.println(currentX);
+			
+			
+			/*// sets the odometer X position to the nearest gridline position
+			if( Math.round((odo.getX()/squareSize)) < squaresTravelledX){
+				
+				odoXCorrect = Math.ceil((odo.getX()/squareSize)) * squareSize;
+			}else{
+				odoXCorrect = Math.floor((odo.getX()/squareSize)) * squareSize;
+			}*/
+			
+			
+		}
+		
+		// offset other localization
+		//goForward(squareSize/2);
+		
+		// travel in the y-direction	
+		initialX = odo.getX();
+		initialY = odo.getY();
+		double currentY = odo.getY();
+		double odoYCorrect;
+		int squaresTravelledY = 0;
+		
+		// COMMENT
+		if(Math.abs(finalY - currentY) <= (CM_ERR*5)){
+			
+		}else if(currentY < finalY){
+			turnTo(90, true);
+			travelingAngle = 90;
+		}
+		else{
+			turnTo(270, true);
+			travelingAngle = 270;
+		}
+		
+		while (Math.abs(finalY - currentY) > (CM_ERR*5)){
+			if(odo.collision)
+				break;		
+			
+			corrector.travelCorrect( odo, this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+			
+			squaresTravelledY++;
+			odoYCorrect = squaresTravelledY*squareSize;
+			
+			if(initialY < finalY){
+				odo.setY(initialY+odoYCorrect);
+			}else{
+				odo.setY(initialY-odoYCorrect);
+			}
+			
+			odo.setX(initialX);
+			odo.setTheta(travelingAngle);
+			
+			currentY = odo.getY();
+			System.out.println(currentY);
+			System.out.println(currentX);
+			
+			
+			/*currentY = odo.getY();
+			
+			// sets the odometer X position to the nearest gridline position
+			if( Math.round((odo.getY()/squareSize)) < squaresTravelledY){
+				
+				odoYCorrect = Math.ceil((odo.getY()/squareSize)) * squareSize;
+			}else{
+				odoYCorrect = Math.floor((odo.getY()/squareSize)) * squareSize;
+			}
+			
+			odo.setY(odoYCorrect);
+			System.out.println(odoYCorrect);
+			
+			//System.out.println(currentY);
+			//double odoYCorrect = odo.getY() - odo.getY()%squareSize;
+			//System.out.println(odoYCorrect);*/
+			
+			
 		}
 		
 		//corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
