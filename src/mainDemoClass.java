@@ -168,14 +168,14 @@ public class mainDemoClass {
 		Sound.setVolume(60);
 		Sound.beep();
 		
-		// important constants for dispenser and ball launcher
+		// important constants for testing the dispenser and ball launcher
 		int omega = 0;
 		double initAng = 0;
 		dispOrientation = "E";
-		bx = 6;
-		by = 3;
+		bx = 0;
+		by = 1;
 		
-		forwardStartPos = 4;
+		forwardStartPos = 3;
 		
 		int targetX = 5;
 		d1 = 4;
@@ -183,7 +183,8 @@ public class mainDemoClass {
 		
 		// Mitchell's testing lines, aka trash code
 		
-		
+		launch.load(odo, navi);
+		Sound.beep();
 		//navi.travelToXY((4-1)*squareSize, (2)*squareSize, odo);
 		//navi.lsTravelTo(1*squareSize, 3*squareSize, odo, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		//launch.load(odo, navi, omega, initAng);
@@ -201,16 +202,14 @@ public class mainDemoClass {
 		//navi.clawTurnTo(90, true);
 		//Sound.beep();
 		
-		
-			
+		///////////////////////////////////////////////
 		// Robot will beep once it has received the Wifi instructions and is ready to localize
 		Sound.beep();
 		
 		// perform the ultrasonic localization using Falling Edge
 		USLocalizer usl = new USLocalizer(odo, navi, usValue, usData, USLocalizer.LocalizationType.FALLING_EDGE);
 		usl.doLocalization();
-		
-		
+			
 		// perform the light localization using two light sensors
 		outer:while(true){
 			
@@ -230,7 +229,7 @@ public class mainDemoClass {
 		}
 		
 		//////////////////////////////////
-		// set localized position coordinates based on the starting square and then beep twice
+		// set localized position coordinates based on the starting square and then beep once
 		if( forwardStartPos == 1){
 			odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
 		}else if(forwardStartPos == 2){
@@ -241,28 +240,26 @@ public class mainDemoClass {
 			odo.setPosition(new double [] {0,6*squareSize,270}, new boolean [] {true, true, true});
 		}
 		
-		/////////////////////////////////
+		Sound.beep();
 		
-		// start driving towards the ball dispenser
+		/////////////////////////////////
+		// drive to the the ball dispenser
 		navi.goToDisp(bx, by, fireLineY, dispOrientation);
 		
+		
+		/////////////////////////////////
+		// load the 3 balls into the robot and get ready to fire them
+		launch.load(odo, navi);
+		
+		
 		////////////////////////////////////////////
-		////////////////////////////////////////////
-		// Mitchell's preliminary code for getting to the firing line and shooting
+		// navigate to one tile below the firing line and shoot the 3 balls
+		navi.goToFireLine(targetX, fireLineY);
+		launch.launcher3();
 		
-		// travel to lauching position, with an offset to allow for localization
-		//navi.travelToXY(targetX - (0.5*squareSize), targetY - (0.5*squareSize), odo);
-		
-		// redo localization at launching position
-		//LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);		
-		//lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
-		//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-		//launch.launcher3();
-		
-  	  	/////////////////////////////////////////////
-		
-		
-		
-		
+		Sound.beep();
+		Sound.beep();
+		Sound.beep();
+
 	}
 }

@@ -8,7 +8,7 @@ import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 
 public class Navigation {
-	final static int FAST = 160, SLOW = 100, clawTurnSpeed = 150, ACCELERATION = 6000;
+	final static int FAST = 160, SLOW = 100, clawTurnSpeed = 200, ACCELERATION = 6000;
 	final static double DEG_ERR = 1.0, CM_ERR = 1.0;
 	private Odometer odometer;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
@@ -135,22 +135,9 @@ public class Navigation {
 			odo.setTheta(travelingAngle);
 			
 			currentX = odo.getX();
-			System.out.println(currentX);
-			
-			
-			/*// sets the odometer X position to the nearest gridline position
-			if( Math.round((odo.getX()/squareSize)) < squaresTravelledX){
-				
-				odoXCorrect = Math.ceil((odo.getX()/squareSize)) * squareSize;
-			}else{
-				odoXCorrect = Math.floor((odo.getX()/squareSize)) * squareSize;
-			}*/
-			
+			System.out.println(currentX);	
 			
 		}
-		
-		// offset other localization
-		//goForward(squareSize/2);
 		
 		// travel in the y-direction	
 		initialX = odo.getX();
@@ -193,29 +180,7 @@ public class Navigation {
 			System.out.println(currentY);
 			System.out.println(currentX);
 			
-			
-			/*currentY = odo.getY();
-			
-			// sets the odometer X position to the nearest gridline position
-			if( Math.round((odo.getY()/squareSize)) < squaresTravelledY){
-				
-				odoYCorrect = Math.ceil((odo.getY()/squareSize)) * squareSize;
-			}else{
-				odoYCorrect = Math.floor((odo.getY()/squareSize)) * squareSize;
-			}
-			
-			odo.setY(odoYCorrect);
-			System.out.println(odoYCorrect);
-			
-			//System.out.println(currentY);
-			//double odoYCorrect = odo.getY() - odo.getY()%squareSize;
-			//System.out.println(odoYCorrect);*/
-			
-			
 		}
-		
-		//corrector.correct( odometer,this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-		//travelTo(x,y);
 		
 	}
 
@@ -264,7 +229,7 @@ public class Navigation {
 		}
 	}
 	
-	public void clawTurnTo(double angle, boolean stop) {
+	public void clawOutTurnTo(double angle, boolean stop) {
 
 		double error = angle - this.odometer.getAng();
 		
@@ -303,55 +268,60 @@ public class Navigation {
 			leftMotor.endSynchronization();
 		}
 	}
-	public void goToDisp(int bx, int by, int fireLineY , String dispOrientation){
-		
-		
-	if( odometer.getY() > fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) > 1*squareSize){
-		travelToXY(0, (fireLineY-1)*squareSize, odometer);
-		travelToXY(bx*squareSize, (fireLineY-1)*squareSize, odometer);
-		travelToXY(bx*squareSize, by*squareSize, odometer);
-	}
-	else if( odometer.getY() > fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) < 1*squareSize){
-		travelToXY(bx*squareSize, by*squareSize, odometer);
-	}
-	else if( odometer.getY() < fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) > 1*squareSize){
-		travelToXY(bx*squareSize, by*squareSize, odometer);
-	}
-	else if( odometer.getY() < fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) < 1*squareSize){
-		travelToXY(bx*squareSize, by*squareSize, odometer);
-	}
-	
-	
-			
-	if(dispOrientation.equals("E")){
-		turnTo(0, true);
-		//Sound.beep();
-		//navi.travelToXY(2*squareSize, 7*squareSize, odo);
-		//navi.travelToXY((bx + 1.7)*squareSize, (by-0.5)*squareSize, odo);
-		//corrector.correct(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-		//odo.setPosition(new double [] {0,0,90}, new boolean [] {false, false, true});
-		//navi.travelToXY((bx + 1)*squareSize, (by)*squareSize, odo);
-		//navi.travelToXY((1-0.5)*squareSize, (5-0.5)*squareSize, odo);
-		//omega = 0;
-		//initAng= odo.getAng();
-		//navi.turnTo(0,true);
-		//launch.load(odo, navi, omega, initAng);
-		
-		Sound.beep();
 
+	public void goToDisp(int bx, int by, int fireLineY , String dispOrientation){
+				
+		// travel to the dispenser
+		if( odometer.getY() > fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) > 1*squareSize){
+			travelToXY(odometer.getX(), (fireLineY-1)*squareSize, odometer);
+			travelToXY(bx*squareSize, (fireLineY-1)*squareSize, odometer);
+			travelToXY(bx*squareSize, by*squareSize, odometer);
+		}
+		else if( odometer.getY() > fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) < 1*squareSize){
+			travelToXY(bx*squareSize, by*squareSize, odometer);
+		}
+		else if( odometer.getY() < fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) > 1*squareSize){
+			travelToXY(bx*squareSize, by*squareSize, odometer);
+		}
+		else if( odometer.getY() < fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) < 1*squareSize){
+			travelToXY(bx*squareSize, by*squareSize, odometer);
+		}
+			
+		// prepare to start loading balls from the dispenser
+		if(dispOrientation.equals("E")){
+			turnTo(0, true);
+			travelToXY((bx + 1)*squareSize, by*squareSize, odometer);
+		}
+		else if(dispOrientation.equals("W")){
+			turnTo(180,true);
+			travelToXY((bx - 1)*squareSize, by*squareSize, odometer);
+		}
+		else if(dispOrientation.equals("N")){
+			turnTo(90,true);
+			travelToXY(bx*squareSize, (by + 1)*squareSize, odometer);	
+		}
+		else if(dispOrientation.equals("S")){
+			turnTo(270,true);
+			travelToXY(bx*squareSize, (by - 1)*squareSize, odometer);
+		}
 	}
-	else if(dispOrientation.equals("W")){
-		travelToXY((bx - 1.33)*squareSize, by*squareSize, odometer);
-		turnTo(180,true);
-	}
-	else if(dispOrientation.equals("N")){
-		travelToXY(bx*squareSize, (by + 1.33)*squareSize, odometer);
-		turnTo(90,true);
-	}
-	else if(dispOrientation.equals("S")){
-		travelToXY(bx*squareSize, (by - 1.33)*squareSize, odometer);
-		turnTo(270,true);
-	}
+	
+	public void goToFireLine(int targetX, int fireLineY){
+		
+		// travel to the firing position, one tile below the firing line
+		if( odometer.getY() > fireLineY*squareSize && Math.abs(targetX*squareSize-odometer.getX()) > 1*squareSize){
+			travelToXY(odometer.getX(), (fireLineY-1)*squareSize, odometer);
+			travelToXY(targetX*squareSize, (fireLineY-1)*squareSize, odometer);
+		}
+		else if( odometer.getY() > fireLineY*squareSize && Math.abs(targetX*squareSize-odometer.getX()) < 1*squareSize){
+			travelToXY(targetX*squareSize, (fireLineY-1)*squareSize, odometer);
+		}
+		else if( odometer.getY() < fireLineY*squareSize && Math.abs(targetX*squareSize-odometer.getX()) > 1*squareSize){
+			travelToXY(targetX*squareSize, (fireLineY-1)*squareSize, odometer);
+		}
+		else if( odometer.getY() < fireLineY*squareSize && Math.abs(targetX*squareSize-odometer.getX()) < 1*squareSize){
+			travelToXY(targetX*squareSize, (fireLineY-1)*squareSize, odometer);
+		}
 	}
 	
 	public void turnImm(double angle) {
@@ -365,7 +335,7 @@ public class Navigation {
 	
 	
 	/*
-	 * Go foward a set distance in cm
+	 * Go foward or backward a set distance in cm
 	 */
 	public void goForward(double distance) {
 		odometer.isTravelling = true;
@@ -378,6 +348,7 @@ public class Navigation {
 		odometer.isTravelling = false;
 
 	}
+	
 	public void goBackward(double distance) {
 		//leftMotor.setSpeed(SLOW);
 		//rightMotor.setSpeed(SLOW);
@@ -395,4 +366,5 @@ public class Navigation {
 	private static int convertAngle(double radius, double width, double angle) {
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
 	}
+
 }

@@ -19,12 +19,12 @@ public class demoTestMotors {
 	
 	//final static TextLCD t = LocalEV3.get().getTextLCD();
 		
-		public void load(Odometer odo, Navigation navi, int omega, double initAng){
+		public void load(Odometer odo, Navigation navi){
 		
 			this.odo = odo;
 			this.navi = navi;
-			
-			
+			double initAng = odo.getAng();
+			double clearDist = 10.0;		// desired distance from the dispenser
 			
 			// set winchMotor acceleration and speed
 			winchMotor.setAcceleration(300);
@@ -32,41 +32,39 @@ public class demoTestMotors {
 			
 			// set loadingMotor initial acceleration and speed
 			loadingMotor.setAcceleration(600);
-			loadingMotor.setSpeed(150);
+			loadingMotor.setSpeed(200);
+						
+			// once the robot is in place, go forward 10cm, and then turn away from the dispenser
+			navi.goForward(clearDist);
+			navi.turnTo((initAng +25)%360, true);
 			
-			// desired distance from the dispenser
-			double clearDist = 10.0;			// 20 too far
-			
-			Sound.setVolume(40);
-			
-			// TODO: implement light localization before picking up the ball to ensure we are at the correct heading
-							
-			// Get the position of the target from the user
-							
-			// TODO: get in front of the dispenser
-				
 			// ready the loading arm to receive the ball, and make sure it doesn't hit the floor
 			loadingMotor.rotate(110);
+			
+			try {
+			    Thread.sleep(500);
+			} catch(InterruptedException ex) {
+			    Thread.currentThread().interrupt();
+			}
+			
+			loadingMotor.rotate(25);
+			
 			try {
 			    Thread.sleep(2000);
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
-			loadingMotor.rotate(20);
 								
-			// back up to get underneath the dispenser
-			navi.goBackward(clearDist);
-		
-			// turn to receive balls from the dispenser
-			//navi.clawTurnTo(omega, true);
+			// once the claw is in place, turn to receive balls from the dispenser
+			navi.clawOutTurnTo((initAng-30)%360, true);
 			
-			// beep, and wait 5 seconds to receive the ball
+			// beep, and wait 6 seconds to receive the balls
 			Sound.beep();
 			Sound.beep();
 			Sound.beep();
 			
 			try {
-			    Thread.sleep(5000);
+			    Thread.sleep(6000);
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
@@ -92,7 +90,7 @@ public class demoTestMotors {
 			// load the ball into the launcher and hold the elastic in position
 			loadingMotor.setAcceleration(650);				// with elastic, was 650 accel, 250 spd
 			loadingMotor.setSpeed(250);
-			loadingMotor.rotate(-130);		// -20 extra degrees to account for the wait of the balls
+			loadingMotor.rotate(-135);		// -20 extra degrees to account for the wait of the balls
 			
 			// TODO: navigate to the firing line and turn to the firing position
 			Sound.beep();
