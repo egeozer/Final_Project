@@ -21,7 +21,6 @@ public class demoTestMotors {
 	private SampleProvider colorSensorLeft;
 	private float[] colorDataRight;
 	private float[] colorDataLeft;
-	boolean loaded;
 	
 	final double squareSize = 30.48;
 	
@@ -40,7 +39,7 @@ public class demoTestMotors {
 		
 		public void load(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight, 
 				SampleProvider colorSensorLeft, float[] colorDataLeft, String dispOrientation, int bx, int by){
-			
+					
 			lightCorrector corrector = new lightCorrector(odo, navi, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
 			
 			double initAng = odo.getAng();
@@ -90,18 +89,24 @@ public class demoTestMotors {
 			}
 			
 			// pull back the elastic until the arm can prevent it from firing
+			System.out.println(winchMotor.getSpeed());
 			winchMotor.rotate(1550);
 								
 			// wait for the winch to wind to the right position
 			
 			try {
-			    Thread.sleep(2000);
+			    Thread.sleep(6000);
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
-					
-			// turn away from the dispenser
+			
+			// go forward to clear the dispenser and correct heading
+			//corrector.correct(odo, navi, colorSensorLeft, colorDataLeft, colorSensorLeft, colorDataLeft);
+			//navi.goForward(clearDist*3);
 			navi.clawOutTurnTo((initAng + 30), true);
+			
+			// turn away from the dispenser
+			//navi.clawTurnTo(initAng, true);
 			
 			try {
 			    Thread.sleep(1000);
@@ -109,13 +114,16 @@ public class demoTestMotors {
 			    Thread.currentThread().interrupt();
 			}
 			
+			// bring the loading arm almost back to it's initial position
+			//loadingMotor.rotate(-100);
+			
 			// load the ball into the launcher and hold the elastic in position
 			loadingMotor.setAcceleration(650);				// with elastic, was 650 accel, 250 spd
 			loadingMotor.setSpeed(250);
-			loadingMotor.rotate(-135);		
+			loadingMotor.rotate(-135);		// -20 extra degrees to account for the wait of the balls
 			
 			// turn back to the initial heading
-			navi.clawOutTurnTo(initAng, true);
+			navi.turnTo(initAng, true);
 			
 			// move to the middle of the tile
 			navi.goForward(clearDist/2);
@@ -136,9 +144,8 @@ public class demoTestMotors {
 			
 			// TODO: navigate to the firing line and turn to the firing position
 			Sound.beep();
+		}
 		
-
-}
 		public void launcher3(){
 			
 		/*

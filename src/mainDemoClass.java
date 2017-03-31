@@ -171,11 +171,11 @@ public class mainDemoClass {
 		// important constants for testing the dispenser and ball launcher
 		int omega = 0;
 		double initAng = 0;
-		dispOrientation = "N";
-		bx = 2;
-		by = 4;
+		dispOrientation = "W";
+		bx = 10;
+		by = 5;
 		
-		forwardStartPos = 4;
+		forwardStartPos = 2;
 		
 		int targetX = 5;			// final design: value is 5
 		d1 = 5;
