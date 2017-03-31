@@ -8,8 +8,9 @@ import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 
 public class Navigation {
-	final static int FAST = 160, SLOW = 100, clawTurnSpeed = 200, ACCELERATION = 6000;
-	final static double DEG_ERR = 1.0, CM_ERR = 1.0;
+	
+	final static int FAST = 160, SLOW = 100, clawTurnSpeed = 125, ACCELERATION = 6000;
+	final static double DEG_ERR = 3.0, CM_ERR = 1.0;
 	private Odometer odometer;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private SampleProvider colorSensorRight,colorSensorLeft;
@@ -193,11 +194,8 @@ public class Navigation {
 
 		double error = angle - this.odometer.getAng();
 		
-		//System.out.println("Err: " + Math.abs(error));
-		//System.out.println("Ang: " + Math.abs(angle));
-		
-		//if(Math.abs(error) >350 && Math.abs(error)<360)
-				//error = error-360;
+		if(Math.abs(error) >350 && Math.abs(error)<360)
+				error = error-360;
 		outer:while (Math.abs(error) > DEG_ERR) {
 			if(odometer.collision){
 				leftMotor.startSynchronization();
@@ -233,8 +231,9 @@ public class Navigation {
 
 		double error = angle - this.odometer.getAng();
 		
-		//System.out.println("Err: " + Math.abs(error));
-		//System.out.println("Ang: " + Math.abs(angle));
+		// change the trackWidth to compensate for the claw being out
+		double initOdoWidth = odometer.getWidth();
+		odometer.setWidth(13.8);
 		
 		if(Math.abs(error) >350 && Math.abs(error)<360)
 				error = error-360;
@@ -267,6 +266,10 @@ public class Navigation {
 			rightMotor.stop();
 			leftMotor.endSynchronization();
 		}
+		
+		// reset the trackWidth to its normal value
+		odometer.setWidth(initOdoWidth);
+		
 	}
 
 	public void goToDisp(int bx, int by, int fireLineY , String dispOrientation){
@@ -287,22 +290,29 @@ public class Navigation {
 			travelToXY(bx*squareSize, by*squareSize, odometer);
 		}
 			
-		// prepare to start loading balls from the dispenser
+		// prepare to start loading balls from the dispenser, offsets are now 0 because of the change in disp. coord specs
 		if(dispOrientation.equals("E")){
 			turnTo(0, true);
-			travelToXY((bx + 1)*squareSize, by*squareSize, odometer);
+			travelToXY((bx + 0)*squareSize, by*squareSize, odometer);
 		}
 		else if(dispOrientation.equals("W")){
 			turnTo(180,true);
-			travelToXY((bx - 1)*squareSize, by*squareSize, odometer);
+			travelToXY((bx - 0)*squareSize, by*squareSize, odometer);
 		}
 		else if(dispOrientation.equals("N")){
 			turnTo(90,true);
-			travelToXY(bx*squareSize, (by + 1)*squareSize, odometer);	
+			travelToXY(bx*squareSize, (by + 0)*squareSize, odometer);	
 		}
 		else if(dispOrientation.equals("S")){
 			turnTo(270,true);
-			travelToXY(bx*squareSize, (by - 1)*squareSize, odometer);
+			travelToXY(bx*squareSize, (by - 0)*squareSize, odometer);
+		}
+		
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -322,6 +332,10 @@ public class Navigation {
 		else if( odometer.getY() < fireLineY*squareSize && Math.abs(targetX*squareSize-odometer.getX()) < 1*squareSize){
 			travelToXY(targetX*squareSize, (fireLineY-1)*squareSize, odometer);
 		}
+		
+		// turn towards the dispenser
+		turnTo(90,true);
+		
 	}
 	
 	public void turnImm(double angle) {

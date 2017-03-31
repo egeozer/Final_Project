@@ -26,7 +26,7 @@ public class mainDemoClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPortRight = LocalEV3.get().getPort("S2");		
 	private static final Port colorPortLeft = LocalEV3.get().getPort("S3");		
-	private static final String SERVER_IP = "192.168.2.14";			//  TA Server: 192.168.2.3
+	private static final String SERVER_IP = "192.168.2.7";			//  TA Server: 192.168.2.3
 	private static final int TEAM_NUMBER = 9;
 	
 
@@ -84,7 +84,7 @@ public class mainDemoClass {
 		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true, forwardStartPos);
 		Navigation navi = new Navigation(odo,colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
 		wallObstacle wall = new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
-		demoTestMotors launch = new demoTestMotors();
+		demoTestMotors launch = new demoTestMotors(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft);
 		
 		// initialize the light sensor classes
 		lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
@@ -171,20 +171,28 @@ public class mainDemoClass {
 		// important constants for testing the dispenser and ball launcher
 		int omega = 0;
 		double initAng = 0;
-		dispOrientation = "E";
-		bx = 0;
-		by = 1;
+		dispOrientation = "N";
+		bx = 2;
+		by = 4;
 		
-		forwardStartPos = 3;
+		forwardStartPos = 4;
 		
-		int targetX = 5;
-		d1 = 4;
-		int fireLineY = 6-d1;
+		int targetX = 5;			// final design: value is 5
+		d1 = 5;
+		int fireLineY = 10-d1;		// final design: value is 10-d1
 		
 		// Mitchell's testing lines, aka trash code
+	
+		//odo.setPosition(new double [] {bx*squareSize, by*squareSize,0}, new boolean [] {true, true, true});
 		
-		launch.load(odo, navi);
-		Sound.beep();
+		//launch.load(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft, dispOrientation, bx, by);
+		
+		//navi.goToFireLine(targetX, fireLineY);
+		
+		
+		//launch.load(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft);
+		
+		//Sound.beep();
 		//navi.travelToXY((4-1)*squareSize, (2)*squareSize, odo);
 		//navi.lsTravelTo(1*squareSize, 3*squareSize, odo, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		//launch.load(odo, navi, omega, initAng);
@@ -233,11 +241,11 @@ public class mainDemoClass {
 		if( forwardStartPos == 1){
 			odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
 		}else if(forwardStartPos == 2){
-			odo.setPosition(new double [] {6*squareSize,0,90}, new boolean [] {true, true, true});
+			odo.setPosition(new double [] {10*squareSize,0,90}, new boolean [] {true, true, true});
 		}else if(forwardStartPos == 3){
-			odo.setPosition(new double [] {6*squareSize,6*squareSize,180}, new boolean [] {true, true, true});
+			odo.setPosition(new double [] {10*squareSize,10*squareSize,180}, new boolean [] {true, true, true});
 		}else if(forwardStartPos == 4){
-			odo.setPosition(new double [] {0,6*squareSize,270}, new boolean [] {true, true, true});
+			odo.setPosition(new double [] {0,10*squareSize,270}, new boolean [] {true, true, true});
 		}
 		
 		Sound.beep();
@@ -246,11 +254,9 @@ public class mainDemoClass {
 		// drive to the the ball dispenser
 		navi.goToDisp(bx, by, fireLineY, dispOrientation);
 		
-		
 		/////////////////////////////////
 		// load the 3 balls into the robot and get ready to fire them
-		launch.load(odo, navi);
-		
+		launch.load(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft, dispOrientation, bx, by);
 		
 		////////////////////////////////////////////
 		// navigate to one tile below the firing line and shoot the 3 balls
