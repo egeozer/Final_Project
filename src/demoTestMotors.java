@@ -40,7 +40,6 @@ public class demoTestMotors {
 		
 		public void load(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight, 
 				SampleProvider colorSensorLeft, float[] colorDataLeft, String dispOrientation, int bx, int by){
-			if(!odo.collision){
 			
 			lightCorrector corrector = new lightCorrector(odo, navi, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
 			
@@ -137,8 +136,8 @@ public class demoTestMotors {
 			
 			// TODO: navigate to the firing line and turn to the firing position
 			Sound.beep();
-		}
-			loaded = true;
+		
+
 }
 		public void launcher3(){
 			
