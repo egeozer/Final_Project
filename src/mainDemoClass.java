@@ -177,7 +177,7 @@ public class mainDemoClass {
 		
 		forwardStartPos = 2;
 		
-		int targetX = 5;			// final design: value is 5
+		int targetX = 8;			// final design: value is 5
 		d1 = 5;
 		int fireLineY = 10-d1;		// final design: value is 10-d1
 		
@@ -249,23 +249,34 @@ public class mainDemoClass {
 		}
 		
 		Sound.beep();
-		
+		wall.start();
 		/////////////////////////////////
 		// drive to the the ball dispenser
+		while(true){
+			if(!navi.wentToDisp)
 		navi.goToDisp(bx, by, fireLineY, dispOrientation);
-		
+		//if(forwardStartPos==14)
+			//break;
+		//}
 		/////////////////////////////////
 		// load the 3 balls into the robot and get ready to fire them
+		if(!launch.loaded)
 		launch.load(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft, dispOrientation, bx, by);
 		
 		////////////////////////////////////////////
 		// navigate to one tile below the firing line and shoot the 3 balls
 		navi.goToFireLine(targetX, fireLineY);
+		if(launch.loaded && navi.wentToDisp){
 		launch.launcher3();
+		launch.loaded = false;
+		navi.wentToDisp = false;
+		}
 		
 		Sound.beep();
 		Sound.beep();
 		Sound.beep();
+		}
+		
 
 	}
 }

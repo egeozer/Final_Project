@@ -21,6 +21,7 @@ public class demoTestMotors {
 	private SampleProvider colorSensorLeft;
 	private float[] colorDataRight;
 	private float[] colorDataLeft;
+	boolean loaded = false;
 	
 	final double squareSize = 30.48;
 	
@@ -75,7 +76,7 @@ public class demoTestMotors {
 			}
 								
 			// once the claw is in place, turn to receive balls from the dispenser
-			navi.clawOutTurnTo((initAng), true);
+			navi.clawOutTurnTo((initAng - 5), true);
 			
 			// beep, and wait 6 seconds to receive the balls
 			Sound.beep();
@@ -95,7 +96,7 @@ public class demoTestMotors {
 			// wait for the winch to wind to the right position
 			
 			try {
-			    Thread.sleep(6000);
+			    Thread.sleep(3000);
 			} catch(InterruptedException ex) {
 			    Thread.currentThread().interrupt();
 			}
@@ -103,10 +104,10 @@ public class demoTestMotors {
 			// go forward to clear the dispenser and correct heading
 			//corrector.correct(odo, navi, colorSensorLeft, colorDataLeft, colorSensorLeft, colorDataLeft);
 			//navi.goForward(clearDist*3);
-			navi.clawOutTurnTo((initAng + 30), true);
+			//navi.clawOutTurnTo((initAng + 30), true);
 			
 			// turn away from the dispenser
-			//navi.clawTurnTo(initAng, true);
+			navi.clawOutTurnTo((initAng + 35), true);
 			
 			try {
 			    Thread.sleep(1000);
@@ -120,10 +121,10 @@ public class demoTestMotors {
 			// load the ball into the launcher and hold the elastic in position
 			loadingMotor.setAcceleration(650);				// with elastic, was 650 accel, 250 spd
 			loadingMotor.setSpeed(250);
-			loadingMotor.rotate(-135);		// -20 extra degrees to account for the wait of the balls
+			loadingMotor.rotate(-135);		
 			
 			// turn back to the initial heading
-			navi.turnTo(initAng, true);
+			navi.clawOutTurnTo(initAng, true);
 			
 			// move to the middle of the tile
 			navi.goForward(clearDist/2);
@@ -144,6 +145,7 @@ public class demoTestMotors {
 			
 			// TODO: navigate to the firing line and turn to the firing position
 			Sound.beep();
+			loaded = true;
 		}
 		
 		public void launcher3(){

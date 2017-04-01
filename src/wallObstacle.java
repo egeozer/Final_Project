@@ -33,13 +33,19 @@ public class wallObstacle extends Thread {
 				Thread.sleep(10);
 				//System.out.println(getFilteredData());
 				
-				if(getFilteredData()<10){
+				if(getFilteredData()<20){
 					odo.collision = true;
-					navi.goBackward(5);
-					navi.turnImm(85);
-					navi.goForward(15);
 					
-					//navi.turnImm(-85);
+					Thread.sleep(2000);
+					
+					odo.collision = false;
+					
+					// TODO: insert ifs to decide how to avoid obstacles based on current headin
+					navi.travelToXY(odo.getX() - 1*30.48, odo.getY() + 3*30.48, odo);
+				
+					
+					
+					//navi.turnImm(-90);
 					odo.collisionAvoided = true;
 					odo.collision = false;
 				}

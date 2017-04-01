@@ -15,6 +15,7 @@ public class Navigation {
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private SampleProvider colorSensorRight,colorSensorLeft;
 	private float[] colorDataRight,colorDataLeft;
+	boolean wentToDisp  = false;
 	
 	// Constants
 	static double squareSize = 30.48;
@@ -196,15 +197,8 @@ public class Navigation {
 		
 		if(Math.abs(error) >350 && Math.abs(error)<360)
 				error = error-360;
-		outer:while (Math.abs(error) > DEG_ERR) {
-			if(odometer.collision){
-				leftMotor.startSynchronization();
-				leftMotor.stop();
-				rightMotor.stop();
-				leftMotor.endSynchronization();
-				break outer ;
-				
-			}
+		while (Math.abs(error) > DEG_ERR) {
+			
 			error = angle - this.odometer.getAng();
 
 			if (error < -180.0) {
@@ -237,15 +231,8 @@ public class Navigation {
 		
 		if(Math.abs(error) >350 && Math.abs(error)<360)
 				error = error-360;
-		outer:while (Math.abs(error) > DEG_ERR) {
-			if(odometer.collision){
-				leftMotor.startSynchronization();
-				leftMotor.stop();
-				rightMotor.stop();
-				leftMotor.endSynchronization();
-				break outer ;
-				
-			}
+		while (Math.abs(error) > DEG_ERR) {
+			
 			error = angle - this.odometer.getAng();
 
 			if (error < -180.0) {
@@ -314,6 +301,7 @@ public class Navigation {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		wentToDisp = true;
 	}
 	
 	public void goToFireLine(int targetX, int fireLineY){
