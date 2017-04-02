@@ -9,12 +9,15 @@ import lejos.robotics.SampleProvider;
 
 public class Navigation {
 	
-	final static int FAST = 160, SLOW = 100, clawTurnSpeed = 125, ACCELERATION = 6000;
+	final static int FAST = 200, SLOW = 100, clawTurnSpeed = 125, ACCELERATION = 6000;
 	final static double DEG_ERR = 3.0, CM_ERR = 1.0;
 	private Odometer odometer;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private SampleProvider colorSensorRight,colorSensorLeft;
 	private float[] colorDataRight,colorDataLeft;
+	boolean wentToDisp  = false;
+	boolean wentToFireLine = false;
+	double travelingAngle = 0;
 	
 	// Constants
 	static double squareSize = 30.48;
@@ -111,9 +114,11 @@ public class Navigation {
 		}else if(currentX < finalX){
 			turnTo(0, true);
 			travelingAngle = 0;
+			odo.setTheta(travelingAngle);
 		}else{
 			turnTo(180, true);
 			travelingAngle = 180;
+			odo.setTheta(travelingAngle);
 		}
 		
 		// COMMENT
@@ -153,10 +158,12 @@ public class Navigation {
 		}else if(currentY < finalY){
 			turnTo(90, true);
 			travelingAngle = 90;
+			odo.setTheta(travelingAngle);
 		}
 		else{
 			turnTo(270, true);
 			travelingAngle = 270;
+			odo.setTheta(travelingAngle);
 		}
 		
 		while (Math.abs(finalY - currentY) > (CM_ERR*5)){
@@ -311,9 +318,11 @@ public class Navigation {
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		wentToDisp = true;
+		
 	}
 	
 	public void goToFireLine(int targetX, int fireLineY){
@@ -336,6 +345,8 @@ public class Navigation {
 		// turn towards the dispenser
 		turnTo(90,true);
 		
+		wentToFireLine = true;
+		
 	}
 	
 	public void turnImm(double angle) {
@@ -353,23 +364,23 @@ public class Navigation {
 	 */
 	public void goForward(double distance) {
 		odometer.isTravelling = true;
-		leftMotor.setSpeed(FAST);
-		rightMotor.setSpeed(FAST);
-		//leftMotor.startSynchronization();
+		leftMotor.setSpeed(SLOW);
+		rightMotor.setSpeed(SLOW);
+		leftMotor.startSynchronization();
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
-		//leftMotor.endSynchronization();
+		leftMotor.endSynchronization();
 		odometer.isTravelling = false;
 
 	}
 	
 	public void goBackward(double distance) {
-		//leftMotor.setSpeed(SLOW);
-		//rightMotor.setSpeed(SLOW);
-		//leftMotor.startSynchronization();
+		leftMotor.setSpeed(SLOW);
+		rightMotor.setSpeed(SLOW);
+		leftMotor.startSynchronization();
 		leftMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), false);
-		//leftMotor.endSynchronization();
+		leftMotor.endSynchronization();
 
 	}
 	

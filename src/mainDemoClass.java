@@ -160,58 +160,36 @@ public class mainDemoClass {
 		}	
 		
 		*/
-		/*
-		 *  Beginning of actual "functional" code
-		 */
 		
-		// Robot will beep once it has set up the sensors and display and is ready to begin receiving instructions from WiFi
-		Sound.setVolume(60);
-		Sound.beep();
+		////////////////////////////////////////////////
+		// Beginning of actual "functional" code
+		///////////////////////////////////////////////
+		
+		// Robot will set up the sensors and display before is ready to begin receiving instructions from WiFi
+		//Sound.setVolume(80);
+		//Sound.beep();
 		
 		// important constants for testing the dispenser and ball launcher
 		int omega = 0;
 		double initAng = 0;
 		dispOrientation = "W";
-		bx = 10;
-		by = 5;
+		bx = 4;
+		by = 0;
 		
-		forwardStartPos = 2;
+		forwardStartPos = 1;
 		
 		int targetX = 5;			// final design: value is 5
-		d1 = 5;
+		d1 = 8;						// final design: [5,8]
 		int fireLineY = 10-d1;		// final design: value is 10-d1
 		
 		// Mitchell's testing lines, aka trash code
 	
-		//odo.setPosition(new double [] {bx*squareSize, by*squareSize,0}, new boolean [] {true, true, true});
-		
-		//launch.load(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft, dispOrientation, bx, by);
-		
-		//navi.goToFireLine(targetX, fireLineY);
-		
-		
-		//launch.load(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft);
-		
-		//Sound.beep();
-		//navi.travelToXY((4-1)*squareSize, (2)*squareSize, odo);
-		//navi.lsTravelTo(1*squareSize, 3*squareSize, odo, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-		//launch.load(odo, navi, omega, initAng);
-		//launch.launcher3();
-		
-		//Sound.beep();
-		//LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
-		//lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
-		//launch.load(odo, navi);
-		//launch.launcher3();
-		//navi.clawTurnTo(0, true);
-		//Sound.beep();
-		//navi.clawTurnTo(180,true);
-		//Sound.beep();
-		//navi.clawTurnTo(90, true);
-		//Sound.beep();
+		launch.load(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft, dispOrientation, fireLineY, fireLineY);
+		launch.launcher3(d1);
 		
 		///////////////////////////////////////////////
 		// Robot will beep once it has received the Wifi instructions and is ready to localize
+		Sound.setVolume(80);
 		Sound.beep();
 		
 		// perform the ultrasonic localization using Falling Edge
@@ -219,25 +197,26 @@ public class mainDemoClass {
 		usl.doLocalization();
 			
 		// perform the light localization using two light sensors
-		outer:while(true){
-			
+		outer:while(true){			
 			if (usl.isLocalized) {
 				LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);		
 				lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
+				
+				// beep once to indicate localizaion has been completed
+				Sound.setVolume(80);
 				Sound.beep();
+				
 				try {
 					Thread.sleep(2000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				Sound.beep();
+				
 				break outer;
-			}
-			
+			}			
 		}
 		
-		//////////////////////////////////
-		// set localized position coordinates based on the starting square and then beep once
+		// set localized position coordinates based on the starting square
 		if( forwardStartPos == 1){
 			odo.setPosition(new double [] {0,0,0}, new boolean [] {true, true, true});
 		}else if(forwardStartPos == 2){
@@ -248,24 +227,45 @@ public class mainDemoClass {
 			odo.setPosition(new double [] {0,10*squareSize,270}, new boolean [] {true, true, true});
 		}
 		
-		Sound.beep();
+		// activate obstacle avoidance
+		//wall.start
 		
-		/////////////////////////////////
-		// drive to the the ball dispenser
-		navi.goToDisp(bx, by, fireLineY, dispOrientation);
-		
-		/////////////////////////////////
-		// load the 3 balls into the robot and get ready to fire them
-		launch.load(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft, dispOrientation, bx, by);
-		
-		////////////////////////////////////////////
-		// navigate to one tile below the firing line and shoot the 3 balls
-		navi.goToFireLine(targetX, fireLineY);
-		launch.launcher3();
-		
-		Sound.beep();
-		Sound.beep();
-		Sound.beep();
-
+		while(true){			
+			
+			// drive to the the ball dispenser
+			if(!navi.wentToDisp){			
+				navi.goToDisp(bx, by, fireLineY, dispOrientation);				
+			}
+			
+			// load the 3 balls into the robot and get ready to fire them
+			if(!launch.loaded3){				
+				launch.load(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft, dispOrientation, bx, by);			
+			}
+			
+			// navigate to one tile below the firing line
+			if(!navi.wentToFireLine){			
+				navi.goToFireLine(targetX, fireLineY);			
+			}
+			
+			// if the robot has received 3 balls and gone to one square below the firing line, shoot the 3 balls
+			if(launch.loaded3 && navi.wentToFireLine){			
+				launch.launcher3(d1);
+			}
+				
+			// if the 3 balls have been successfully fired, reset the booleans indicating which steps have been completed
+			if(launch.fired3){							
+				navi.wentToDisp = false;
+				launch.loaded3 = false;
+				navi.wentToFireLine = false;
+				launch.fired3 = false;
+				
+				// wait for 4 seconds to ensure there are no threading conflicts
+				try {
+					Thread.sleep(4000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 }
