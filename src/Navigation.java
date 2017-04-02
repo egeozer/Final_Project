@@ -9,15 +9,12 @@ import lejos.robotics.SampleProvider;
 
 public class Navigation {
 	
-	final int FAST = 200, SLOW = 100, clawTurnSpeed = 125, ACCELERATION = 6000;
-	final double DEG_ERR = 3.0, CM_ERR = 1.0;
+	final static int FAST = 160, SLOW = 100, clawTurnSpeed = 125, ACCELERATION = 6000;
+	final static double DEG_ERR = 3.0, CM_ERR = 1.0;
 	private Odometer odometer;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private SampleProvider colorSensorRight,colorSensorLeft;
 	private float[] colorDataRight,colorDataLeft;
-	boolean wentToDisp  = false;
-	boolean wentToFireLine = false;
-	double travelingAngle = 0;
 	
 	// Constants
 	static double squareSize = 30.48;
@@ -72,7 +69,7 @@ public class Navigation {
 	 * TravelTo function which takes as arguments the x and y position in cm Will travel to designated position, while
 	 * constantly updating it's heading
 	 */
-	public void obstacleTravelTo(double x, double y, Odometer odometer) {
+	public void travelTo(double x, double y) {
 
 		if(!odometer.isTravelling){
 			odometer.isTravelling=true;
@@ -86,7 +83,6 @@ public class Navigation {
 					break outer;
 				
 				this.setSpeeds(FAST, FAST);
-				
 			}
 
 		leftMotor.startSynchronization();
@@ -104,6 +100,7 @@ public class Navigation {
 		// travel in the x-direction
 		double initialX = odo.getX();
 		double initialY = odo.getY();
+		double travelingAngle = 0;
 		double currentX = odo.getX();
 		double odoXCorrect;
 		int squaresTravelledX = 0;
@@ -114,11 +111,9 @@ public class Navigation {
 		}else if(currentX < finalX){
 			turnTo(0, true);
 			travelingAngle = 0;
-			odo.setTheta(travelingAngle);
 		}else{
 			turnTo(180, true);
 			travelingAngle = 180;
-			odo.setTheta(travelingAngle);
 		}
 		
 		// COMMENT
@@ -141,6 +136,7 @@ public class Navigation {
 			odo.setTheta(travelingAngle);
 			
 			currentX = odo.getX();
+			System.out.println(currentX);	
 			
 		}
 		
@@ -157,12 +153,10 @@ public class Navigation {
 		}else if(currentY < finalY){
 			turnTo(90, true);
 			travelingAngle = 90;
-			odo.setTheta(travelingAngle);
 		}
 		else{
 			turnTo(270, true);
 			travelingAngle = 270;
-			odo.setTheta(travelingAngle);
 		}
 		
 		while (Math.abs(finalY - currentY) > (CM_ERR*5)){
@@ -183,7 +177,9 @@ public class Navigation {
 			odo.setX(initialX);
 			odo.setTheta(travelingAngle);
 			
-			currentY = odo.getY();	
+			currentY = odo.getY();
+			System.out.println(currentY);
+			System.out.println(currentX);
 			
 		}
 		
@@ -197,14 +193,20 @@ public class Navigation {
 	public void turnTo(double angle, boolean stop) {
 
 		double error = angle - this.odometer.getAng();
-	
+		
 		if(Math.abs(error) >350 && Math.abs(error)<360)
 				error = error-360;
-		
-		while (Math.abs(error) > DEG_ERR) {
-			
+		outer:while (Math.abs(error) > DEG_ERR) {
+			if(odometer.collision){
+				leftMotor.startSynchronization();
+				leftMotor.stop();
+				rightMotor.stop();
+				leftMotor.endSynchronization();
+				break outer ;
+				
+			}
 			error = angle - this.odometer.getAng();
-			
+
 			if (error < -180.0) {
 				this.setSpeeds(-SLOW, SLOW);
 			} else if (error < 0.0) {
@@ -227,17 +229,23 @@ public class Navigation {
 	
 	public void clawOutTurnTo(double angle, boolean stop) {
 
+		double error = angle - this.odometer.getAng();
+		
 		// change the trackWidth to compensate for the claw being out
 		double initOdoWidth = odometer.getWidth();
 		odometer.setWidth(13.8);
 		
-		double error = angle - this.odometer.getAng();
-		
 		if(Math.abs(error) >350 && Math.abs(error)<360)
-			error = error-360;
-		
-		while (Math.abs(error) > DEG_ERR) {
-			
+				error = error-360;
+		outer:while (Math.abs(error) > DEG_ERR) {
+			if(odometer.collision){
+				leftMotor.startSynchronization();
+				leftMotor.stop();
+				rightMotor.stop();
+				leftMotor.endSynchronization();
+				break outer ;
+				
+			}
 			error = angle - this.odometer.getAng();
 
 			if (error < -180.0) {
@@ -252,6 +260,7 @@ public class Navigation {
 		}
 
 		if (stop) {
+			//this.setSpeeds(0, 0);
 			leftMotor.startSynchronization();
 			leftMotor.stop();
 			rightMotor.stop();
@@ -266,8 +275,6 @@ public class Navigation {
 	public void goToDisp(int bx, int by, int fireLineY , String dispOrientation){
 				
 		// travel to the dispenser
-		wentToDisp = false;
-		
 		if( odometer.getY() > fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) > 1*squareSize){
 			travelToXY(odometer.getX(), (fireLineY-1)*squareSize, odometer);
 			travelToXY(bx*squareSize, (fireLineY-1)*squareSize, odometer);
@@ -307,16 +314,11 @@ public class Navigation {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		wentToDisp = true;
-		
 	}
 	
 	public void goToFireLine(int targetX, int fireLineY){
 		
 		// travel to the firing position, one tile below the firing line
-		wentToFireLine =  false;
-		
 		if( odometer.getY() > fireLineY*squareSize && Math.abs(targetX*squareSize-odometer.getX()) > 1*squareSize){
 			travelToXY(odometer.getX(), (fireLineY-1)*squareSize, odometer);
 			travelToXY(targetX*squareSize, (fireLineY-1)*squareSize, odometer);
@@ -331,10 +333,8 @@ public class Navigation {
 			travelToXY(targetX*squareSize, (fireLineY-1)*squareSize, odometer);
 		}
 		
-		// turn towards the target
+		// turn towards the dispenser
 		turnTo(90,true);
-		
-		wentToFireLine = true;
 		
 	}
 	
@@ -352,26 +352,24 @@ public class Navigation {
 	 * Go foward or backward a set distance in cm
 	 */
 	public void goForward(double distance) {
-		//odometer.isTravelling = true;
+		odometer.isTravelling = true;
 		leftMotor.setSpeed(FAST);
 		rightMotor.setSpeed(FAST);
-		leftMotor.startSynchronization();
+		//leftMotor.startSynchronization();
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
-		leftMotor.endSynchronization();
-		//odometer.isTravelling = false;
+		//leftMotor.endSynchronization();
+		odometer.isTravelling = false;
 
 	}
 	
 	public void goBackward(double distance) {
-		odometer.isTravelling = true;
-		leftMotor.setSpeed(FAST);
-		rightMotor.setSpeed(FAST);
-		leftMotor.startSynchronization();
+		//leftMotor.setSpeed(SLOW);
+		//rightMotor.setSpeed(SLOW);
+		//leftMotor.startSynchronization();
 		leftMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), false);
-		leftMotor.endSynchronization();
-		odometer.isTravelling = false;
+		//leftMotor.endSynchronization();
 
 	}
 	
