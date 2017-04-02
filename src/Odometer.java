@@ -25,11 +25,13 @@ public class Odometer implements TimerListener {
 		this.leftMotor = leftMotor;
 		this.rightMotor = rightMotor;
 		leftMotor.synchronizeWith(new EV3LargeRegulatedMotor[] {rightMotor});
-		// default values, modify for your robot
+		
+		// corrected values for our robot
 		this.rightRadius = 2.05;
 		this.leftRadius = 2.05;
 		this.width = 13.3;		// was 13.5 // without counterweight is 14.5cm // with counterweight is 
 		
+		// initailizing the position and heading variables
 		this.x = 0.0;
 		this.y = 0.0;
 		this.theta = 90.0;
