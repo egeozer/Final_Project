@@ -320,7 +320,7 @@ public class Navigation {
 			e.printStackTrace();
 		}
 		
-		if(odometer.getX() == bx && odometer.getY() == by){
+		if(Math.abs(  odometer.getX() - bx*squareSize  )<3 &&Math.abs(  odometer.getY() - by*squareSize  )<3){
 		
 		wentToDisp = true;
 		}
