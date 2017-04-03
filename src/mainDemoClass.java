@@ -84,7 +84,6 @@ public class mainDemoClass {
 		Odometer odo = new Odometer(leftMotor, rightMotor, 30, true, forwardStartPos);
 		Navigation navi = new Navigation(odo,colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
 		wallObstacle wall = new wallObstacle(leftMotor, rightMotor, odo, navi, usValue, usData);
-		demoTestMotors launch = new demoTestMotors(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft);
 		
 		// initialize the light sensor classes
 		lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
@@ -179,11 +178,11 @@ public class mainDemoClass {
 		forwardStartPos = 2;
 		
 		int targetX = 8;			// final design: value is 5
-		d1 = 6;						// final design: [5,8]
+		d1 = 8;						// final design: [5,8]
 		int fireLineY = 10-d1;		// final design: value is 10-d1
 		
 		// Mitchell's testing lines, aka trash code
-	
+
 		//launch.load(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft, dispOrientation, fireLineY, fireLineY);
 		//launch.launcher3(d1);
 		
@@ -226,6 +225,8 @@ public class mainDemoClass {
 		}else if(forwardStartPos == 4){
 			odo.setPosition(new double [] {0,10*squareSize,270}, new boolean [] {true, true, true});
 		}
+		demoTestMotors launch = new demoTestMotors(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft, dispOrientation, bx,by);
+
 		
 		// activate obstacle avoidance
 		//wall.start();
@@ -241,17 +242,23 @@ public class mainDemoClass {
 				
 				// load the 3 balls into the robot and get ready to fire them
 				if(navi.wentToDisp && !launch.loaded3){				
-					launch.load(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft, dispOrientation, bx, by);			
+					launch.load();			
 				}
 				
 				// navigate to one tile below the firing line
 				if(navi.wentToDisp && launch.loaded3 && !navi.wentToFireLine){			
 					navi.goToFireLine(targetX, fireLineY);			
 				}
+				
 				//System.out.println(navi.wentToDisp+" "+ launch.loaded3 +" "+ navi.wentToFireLine+" "+  launch.fired3);
 				// if the robot has received 3 balls and gone to one square below the firing line, shoot the 3 balls
 				if(navi.wentToDisp && launch.loaded3 && navi.wentToFireLine && !launch.fired3){			
 					launch.launcher3(targetX, fireLineY);
+				}
+				try {
+					Thread.sleep(4000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
 				}
 					
 				// if the 3 balls have been successfully fired, reset the booleans indicating which steps have been completed

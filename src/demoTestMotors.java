@@ -15,37 +15,42 @@ public class demoTestMotors {
 	// Gear motor is connected to output C
 	public static final EV3LargeRegulatedMotor winchMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
 	
-	private Odometer odometer;
-	private Navigation navigation;
+	private Odometer odo;
+	private Navigation navi;
 	private SampleProvider colorSensorRight;
 	private SampleProvider colorSensorLeft;
 	private float[] colorDataRight;
 	private float[] colorDataLeft;
-	
+	String dispOrientation;
+	int bx; int by;
 	final double squareSize = 30.48;
 	final double lightSensorDist = 6.00;
 	boolean loaded3 = false;
 	boolean fired3 = false;
 	
-	public demoTestMotors(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft){
+	public demoTestMotors(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft,String dispOrientation, int bx, int by){
 		
-		this.odometer = odo;
-		this.navigation = navi;
+		this.odo = odo;
+		this.navi = navi;
 		this.colorSensorRight = colorSensorRight;
 		this.colorDataRight = colorDataRight;
 		this.colorSensorLeft = colorSensorLeft;
 		this.colorDataLeft = colorDataLeft;
+		this.dispOrientation = dispOrientation;
+		this.bx = bx;
+		this.by = by;
+
+		
 		
 	}
 	
 	//final static TextLCD t = LocalEV3.get().getTextLCD();
 		
-	public void load(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight, 
-			SampleProvider colorSensorLeft, float[] colorDataLeft, String dispOrientation, int bx, int by){
+	public void load( ){
 				
 		lightCorrector corrector = new lightCorrector(odo, navi, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
 		
-		double initAng = odo.getAng();
+		
 		double clearDist = 10.0;		// desired distance from the dispenser
 		
 		// set winchMotor acceleration and speed
@@ -63,15 +68,16 @@ public class demoTestMotors {
 		}
 		
 		// once the robot is in place, go forward 10cm, and then turn away from the dispenser
-		navi.goForward(clearDist);
-		
+		//navi.goForward(clearDist);
+		corrector.travelCorrect();
 		try {
 		    Thread.sleep(4000);
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
+		double initAng = odo.getAng();
 		
-		navi.turnTo((initAng + 35), true);
+		//navi.turnTo((initAng + 35), true);
 		
 		try {
 		    Thread.sleep(4000);
@@ -97,7 +103,8 @@ public class demoTestMotors {
 		}
 							
 		// once the claw is in place, turn to receive balls from the dispenser, -5 degree offset to ensure we are close enough
-		navi.clawOutTurnTo((initAng - 10), true);
+		//navi.clawOutTurnTo((initAng - 10), true);
+		navi.goBackward(20);
 		
 		// beep, and wait 6 seconds to receive the balls
 		Sound.beep();
@@ -184,11 +191,11 @@ public class demoTestMotors {
 	
 		//lightCorrector corrector = new lightCorrector(odometer, navigation, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
 		
-		for(int balls = 2; balls > 0; balls--){
+		for(int balls = 0; balls < 2; balls++){
 			
 			// use light correction to ensure we are directly facing the target
-			navigation.travelToXY(targetX, fireLineY, odometer);
-			navigation.goBackward(3*lightSensorDist);
+			navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
+			navi.goBackward(3*lightSensorDist);
 			//corrector.travelCorrect();
 			
 			// unwind the winch to ensure the launcher can fire at the desired power
@@ -220,8 +227,8 @@ public class demoTestMotors {
 		// launch routine for ball 3, using less power since less weight in the claw
 		
 		// use light correction to ensure we are directly facing the target
-		navigation.travelToXY(targetX, fireLineY, odometer);
-		navigation.goBackward(3*lightSensorDist);
+		navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
+		navi.goBackward(3*lightSensorDist);
 		
 		try {
 			Thread.sleep(3000);

@@ -208,6 +208,8 @@ public class Navigation {
 	 */
 	
 	public void turnTo(double angle, boolean stop) {
+		if(angle<0)
+			angle=angle+360;
 
 		double error = angle - this.odometer.getAng();
 		
@@ -239,9 +241,11 @@ public class Navigation {
 	
 	public void clawOutTurnTo(double angle, boolean stop) {
 
+		if(angle<0)
+			angle=angle+360;
 		double error = angle - this.odometer.getAng();
-		//if(Math.abs(error) >350 && Math.abs(error)<370)
-			//error = error-360;
+		if(Math.abs(error) >180 && Math.abs(error)<450)
+			error = error-360;
 		// change the trackWidth to compensate for the claw being out
 		double initOdoWidth = odometer.getWidth();
 		odometer.setWidth(13.8);
