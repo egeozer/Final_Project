@@ -50,7 +50,7 @@ public class Navigation {
 	 */
 	public void setSpeeds(int lSpd, int rSpd) {
 		
-		leftMotor.startSynchronization();
+		//leftMotor.startSynchronization();
 						
 		
 		this.leftMotor.setSpeed(lSpd);
@@ -65,7 +65,7 @@ public class Navigation {
 			this.rightMotor.forward();
 	
 		
-		leftMotor.endSynchronization();
+		//leftMotor.endSynchronization();
 	}
 
 	/*
@@ -99,97 +99,107 @@ public class Navigation {
 	public void travelToXY(double finalX, double finalY, Odometer odo) {
 		
 		lightCorrector corrector = new lightCorrector(odo, this, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
-		
+		//if(!odometer.isTravelling){
+			//odometer.isTravelling=true;
 		// travel in the x-direction
-		double initialX = odo.getX();
-		double initialY = odo.getY();
-		double travelingAngle = 0;
-		double currentX = odo.getX();
-		double odoXCorrect;
-		int squaresTravelledX = 0;
 		
-		// COMMENT
-		if(Math.abs(finalX - currentX) <= (CM_ERR*5)){
+		if(!odo.collision){
+			double initialX = odo.getX();
+			double initialY = odo.getY();
+			double travelingAngle = 0;
+			double currentX = odo.getX();
+			double odoXCorrect;
+			int squaresTravelledX = 0;
 			
-		}else if(currentX < finalX){
-			turnTo(0, true);
-			travelingAngle = 0;
-			odo.setTheta(travelingAngle);
-		}else{
-			turnTo(180, true);
-			travelingAngle = 180;
-			odo.setTheta(travelingAngle);
-		}
-		
-		// COMMENT
-		while (Math.abs(finalX - currentX) > (CM_ERR*5)){
-			if(odo.collision)
-				break;
-			
-			corrector.travelCorrect(odo, this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-			
-			squaresTravelledX++;
-			odoXCorrect = squaresTravelledX*squareSize;
-			
-			if(initialX < finalX){
-				odo.setX(initialX+odoXCorrect);
+			// COMMENT
+			if(Math.abs(finalX - currentX) <= (CM_ERR*5)){
+				
+			}else if(currentX < finalX){
+				turnTo(0, true);
+				travelingAngle = 0;
+				odo.setTheta(travelingAngle);
 			}else{
-				odo.setX(initialX-odoXCorrect);
+				turnTo(180, true);
+				travelingAngle = 180;
+				odo.setTheta(travelingAngle);
 			}
 			
-			odo.setY(initialY);
-			odo.setTheta(travelingAngle);
-			
-			currentX = odo.getX();
-			System.out.println(currentX);	
-			
-		}
-		
-		// travel in the y-direction	
-		initialX = odo.getX();
-		initialY = odo.getY();
-		double currentY = odo.getY();
-		double odoYCorrect;
-		int squaresTravelledY = 0;
-		
-		// COMMENT
-		if(Math.abs(finalY - currentY) <= (CM_ERR*5)){
-			
-		}else if(currentY < finalY){
-			turnTo(90, true);
-			travelingAngle = 90;
-			odo.setTheta(travelingAngle);
-		}
-		else{
-			turnTo(270, true);
-			travelingAngle = 270;
-			odo.setTheta(travelingAngle);
-		}
-		
-		while (Math.abs(finalY - currentY) > (CM_ERR*5)){
-			if(odo.collision)
-				break;		
-			
-			corrector.travelCorrect( odo, this, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
-			
-			squaresTravelledY++;
-			odoYCorrect = squaresTravelledY*squareSize;
-			
-			if(initialY < finalY){
-				odo.setY(initialY+odoYCorrect);
-			}else{
-				odo.setY(initialY-odoYCorrect);
+			// COMMENT
+			while (Math.abs(finalX - currentX) > (CM_ERR*5)){
+				if(odo.collision)
+					break;
+				
+				corrector.travelCorrect();
+				
+				squaresTravelledX++;
+				odoXCorrect = squaresTravelledX*squareSize;
+				
+				if(initialX < finalX){
+					odo.setX(initialX+odoXCorrect);
+				}else{
+					odo.setX(initialX-odoXCorrect);
+				}
+				
+				odo.setY(initialY);
+				odo.setTheta(travelingAngle);
+				
+				currentX = odo.getX();
+				//System.out.println(currentX);	
+				
 			}
 			
-			odo.setX(initialX);
-			odo.setTheta(travelingAngle);
 			
-			currentY = odo.getY();
-			System.out.println(currentY);
-			System.out.println(currentX);
+			// travel in the y-direction	
+			initialX = odo.getX();
+			initialY = odo.getY();
+			double currentY = odo.getY();
+			double odoYCorrect;
+			int squaresTravelledY = 0;
 			
-		}
+			// COMMENT
+			if(Math.abs(finalY - currentY) <= (CM_ERR*5)){
+				
+			}else if(currentY < finalY){
+				turnTo(90, true);
+				travelingAngle = 90;
+				odo.setTheta(travelingAngle);
+			}
+			else{
+				turnTo(270, true);
+				travelingAngle = 270;
+				odo.setTheta(travelingAngle);
+			}
+			
+			while (Math.abs(finalY - currentY) > (CM_ERR*5)){
+				if(odo.collision)
+					break;		
+				
+				corrector.travelCorrect();
+				
+				squaresTravelledY++;
+				odoYCorrect = squaresTravelledY*squareSize;
+				
+				if(initialY < finalY){
+					odo.setY(initialY+odoYCorrect);
+				}else{
+					odo.setY(initialY-odoYCorrect);
+				}
+				
+				odo.setX(initialX);
+				odo.setTheta(travelingAngle);
+				
+				currentY = odo.getY();
+				//System.out.println(currentY);
+				//System.out.println(currentX);
+			
 		
+			}
+
+	}
+	
+		//}
+		//odometer.isTravelling=false;
+	
 	}
 
 	/*
@@ -203,25 +213,18 @@ public class Navigation {
 		
 		if(Math.abs(error) >350 && Math.abs(error)<360)
 				error = error-360;
-		outer:while (Math.abs(error) > DEG_ERR) {
-			if(odometer.collision){
-				leftMotor.startSynchronization();
-				leftMotor.stop();
-				rightMotor.stop();
-				leftMotor.endSynchronization();
-				break outer ;
-				
-			}
+		while (Math.abs(error) > DEG_ERR) {
+			
 			error = angle - this.odometer.getAng();
 
 			if (error < -180.0) {
-				this.setSpeeds(-SLOW, SLOW);
+				this.setSpeeds(-FAST, FAST);
 			} else if (error < 0.0) {
-				this.setSpeeds(SLOW, -SLOW);
+				this.setSpeeds(FAST, -FAST);
 			} else if (error > 180.0) {
-				this.setSpeeds(SLOW, -SLOW);
+				this.setSpeeds(FAST, -FAST);
 			} else {
-				this.setSpeeds(-SLOW, SLOW);
+				this.setSpeeds(-FAST, FAST);
 			}
 		}
 
@@ -242,27 +245,18 @@ public class Navigation {
 		double initOdoWidth = odometer.getWidth();
 		odometer.setWidth(13.8);
 		
-		if(Math.abs(error) >350 && Math.abs(error)<360)
-				error = error-360;
-		outer:while (Math.abs(error) > DEG_ERR) {
-			if(odometer.collision){
-				leftMotor.startSynchronization();
-				leftMotor.stop();
-				rightMotor.stop();
-				leftMotor.endSynchronization();
-				break outer ;
-				
-			}
+		while (Math.abs(error) > DEG_ERR) {
+			
 			error = angle - this.odometer.getAng();
 
 			if (error < -180.0) {
-				this.setSpeeds(-clawTurnSpeed, clawTurnSpeed);
+				this.setSpeeds(-FAST, FAST);
 			} else if (error < 0.0) {
-				this.setSpeeds(clawTurnSpeed, -clawTurnSpeed);
+				this.setSpeeds(FAST, -FAST);
 			} else if (error > 180.0) {
-				this.setSpeeds(clawTurnSpeed, -clawTurnSpeed);
+				this.setSpeeds(FAST, -FAST);
 			} else {
-				this.setSpeeds(-clawTurnSpeed, clawTurnSpeed);
+				this.setSpeeds(-FAST, FAST);
 			}
 		}
 
@@ -296,7 +290,12 @@ public class Navigation {
 		else if( odometer.getY() < fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) < 1*squareSize){
 			travelToXY(bx*squareSize, by*squareSize, odometer);
 		}
-			
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				
+				e1.printStackTrace();
+			}
 		// prepare to start loading balls from the dispenser, offsets are now 0 because of the change in disp. coord specs
 		if(dispOrientation.equals("E")){
 			turnTo(0, true);
@@ -321,7 +320,10 @@ public class Navigation {
 			e.printStackTrace();
 		}
 		
+		if(odometer.getX() == bx && odometer.getY() == by){
+		
 		wentToDisp = true;
+		}
 		
 	}
 	
@@ -341,7 +343,12 @@ public class Navigation {
 		else if( odometer.getY() < fireLineY*squareSize && Math.abs(targetX*squareSize-odometer.getX()) < 1*squareSize){
 			travelToXY(targetX*squareSize, (fireLineY-1)*squareSize, odometer);
 		}
-		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			
+			e1.printStackTrace();
+		}
 		// turn towards the dispenser
 		turnTo(90,true);
 		
@@ -363,24 +370,24 @@ public class Navigation {
 	 * Go foward or backward a set distance in cm
 	 */
 	public void goForward(double distance) {
-		odometer.isTravelling = true;
-		leftMotor.setSpeed(SLOW);
-		rightMotor.setSpeed(SLOW);
-		leftMotor.startSynchronization();
+		
+		leftMotor.setSpeed(FAST);
+		rightMotor.setSpeed(FAST);
+		//leftMotor.startSynchronization();
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
-		leftMotor.endSynchronization();
-		odometer.isTravelling = false;
+		//leftMotor.endSynchronization();
+		
 
 	}
 	
 	public void goBackward(double distance) {
-		leftMotor.setSpeed(SLOW);
-		rightMotor.setSpeed(SLOW);
-		leftMotor.startSynchronization();
+		leftMotor.setSpeed(FAST);
+		rightMotor.setSpeed(FAST);
+		//leftMotor.startSynchronization();
 		leftMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), false);
-		leftMotor.endSynchronization();
+		//leftMotor.endSynchronization();
 
 	}
 	

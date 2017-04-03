@@ -23,6 +23,7 @@ public class demoTestMotors {
 	private float[] colorDataLeft;
 	
 	final double squareSize = 30.48;
+	final double lightSensorDist = 6.00;
 	boolean loaded3 = false;
 	boolean fired3 = false;
 	
@@ -164,37 +165,31 @@ public class demoTestMotors {
 
 	}
 		
-	public void launcher3(int d1){
+	public void launcher3(int targetX, int fireLineY){
 		
 		// set unwinding rotations based on the distance from the target
 		int rotationOffset = 0;
 		
-		if(d1 == 5){
+		if(fireLineY == 5){
 			rotationOffset = 180;
-		}else if(d1== 6){
+		}else if(fireLineY== 4){
 			rotationOffset = 180;
-		}else if(d1 == 7){
+		}else if(fireLineY == 3){
 			rotationOffset = 180;
-		}else if(d1 == 8){
+		}else if(fireLineY == 2){
 			rotationOffset = 450;		// 540 too much
 		}
 		
 		// launch routine for balls 1 and 2
 	
-		lightCorrector corrector = new lightCorrector(odometer, navigation, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
+		//lightCorrector corrector = new lightCorrector(odometer, navigation, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
 		
 		for(int balls = 2; balls > 0; balls--){
 			
 			// use light correction to ensure we are directly facing the target
-			navigation.goBackward(corrector.lightSensorDist);
-			
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			
-			corrector.fireCorrect(odometer, navigation, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+			navigation.travelToXY(targetX, fireLineY, odometer);
+			navigation.goBackward(3*lightSensorDist);
+			//corrector.travelCorrect();
 			
 			// unwind the winch to ensure the launcher can fire at the desired power
 			winchMotor.rotate(-1550 + rotationOffset); 		// full unwind is (-1550)
@@ -225,7 +220,8 @@ public class demoTestMotors {
 		// launch routine for ball 3, using less power since less weight in the claw
 		
 		// use light correction to ensure we are directly facing the target
-		navigation.goBackward(corrector.lightSensorDist);
+		navigation.travelToXY(targetX, fireLineY, odometer);
+		navigation.goBackward(3*lightSensorDist);
 		
 		try {
 			Thread.sleep(3000);
@@ -233,7 +229,7 @@ public class demoTestMotors {
 			e.printStackTrace();
 		}	
 		
-		corrector.fireCorrect(odometer, navigation, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
+		//corrector.fireCorrect();
 		
 		// unwind the winch to ensure the launcher can fire at full power
 		winchMotor.rotate(-1550 + rotationOffset); 		// full unwind is (-1550)

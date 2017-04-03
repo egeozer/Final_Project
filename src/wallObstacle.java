@@ -11,6 +11,7 @@ public class wallObstacle extends Thread {
 	private double prevDist  = 0;
 	EV3LargeRegulatedMotor leftMotor;
 	EV3LargeRegulatedMotor rightMotor;
+	double squareSize =  30.48;
 	
 	
 	
@@ -33,14 +34,49 @@ public class wallObstacle extends Thread {
 				Thread.sleep(10);
 				//System.out.println(getFilteredData());
 				
-				if(getFilteredData()<10){
+				if(getFilteredData() < 20){
 					odo.collision = true;
-					navi.goBackward(5);
-					navi.turnImm(85);
-					navi.goForward(15);
+					
+					//leftMotor.startSynchronization();
+					leftMotor.stop();
+					rightMotor.stop();
+					//leftMotor.endSynchronization();
+					
+					double initX =  odo.getX();
+					double initY = odo.getY();
+					double initAng = odo.getAng();
+					
+					//if (initX < 2 * squareSize && initY < 2 * squareSize){
+						
+					//}
+					
+					//if (initX < 2 * squareSize && initY < 2 * squareSize)
+					
+					//if()
+					Thread.sleep(5000);
+				
+					navi.turnTo(180, true);
+					Thread.sleep(3000);
+					navi.goForward(squareSize);
+					Thread.sleep(3000);
+					odo.setPosition(new double [] {initX - squareSize, initY, 180}, new boolean [] {true, false, true});
+					Thread.sleep(3000);
+					
+					navi.turnTo(90, true);
+					Thread.sleep(3000);
+					navi.goForward(2*squareSize);
+					Thread.sleep(3000);
+					odo.setPosition(new double [] {initX - squareSize, initY + 2*squareSize, 90}, new boolean [] {true, true, true});
+					
+					Sound.beep();
+					
+					
+					//navi.goBackward(5);
+					//navi.turnImm(85);
+					//navi.goForward(15);
 					
 					//navi.turnImm(-85);
-					odo.collisionAvoided = true;
+					
 					odo.collision = false;
 				}
 				else{

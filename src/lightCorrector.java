@@ -24,22 +24,15 @@ public class lightCorrector {
 		this.colorDataRight = colorDataRight;
 		this.colorSensorLeft = colorSensorLeft;
 		this.colorDataLeft = colorDataLeft;
-		Sound.setVolume(40);
-	}
-	
-	public void correct(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft) {
-		this.odo = odo;
-		this.navi = navi;
-		this.colorSensorRight = colorSensorRight;
-		this.colorDataRight = colorDataRight;
-		this.colorSensorLeft = colorSensorLeft;
-		this.colorDataLeft = colorDataLeft;
 		EV3LargeRegulatedMotor[] motors = this.odo.getMotors();
 		this.leftMotor = motors[0];
 		this.rightMotor = motors[1];
-			
+		Sound.setVolume(40);
 		leftMotor.setSpeed(fast);
 		rightMotor.setSpeed(fast);
+	}
+	
+	public void correct() {
 		
 		try {
 			Thread.sleep(100);
@@ -57,10 +50,10 @@ public class lightCorrector {
 			e.printStackTrace();
 		}		
 	
-		leftMotor.startSynchronization();
+		//leftMotor.startSynchronization();
 		leftMotor.forward();
 		rightMotor.forward();
-		leftMotor.endSynchronization();
+		//leftMotor.endSynchronization();
 		
 		right.start();		// stops right motor when right sensor sees a black line, then beeps
 		left.start();		// stops left motor when left sensor sees a black line, then beeps
@@ -97,20 +90,8 @@ public class lightCorrector {
 		
 	}
 	
-	public void travelCorrect(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft) {
-		this.odo = odo;
-		this.navi = navi;
-		this.colorSensorRight = colorSensorRight;
-		this.colorDataRight = colorDataRight;
-		this.colorSensorLeft = colorSensorLeft;
-		this.colorDataLeft = colorDataLeft;
-		EV3LargeRegulatedMotor[] motors = this.odo.getMotors();
-		this.leftMotor = motors[0];
-		this.rightMotor = motors[1];
-			
-		leftMotor.setSpeed(fast);
-		rightMotor.setSpeed(fast);
-		
+	public void travelCorrect() {	
+	
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {
@@ -126,10 +107,10 @@ public class lightCorrector {
 			e.printStackTrace();
 		}	
 		
-		leftMotor.startSynchronization();
+		//leftMotor.startSynchronization();
 		leftMotor.forward();
 		rightMotor.forward();
-		leftMotor.endSynchronization();
+		//leftMotor.endSynchronization();
 		
 		right.start();		// stops right motor when right sensor sees a black line, then beeps
 		left.start();		// stops left motor when left sensor sees a black line, then beeps
@@ -148,7 +129,7 @@ public class lightCorrector {
 		left.scanLine=false;
 		
 		try {
-			Thread.sleep(100);
+			Thread.sleep(500);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}	
@@ -156,26 +137,14 @@ public class lightCorrector {
 		navi.goForward(lightSensorDist);
 		
 		try {
-			Thread.sleep(100);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}	
 		
 	}
 	
-	public void fireCorrect(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft) {
-		this.odo = odo;
-		this.navi = navi;
-		this.colorSensorRight = colorSensorRight;
-		this.colorDataRight = colorDataRight;
-		this.colorSensorLeft = colorSensorLeft;
-		this.colorDataLeft = colorDataLeft;
-		EV3LargeRegulatedMotor[] motors = this.odo.getMotors();
-		this.leftMotor = motors[0];
-		this.rightMotor = motors[1];
-			
-		leftMotor.setSpeed(fast);
-		rightMotor.setSpeed(fast);
+	public void fireCorrect() {	
 		
 		try {
 			Thread.sleep(100);
@@ -186,7 +155,15 @@ public class lightCorrector {
 		lightRight right = new lightRight(colorSensorRight, colorDataRight, odo );
 		lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
 		
-		// when facing the black line, wait 3 seconds
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}		
+		
+		navi.goBackward(lightSensorDist*2);
+		
+		// when facing the firing line, wait 3 seconds
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
@@ -221,7 +198,7 @@ public class lightCorrector {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}		
+		}
 		
 	}
 	
