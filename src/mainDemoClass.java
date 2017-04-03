@@ -174,12 +174,12 @@ public class mainDemoClass {
 		double initAng = 0;
 		dispOrientation = "W";
 		bx = 10;
-		by = 6;
+		by = 2;
 		
 		forwardStartPos = 2;
 		
 		int targetX = 8;			// final design: value is 5
-		d1 = 5;						// final design: [5,8]
+		d1 = 6;						// final design: [5,8]
 		int fireLineY = 10-d1;		// final design: value is 10-d1
 		
 		// Mitchell's testing lines, aka trash code
@@ -228,7 +228,7 @@ public class mainDemoClass {
 		}
 		
 		// activate obstacle avoidance
-		wall.start();
+		//wall.start();
 		
 		while(true){	
 			
@@ -248,7 +248,7 @@ public class mainDemoClass {
 				if(navi.wentToDisp && launch.loaded3 && !navi.wentToFireLine){			
 					navi.goToFireLine(targetX, fireLineY);			
 				}
-				
+				//System.out.println(navi.wentToDisp+" "+ launch.loaded3 +" "+ navi.wentToFireLine+" "+  launch.fired3);
 				// if the robot has received 3 balls and gone to one square below the firing line, shoot the 3 balls
 				if(navi.wentToDisp && launch.loaded3 && navi.wentToFireLine && !launch.fired3){			
 					launch.launcher3(targetX, fireLineY);

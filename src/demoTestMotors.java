@@ -97,7 +97,7 @@ public class demoTestMotors {
 		}
 							
 		// once the claw is in place, turn to receive balls from the dispenser, -5 degree offset to ensure we are close enough
-		navi.clawOutTurnTo((initAng - 5), true);
+		navi.clawOutTurnTo((initAng - 10), true);
 		
 		// beep, and wait 6 seconds to receive the balls
 		Sound.beep();

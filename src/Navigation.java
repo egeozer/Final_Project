@@ -211,8 +211,8 @@ public class Navigation {
 
 		double error = angle - this.odometer.getAng();
 		
-		if(Math.abs(error) >350 && Math.abs(error)<360)
-				error = error-360;
+		//if(Math.abs(error) >350 && Math.abs(error)<360)
+			//	error = error-360;
 		while (Math.abs(error) > DEG_ERR) {
 			
 			error = angle - this.odometer.getAng();
@@ -240,7 +240,8 @@ public class Navigation {
 	public void clawOutTurnTo(double angle, boolean stop) {
 
 		double error = angle - this.odometer.getAng();
-		
+		//if(Math.abs(error) >350 && Math.abs(error)<370)
+			//error = error-360;
 		// change the trackWidth to compensate for the claw being out
 		double initOdoWidth = odometer.getWidth();
 		odometer.setWidth(13.8);
@@ -249,6 +250,7 @@ public class Navigation {
 			
 			error = angle - this.odometer.getAng();
 
+			//System.out.println(error);
 			if (error < -180.0) {
 				this.setSpeeds(-FAST, FAST);
 			} else if (error < 0.0) {
@@ -349,10 +351,13 @@ public class Navigation {
 			
 			e1.printStackTrace();
 		}
-		// turn towards the dispenser
+		// turn towards the target
 		turnTo(90,true);
+		if(Math.abs(  odometer.getX() - targetX*squareSize  )<3 && Math.abs(  odometer.getY() - (fireLineY-1)*squareSize  )<3){
+			wentToFireLine = true;
+		}
 		
-		wentToFireLine = true;
+		
 		
 	}
 	
