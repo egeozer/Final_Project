@@ -170,8 +170,8 @@ public class mainDemoClass {
 		
 		// important constants for testing the dispenser and ball launcher
 		dispOrientation = "W";
-		bx = 10;
-		by = 6;
+		bx = 8;
+		by = 0;
 		w2 = 2;
 		
 		forwardNum = 9;

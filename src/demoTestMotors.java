@@ -125,7 +125,6 @@ public class demoTestMotors {
 		}
 		
 		// pull back the elastic until the arm can prevent it from firing
-		System.out.println(winchMotor.getSpeed());
 		winchMotor.rotate(1550);
 							
 		// wait for the winch to wind to the right position
@@ -136,13 +135,14 @@ public class demoTestMotors {
 		}
 				
 		// turn away from the dispenser and wait 2 seconds
-		navi.clawOutTurnTo((initAng + 45), true);
+		//navi.clawOutTurnTo((initAng + 45), true);
+		navi.goForward(2*clearDist);
 		
-		try {
+		/*try {
 			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
+		}*/
 			
 		// load the ball into the launcher and hold the elastic in position
 		loadingMotor.setAcceleration(650);				// with elastic, was 650 accel, 250 spd
@@ -150,7 +150,7 @@ public class demoTestMotors {
 		loadingMotor.rotate(-135);		
 		
 		// turn back to the initial heading
-		navi.turnTo(initAng, true);
+		//navi.turnTo(initAng, true);
 		
 		try {
 			Thread.sleep(4000);
