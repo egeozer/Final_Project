@@ -17,6 +17,7 @@ public class Navigation {
 	private float[] colorDataRight,colorDataLeft;
 	boolean wentToDisp  = false;
 	boolean wentToFireLine = false;
+	boolean wentToDefLine = false;
 	double travelingAngle = 0;
 	
 	// Constants
@@ -361,7 +362,35 @@ public class Navigation {
 			wentToFireLine = true;
 		}
 		
+	}
+	
+	public void goToDefLine(int targetX, int defLineY){
 		
+		// travel to the firing position, one tile below the firing line
+		if( odometer.getY() > (defLineY-1)*squareSize && Math.abs(targetX*squareSize-odometer.getX()) > 1*squareSize){
+			travelToXY(odometer.getX(), (defLineY-1)*squareSize, odometer);
+			travelToXY(targetX*squareSize, (defLineY-1)*squareSize, odometer);
+		}
+		else if( odometer.getY() > (defLineY-1)*squareSize && Math.abs(targetX*squareSize-odometer.getX()) < 1*squareSize){
+			travelToXY(targetX*squareSize, (defLineY-1)*squareSize, odometer);
+		}
+		else if( odometer.getY() < (defLineY-1)*squareSize && Math.abs(targetX*squareSize-odometer.getX()) > 1*squareSize){
+			travelToXY(targetX*squareSize, (defLineY-1)*squareSize, odometer);
+		}
+		else if( odometer.getY() < (defLineY-1)*squareSize && Math.abs(targetX*squareSize-odometer.getX()) < 1*squareSize){
+			travelToXY(targetX*squareSize, (defLineY-1)*squareSize, odometer);
+		}
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e1) {
+			
+			e1.printStackTrace();
+		}
+		// turn towards the other robot
+		turnTo(270,true);
+		if(Math.abs(  odometer.getX() - targetX*squareSize  ) <3 && Math.abs(  odometer.getY() - (defLineY-1)*squareSize  )<3){
+			wentToDefLine = true;
+		}
 		
 	}
 	

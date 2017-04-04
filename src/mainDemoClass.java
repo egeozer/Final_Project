@@ -169,22 +169,33 @@ public class mainDemoClass {
 		//Sound.beep();
 		
 		// important constants for testing the dispenser and ball launcher
-		int omega = 0;
-		double initAng = 0;
 		dispOrientation = "W";
 		bx = 10;
 		by = 2;
+		w2 = 2;
 		
 		forwardStartPos = 2;
 		
 		int targetX = 8;			// final design: value is 5
 		d1 = 8;						// final design: [5,8]
 		int fireLineY = 10-d1;		// final design: value is 10-d1
+		int defLineY = 10-w2;
 		
 		// Mitchell's testing lines, aka trash code
 
 		//launch.load(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft, dispOrientation, fireLineY, fireLineY);
 		//launch.launcher3(d1);
+		Sound.beep();
+		((EV3UltrasonicSensor) usSensor).disable();
+		
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		((EV3UltrasonicSensor) usSensor).enable();
 		
 		///////////////////////////////////////////////
 		// Robot will beep once it has received the Wifi instructions and is ready to localize
@@ -233,51 +244,71 @@ public class mainDemoClass {
 		// activate obstacle avoidance
 		wall.start();
 		
-		while(true){	
+		
+		if(forwardNum == 9){
 			
-			while(!odo.collision){
-			
-				// drive to the the ball dispenser
-				if(!navi.wentToDisp){			
-					navi.goToDisp(bx, by, fireLineY, dispOrientation);				
-				}
+			while(true){	
 				
-				// load the 3 balls into the robot and get ready to fire them
-				if(navi.wentToDisp && !launch.loaded3){				
-					launch.load();			
-				}
+				while(!odo.collision){
 				
-				// navigate to one tile below the firing line
-				if(navi.wentToDisp && launch.loaded3 && !navi.wentToFireLine){			
-					navi.goToFireLine(targetX, fireLineY);			
-				}
-				
-				//System.out.println(navi.wentToDisp+" "+ launch.loaded3 +" "+ navi.wentToFireLine+" "+  launch.fired3);
-				// if the robot has received 3 balls and gone to one square below the firing line, shoot the 3 balls
-				if(navi.wentToDisp && launch.loaded3 && navi.wentToFireLine && !launch.fired3){			
-					launch.launcher3(targetX, fireLineY);
-				}
-				try {
-					Thread.sleep(4000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+					// drive to the the ball dispenser
+					if(!navi.wentToDisp){			
+						navi.goToDisp(bx, by, fireLineY, dispOrientation);				
+					}
 					
-				// if the 3 balls have been successfully fired, reset the booleans indicating which steps have been completed
-				if(launch.fired3){							
-					navi.wentToDisp = false;
-					launch.loaded3 = false;
-					navi.wentToFireLine = false;
-					launch.fired3 = false;
+					// load the 3 balls into the robot and get ready to fire them
+					if(navi.wentToDisp && !launch.loaded3){				
+						launch.load();			
+					}
 					
-					// wait for 4 seconds to ensure there are no threading conflicts
+					// navigate to one tile below the firing line and then turn off the usSensor
+					if(navi.wentToDisp && launch.loaded3 && !navi.wentToFireLine){			
+						navi.goToFireLine(targetX, fireLineY);
+						((EV3UltrasonicSensor) usSensor).disable();
+					}
+					
+					//System.out.println(navi.wentToDisp+" "+ launch.loaded3 +" "+ navi.wentToFireLine+" "+  launch.fired3);
+					// if the robot has received 3 balls and gone to one square below the firing line, shoot the 3 balls
+					if(navi.wentToDisp && launch.loaded3 && navi.wentToFireLine && !launch.fired3){			
+						launch.launcher3(targetX, fireLineY);
+					}
 					try {
 						Thread.sleep(4000);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+						
+					// if the 3 balls have been successfully fired, reset the booleans indicating which steps have been completed
+					// and turn the usSensor back on
+					if(launch.fired3){							
+						navi.wentToDisp = false;
+						launch.loaded3 = false;
+						navi.wentToFireLine = false;
+						launch.fired3 = false;
+						((EV3UltrasonicSensor) usSensor).enable();
+						
+						// wait for 4 seconds to ensure there are no threading conflicts
+						try {
+							Thread.sleep(4000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}			
+			}
+		}
+		
+		if(defenderNum == 9){
+					
+			while(true){	
+				
+				while(!odo.collision){
+					if(!navi.wentToDefLine){
+					navi.goToDefLine(targetX, defLineY);
+					}
 				}
 			}
 		}
+			
 	}
 }
