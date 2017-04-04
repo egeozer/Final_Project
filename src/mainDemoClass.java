@@ -171,9 +171,11 @@ public class mainDemoClass {
 		// important constants for testing the dispenser and ball launcher
 		dispOrientation = "W";
 		bx = 10;
-		by = 2;
+		by = 6;
 		w2 = 2;
 		
+		forwardNum = 9;
+		defenderNum = 0;
 		forwardStartPos = 2;
 		
 		int targetX = 8;			// final design: value is 5
@@ -183,19 +185,11 @@ public class mainDemoClass {
 		
 		// Mitchell's testing lines, aka trash code
 
+		navi.clawOutTurnTo(270, true);
+		navi.clawOutTurnTo(180, true);
+		
 		//launch.load(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft, dispOrientation, fireLineY, fireLineY);
 		//launch.launcher3(d1);
-		Sound.beep();
-		((EV3UltrasonicSensor) usSensor).disable();
-		
-		try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		((EV3UltrasonicSensor) usSensor).enable();
 		
 		///////////////////////////////////////////////
 		// Robot will beep once it has received the Wifi instructions and is ready to localize

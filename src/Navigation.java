@@ -10,7 +10,7 @@ import lejos.robotics.SampleProvider;
 public class Navigation {
 	
 	final static int FAST = 200, SLOW = 100, clawTurnSpeed = 125, ACCELERATION = 6000;
-	final static double DEG_ERR = 3.0, CM_ERR = 1.0;
+	final static double DEG_ERR = 2.0, CM_ERR = 1.0;
 	private Odometer odometer;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private SampleProvider colorSensorRight,colorSensorLeft;
@@ -243,13 +243,16 @@ public class Navigation {
 	public void clawOutTurnTo(double angle, boolean stop) {
 
 		if(angle<0)
-			angle=angle+360;
+			angle = angle+360;
+		
 		double error = angle - this.odometer.getAng();
+		
 		if(Math.abs(error) >180 && Math.abs(error)<450)
 			error = error-360;
+		
 		// change the trackWidth to compensate for the claw being out
 		double initOdoWidth = odometer.getWidth();
-		odometer.setWidth(13.8);
+		odometer.setWidth(13.2);
 		
 		while (Math.abs(error) > DEG_ERR) {
 			

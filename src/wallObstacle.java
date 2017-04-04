@@ -35,12 +35,13 @@ public class wallObstacle extends Thread {
 				//System.out.println(getFilteredData());
 				
 				if(getFilteredData() < 20){
+					
 					odo.collision = true;
 					
-					//leftMotor.startSynchronization();
+					leftMotor.startSynchronization();
 					leftMotor.stop();
 					rightMotor.stop();
-					//leftMotor.endSynchronization();
+					leftMotor.endSynchronization();
 					
 					double initX =  odo.getX();
 					double initY = odo.getY();
@@ -56,11 +57,14 @@ public class wallObstacle extends Thread {
 					
 					Thread.sleep(5000);
 					//right lane going up
-				if(initX >= squareSize*8 && Math.abs(initAng -90)<5){
+				if(initX >= squareSize*8 && Math.abs(initAng - 90)<5){
+					
 					navi.turnTo(180, true);
 					Thread.sleep(3000);
+					
 					navi.goForward(squareSize);
 					Thread.sleep(3000);
+					
 					odo.setPosition(new double [] {initX - squareSize, initY, 180}, new boolean [] {true, false, true});
 					Thread.sleep(3000);
 					

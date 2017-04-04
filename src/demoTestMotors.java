@@ -48,7 +48,7 @@ public class demoTestMotors {
 		
 	public void load( ){
 				
-		lightCorrector corrector = new lightCorrector(odo, navi, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
+		lightCorrector corrector = new lightCorrector(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		
 		
 		double clearDist = 10.0;		// desired distance from the dispenser
@@ -67,24 +67,18 @@ public class demoTestMotors {
 		    Thread.currentThread().interrupt();
 		}
 		
-		// once the robot is in place, go forward 10cm, and then turn away from the dispenser
-		//navi.goForward(clearDist);
+		// once the robot is in place, go forward and correct the heading
 		corrector.travelCorrect();
+		
 		try {
 		    Thread.sleep(4000);
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
+		
+		// get the angle to load from the dispenser
 		double initAng = odo.getAng();
-		
-		//navi.turnTo((initAng + 35), true);
-		
-		try {
-		    Thread.sleep(4000);
-		} catch(InterruptedException ex) {
-		    Thread.currentThread().interrupt();
-		}
-		
+					
 		// ready the loading arm to receive the ball, and make sure it doesn't hit the floor
 		loadingMotor.rotate(120);
 		
@@ -94,7 +88,7 @@ public class demoTestMotors {
 		    Thread.currentThread().interrupt();
 		}
 		
-		loadingMotor.rotate(20);
+		loadingMotor.rotate(15);
 		
 		try {
 		    Thread.sleep(4000);
@@ -102,17 +96,30 @@ public class demoTestMotors {
 		    Thread.currentThread().interrupt();
 		}
 							
-		// once the claw is in place, turn to receive balls from the dispenser, -5 degree offset to ensure we are close enough
-		//navi.clawOutTurnTo((initAng - 10), true);
-		navi.goBackward(20);
+		// once the claw is in place, go back 20cm to receive balls from the dispenser
+		navi.goBackward(2*clearDist);
 		
-		// beep, and wait 6 seconds to receive the balls
-		Sound.beep();
-		Sound.beep();
+		// beep 3 times, and wait 6 seconds to receive the balls
 		Sound.beep();
 		
 		try {
-		    Thread.sleep(6000);
+		    Thread.sleep(2000);
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
+		}
+		
+		Sound.beep();
+		
+		try {
+		    Thread.sleep(2000);
+		} catch(InterruptedException ex) {
+		    Thread.currentThread().interrupt();
+		}
+		
+		Sound.beep();
+		
+		try {
+		    Thread.sleep(2000);
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
@@ -128,11 +135,11 @@ public class demoTestMotors {
 			e.printStackTrace();
 		}
 				
-		// turn away from the dispenser and wait 1 second
-		navi.clawOutTurnTo((initAng + 35), true);
+		// turn away from the dispenser and wait 2 seconds
+		navi.clawOutTurnTo((initAng + 45), true);
 		
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -140,13 +147,13 @@ public class demoTestMotors {
 		// load the ball into the launcher and hold the elastic in position
 		loadingMotor.setAcceleration(650);				// with elastic, was 650 accel, 250 spd
 		loadingMotor.setSpeed(250);
-		loadingMotor.rotate(-140);		
+		loadingMotor.rotate(-135);		
 		
 		// turn back to the initial heading
 		navi.turnTo(initAng, true);
 		
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -178,13 +185,13 @@ public class demoTestMotors {
 		int rotationOffset = 0;
 		
 		if(fireLineY == 5){
-			rotationOffset = 180;
+			rotationOffset = 720;
 		}else if(fireLineY== 4){
-			rotationOffset = 180;
+			rotationOffset = 450;
 		}else if(fireLineY == 3){
-			rotationOffset = 180;
+			rotationOffset = 360;
 		}else if(fireLineY == 2){
-			rotationOffset = 450;		// 540 too much
+			rotationOffset = 180;		// 540 too much
 		}
 		
 		// launch routine for balls 1 and 2
