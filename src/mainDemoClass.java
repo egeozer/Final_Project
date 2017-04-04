@@ -231,7 +231,7 @@ public class mainDemoClass {
 
 		
 		// activate obstacle avoidance
-		//wall.start();
+		wall.start();
 		
 		while(true){	
 			
