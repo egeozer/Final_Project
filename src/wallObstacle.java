@@ -127,6 +127,42 @@ public class wallObstacle extends Thread {
 					
 					Sound.beep();
 				}
+				//down lane going right
+				else if(initY <= squareSize*2 && Math.abs(initAng-0)<5){
+					
+					navi.turnTo(90, true);
+					Thread.sleep(3000);
+					navi.goForward(squareSize);
+					Thread.sleep(3000);
+					odo.setPosition(new double [] {initX, initY+squareSize, 90}, new boolean [] {true, true, true});
+					Thread.sleep(3000);
+					
+					navi.turnTo(0, true);
+					Thread.sleep(3000);
+					navi.goForward(2*squareSize);
+					Thread.sleep(3000);
+					odo.setPosition(new double [] {initX+2*squareSize, initY+squareSize, 0}, new boolean [] {true, true, true});
+					
+					Sound.beep();
+				}
+				//down lane going left
+				else if(initY <= squareSize*2 && Math.abs(initAng-180)<5){
+					
+					navi.turnTo(90, true);
+					Thread.sleep(3000);
+					navi.goForward(squareSize);
+					Thread.sleep(3000);
+					odo.setPosition(new double [] {initX , initY+squareSize, 0}, new boolean [] {true, true, true});
+					Thread.sleep(3000);
+					
+					navi.turnTo(180, true);
+					Thread.sleep(3000);
+					navi.goForward(2*squareSize);
+					Thread.sleep(3000);
+					odo.setPosition(new double [] {initX - 2*squareSize, initY +squareSize, 180}, new boolean [] {true, true, true});
+					
+					Sound.beep();
+				}
 					
 					//navi.goBackward(5);
 					//navi.turnImm(85);

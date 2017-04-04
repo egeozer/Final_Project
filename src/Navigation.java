@@ -358,9 +358,9 @@ public class Navigation {
 		}
 		// turn towards the target
 		turnTo(90,true);
-		if(Math.abs(  odometer.getX() - targetX*squareSize  )<3 && Math.abs(  odometer.getY() - (fireLineY-1)*squareSize  )<3){
+		//if(Math.abs(  odometer.getX() - targetX*squareSize  )<3 && Math.abs(  odometer.getY() - (fireLineY-1)*squareSize  )<3){
 			wentToFireLine = true;
-		}
+	//	}
 		
 	}
 	
