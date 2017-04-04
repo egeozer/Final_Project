@@ -225,6 +225,8 @@ public class mainDemoClass {
 		}else if(forwardStartPos == 4){
 			odo.setPosition(new double [] {0,10*squareSize,270}, new boolean [] {true, true, true});
 		}
+		
+		// initialize the launcher class
 		demoTestMotors launch = new demoTestMotors(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft, dispOrientation, bx,by);
 
 		

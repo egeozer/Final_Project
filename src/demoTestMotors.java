@@ -196,6 +196,7 @@ public class demoTestMotors {
 			// use light correction to ensure we are directly facing the target
 			navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
 			navi.goBackward(3*lightSensorDist);
+			odo.setPosition(new double [] {targetX*squareSize, (fireLineY-1)*squareSize, 90}, new boolean [] {true, true, true});
 			//corrector.travelCorrect();
 			
 			// unwind the winch to ensure the launcher can fire at the desired power
@@ -219,8 +220,14 @@ public class demoTestMotors {
 			// load another ball into the launcher
 			loadingMotor.setAcceleration(800);
 			loadingMotor.setSpeed(250);
-			loadingMotor.rotate(-80);			
-					
+			loadingMotor.rotate(-80);	
+			
+			try {
+				Thread.sleep(2000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+						
 		}
 		
 		/////////////////////////////////////////
@@ -229,6 +236,7 @@ public class demoTestMotors {
 		// use light correction to ensure we are directly facing the target
 		navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
 		navi.goBackward(3*lightSensorDist);
+		odo.setPosition(new double [] {targetX*squareSize, (fireLineY-1)*squareSize, 90}, new boolean [] {true, true, true});
 		
 		try {
 			Thread.sleep(3000);
