@@ -80,7 +80,7 @@ public class demoTestMotors {
 		double initAng = odo.getAng();
 					
 		// ready the loading arm to receive the ball, and make sure it doesn't hit the floor
-		loadingMotor.rotate(120);
+		loadingMotor.rotate(115);
 		
 		try {
 		    Thread.sleep(1000);
@@ -88,7 +88,7 @@ public class demoTestMotors {
 		    Thread.currentThread().interrupt();
 		}
 		
-		loadingMotor.rotate(15);
+		loadingMotor.rotate(10);
 		
 		try {
 		    Thread.sleep(4000);
@@ -125,7 +125,7 @@ public class demoTestMotors {
 		}
 		
 		// pull back the elastic until the arm can prevent it from firing
-		winchMotor.rotate(1550);
+		winchMotor.rotate(1910);
 							
 		// wait for the winch to wind to the right position
 		try {
@@ -147,7 +147,7 @@ public class demoTestMotors {
 		// load the ball into the launcher and hold the elastic in position
 		loadingMotor.setAcceleration(650);				// with elastic, was 650 accel, 250 spd
 		loadingMotor.setSpeed(250);
-		loadingMotor.rotate(-135);		
+		loadingMotor.rotate(-125);		
 		
 		// turn back to the initial heading
 		//navi.turnTo(initAng, true);
@@ -163,13 +163,13 @@ public class demoTestMotors {
 					
 		// implement an odometry correction base on dispenser orientation to ensure proper traveling to the firing line
 		if(dispOrientation.equals("E")){
-			odo.setPosition(new double [] {(bx + 0)*squareSize, by*squareSize, 0}, new boolean [] {true, true, true});
+			odo.setPosition(new double [] {(bx + 0)*squareSize, by*squareSize, 0}, new boolean [] {false, false, true});
 		}
 		else if(dispOrientation.equals("W")){
-			odo.setPosition(new double [] {(bx - 0)*squareSize, by*squareSize, 180}, new boolean [] {true, true, true});
+			odo.setPosition(new double [] {(bx - 0)*squareSize, by*squareSize, 180}, new boolean [] {false, false, true});
 		}
 		else if(dispOrientation.equals("N")){
-			odo.setPosition(new double [] {bx*squareSize, (by + 0)*squareSize, 90}, new boolean [] {true, true, true});
+			odo.setPosition(new double [] {bx*squareSize, (by + 0)*squareSize, 90}, new boolean [] {false, false, true});
 		}
 		else if(dispOrientation.equals("S")){
 			odo.setPosition(new double [] {bx*squareSize, (by - 0)*squareSize, 270}, new boolean [] {true, true, true});
@@ -191,8 +191,15 @@ public class demoTestMotors {
 		}else if(fireLineY == 3){
 			rotationOffset = 360;
 		}else if(fireLineY == 2){
-			rotationOffset = 180;		// 540 too much
+			rotationOffset = 500;		// 540 too much
 		}
+		
+		// use light correction to ensure we are directly facing the target
+		//navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
+		navi.goBackward(3*lightSensorDist);
+		//odo.setPosition(new double [] {targetX*squareSize, (fireLineY-1)*squareSize, 90}, new boolean [] {true, true, true});
+		//corrector.travelCorrect();
+		
 		
 		// launch routine for balls 1 and 2
 	
@@ -200,34 +207,35 @@ public class demoTestMotors {
 		
 		for(int balls = 0; balls < 2; balls++){
 			
-			// use light correction to ensure we are directly facing the target
-			navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
-			navi.goBackward(3*lightSensorDist);
-			odo.setPosition(new double [] {targetX*squareSize, (fireLineY-1)*squareSize, 90}, new boolean [] {true, true, true});
-			//corrector.travelCorrect();
-			
 			// unwind the winch to ensure the launcher can fire at the desired power
-			winchMotor.rotate(-1550 + rotationOffset); 		// full unwind is (-1550)
+			winchMotor.rotate(-1910 + rotationOffset); 		// full unwind is (-1550)
 			
 			// set the loading arm to firing acceleration and speed, then release the ball
-			loadingMotor.setAcceleration(5000);
-			loadingMotor.setSpeed(450);
-			loadingMotor.rotate(80);
+			loadingMotor.setAcceleration(9000);
+			loadingMotor.setSpeed(1200);
+			loadingMotor.rotate(100);
 			
-			// wait 3 sec, then reset the arm acceleration, speed and position
 			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+				Thread.sleep(500);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
 			}
 			
+			loadingMotor.rotate(50);
+			
+			
+			
+			// wait 3 sec, then reset the arm acceleration, speed and position
+			
+			
 			// rewind the winch to fire
-			winchMotor.rotate(1550 - rotationOffset);		// full wind is (1550)
+			winchMotor.rotate(1910 - rotationOffset);		// full wind is (1550)
 			
 			// load another ball into the launcher
-			loadingMotor.setAcceleration(800);
-			loadingMotor.setSpeed(250);
-			loadingMotor.rotate(-80);	
+			loadingMotor.setAcceleration(900);
+			loadingMotor.setSpeed(300);
+			loadingMotor.rotate(-150);	
 			
 			try {
 				Thread.sleep(2000);
@@ -241,9 +249,9 @@ public class demoTestMotors {
 		// launch routine for ball 3, using less power since less weight in the claw
 		
 		// use light correction to ensure we are directly facing the target
-		navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
-		navi.goBackward(3*lightSensorDist);
-		odo.setPosition(new double [] {targetX*squareSize, (fireLineY-1)*squareSize, 90}, new boolean [] {true, true, true});
+		//navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
+		//navi.goBackward(3*lightSensorDist);
+		//odo.setPosition(new double [] {targetX*squareSize, (fireLineY-1)*squareSize, 90}, new boolean [] {true, true, true});
 		
 		try {
 			Thread.sleep(3000);
@@ -254,12 +262,21 @@ public class demoTestMotors {
 		//corrector.fireCorrect();
 		
 		// unwind the winch to ensure the launcher can fire at full power
-		winchMotor.rotate(-1550 + rotationOffset); 		// full unwind is (-1550)
+		winchMotor.rotate(-1910 + rotationOffset); 		// full unwind is (-1550)
 		
 		// set the loading arm to firing acceleration and speed, then release the ball
-		loadingMotor.setAcceleration(4000);
-		loadingMotor.setSpeed(300);
-		loadingMotor.rotate(80);
+		loadingMotor.setAcceleration(9000);
+		loadingMotor.setSpeed(1200);
+		loadingMotor.rotate(100);
+		
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		loadingMotor.rotate(50);
 		
 		// wait 3 sec, then reset the arm acceleration and speed
 		try {
@@ -273,7 +290,7 @@ public class demoTestMotors {
 		loadingMotor.setSpeed(200);	
 		
 		winchMotor.rotate(0 - rotationOffset);		// fully unwind as if it was (0)
-		loadingMotor.rotate(-80);
+		loadingMotor.rotate(-120);
 		
 		fired3 = true;
 		

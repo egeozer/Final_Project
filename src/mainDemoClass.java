@@ -26,7 +26,7 @@ public class mainDemoClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPortRight = LocalEV3.get().getPort("S2");		
 	private static final Port colorPortLeft = LocalEV3.get().getPort("S3");		
-	private static final String SERVER_IP = "192.168.2.7";			//  TA Server: 192.168.2.3
+	private static final String SERVER_IP = "192.168.2.14";			//  TA Server: 192.168.2.3
 	private static final int TEAM_NUMBER = 9;
 	
 
@@ -111,7 +111,7 @@ public class mainDemoClass {
 		 */
 		
 		// Initialize the wifi connection class
-		/*WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
+		WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
 				
 		// Connect to server and get the data, catching any errors that might occur
 		try {
@@ -137,7 +137,7 @@ public class mainDemoClass {
 			
 			// Variables given by Wifi
 			// Player variables:
-		/*	forwardNum = ((Long) data.get("FWD_TEAM")).intValue();
+			forwardNum = ((Long) data.get("FWD_TEAM")).intValue();
 			forwardStartPos = ((Long) data.get("FWD_CORNER")).intValue();
 			defenderNum = ((Long) data.get("DEF_TEAM")).intValue();
 			defenderStartPos = ((Long) data.get("DEF_CORNER")).intValue();
@@ -158,7 +158,7 @@ public class mainDemoClass {
 			System.err.println("Error: " + e.getMessage());
 		}	
 		
-		*/
+		
 		
 		////////////////////////////////////////////////
 		// Beginning of actual "functional" code
@@ -169,27 +169,19 @@ public class mainDemoClass {
 		//Sound.beep();
 		
 		// important constants for testing the dispenser and ball launcher
-		dispOrientation = "W";
-		bx = 8;
+		/*dispOrientation = "N";
+		bx = 5;
 		by = 0;
 		w2 = 2;
 		
 		forwardNum = 9;
 		defenderNum = 0;
-		forwardStartPos = 2;
-		
-		int targetX = 8;			// final design: value is 5
-		d1 = 8;						// final design: [5,8]
+		forwardStartPos = 1;
+		*/
+		int targetX = 5;			// final design: value is 5
+		//d1 = 8;						// final design: [5,8]
 		int fireLineY = 10-d1;		// final design: value is 10-d1
 		int defLineY = 10-w2;
-		
-		// Mitchell's testing lines, aka trash code
-
-		navi.clawOutTurnTo(270, true);
-		navi.clawOutTurnTo(180, true);
-		
-		//launch.load(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft, dispOrientation, fireLineY, fireLineY);
-		//launch.launcher3(d1);
 		
 		///////////////////////////////////////////////
 		// Robot will beep once it has received the Wifi instructions and is ready to localize
