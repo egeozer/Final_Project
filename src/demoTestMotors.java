@@ -125,7 +125,7 @@ public class demoTestMotors {
 		}
 		
 		// pull back the elastic until the arm can prevent it from firing
-		winchMotor.rotate(1910);
+		winchMotor.rotate(1550);
 							
 		// wait for the winch to wind to the right position
 		try {
@@ -159,7 +159,7 @@ public class demoTestMotors {
 		}
 				
 		// move to the middle of the tile
-		navi.goForward(clearDist/2);
+		//navi.goForward(clearDist/2);
 					
 		// implement an odometry correction base on dispenser orientation to ensure proper traveling to the firing line
 		if(dispOrientation.equals("E")){
@@ -185,17 +185,17 @@ public class demoTestMotors {
 		int rotationOffset = 0;
 		
 		if(fireLineY == 5){
-			rotationOffset = 720;
+			rotationOffset = 800;
 		}else if(fireLineY== 4){
-			rotationOffset = 450;
+			rotationOffset = 700;
 		}else if(fireLineY == 3){
-			rotationOffset = 360;
+			rotationOffset = 600;
 		}else if(fireLineY == 2){
 			rotationOffset = 500;		// 540 too much
 		}
 		
 		// use light correction to ensure we are directly facing the target
-		//navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
+		navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
 		navi.goBackward(3*lightSensorDist);
 		//odo.setPosition(new double [] {targetX*squareSize, (fireLineY-1)*squareSize, 90}, new boolean [] {true, true, true});
 		//corrector.travelCorrect();
@@ -208,7 +208,7 @@ public class demoTestMotors {
 		for(int balls = 0; balls < 2; balls++){
 			
 			// unwind the winch to ensure the launcher can fire at the desired power
-			winchMotor.rotate(-1910 + rotationOffset); 		// full unwind is (-1550)
+			winchMotor.rotate(-1550 + rotationOffset); 		// full unwind is (-1550)
 			
 			// set the loading arm to firing acceleration and speed, then release the ball
 			loadingMotor.setAcceleration(9000);
@@ -230,7 +230,7 @@ public class demoTestMotors {
 			
 			
 			// rewind the winch to fire
-			winchMotor.rotate(1910 - rotationOffset);		// full wind is (1550)
+			winchMotor.rotate(1550 - rotationOffset);		// full wind is (1550)
 			
 			// load another ball into the launcher
 			loadingMotor.setAcceleration(900);
@@ -262,7 +262,7 @@ public class demoTestMotors {
 		//corrector.fireCorrect();
 		
 		// unwind the winch to ensure the launcher can fire at full power
-		winchMotor.rotate(-1910 + rotationOffset); 		// full unwind is (-1550)
+		winchMotor.rotate(-1550 + rotationOffset); 		// full unwind is (-1550)
 		
 		// set the loading arm to firing acceleration and speed, then release the ball
 		loadingMotor.setAcceleration(9000);

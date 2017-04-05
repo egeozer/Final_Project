@@ -19,6 +19,7 @@ public class lightRight extends Thread {
 		EV3LargeRegulatedMotor[] motors = odo.getMotors();
 		this.leftMotor = motors[0];
 		this.rightMotor = motors[1];
+		Sound.setVolume(0);
 		//this.left = left;
 	
 	}

@@ -26,7 +26,7 @@ public class mainDemoClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPortRight = LocalEV3.get().getPort("S2");		
 	private static final Port colorPortLeft = LocalEV3.get().getPort("S3");		
-	private static final String SERVER_IP = "192.168.2.14";			//  TA Server: 192.168.2.3
+	private static final String SERVER_IP = "192.168.2.30";			//  TA Server: 192.168.2.3
 	private static final int TEAM_NUMBER = 9;
 	
 
@@ -148,8 +148,6 @@ public class mainDemoClass {
 			w2 = ((Long) data.get("w2")).intValue();
 			
 			// Ball dispenser variables:
-			int omega = 0;
-			int initTheta = 0;
 			bx = ((Long) data.get("bx")).intValue();
 			by = ((Long) data.get("by")).intValue();
 			dispOrientation = (String) data.get("omega");			
@@ -185,7 +183,7 @@ public class mainDemoClass {
 		
 		///////////////////////////////////////////////
 		// Robot will beep once it has received the Wifi instructions and is ready to localize
-		Sound.setVolume(80);
+		Sound.setVolume(100);
 		Sound.beep();
 		
 		// perform the ultrasonic localization using Falling Edge
@@ -226,6 +224,11 @@ public class mainDemoClass {
 		// initialize the launcher class
 		demoTestMotors launch = new demoTestMotors(odo, navi, colorValueLeft, colorDataLeft, colorValueLeft, colorDataLeft, dispOrientation, bx,by);
 
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		// activate obstacle avoidance
 		wall.start();
@@ -253,11 +256,11 @@ public class mainDemoClass {
 						((EV3UltrasonicSensor) usSensor).disable();
 					}
 					
-					//System.out.println(navi.wentToDisp+" "+ launch.loaded3 +" "+ navi.wentToFireLine+" "+  launch.fired3);
 					// if the robot has received 3 balls and gone to one square below the firing line, shoot the 3 balls
 					if(navi.wentToDisp && launch.loaded3 && navi.wentToFireLine && !launch.fired3){			
 						launch.launcher3(targetX, fireLineY);
 					}
+					
 					try {
 						Thread.sleep(4000);
 					} catch (InterruptedException e) {
