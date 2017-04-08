@@ -26,7 +26,7 @@ public class mainDemoClass {
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
 	private static final Port colorPortRight = LocalEV3.get().getPort("S2");		
 	private static final Port colorPortLeft = LocalEV3.get().getPort("S3");		
-	private static final String SERVER_IP = "192.168.2.30";			//  TA Server: 192.168.2.3
+	private static final String SERVER_IP = "192.168.2.3";			//  TA Server: 192.168.2.3
 	private static final int TEAM_NUMBER = 9;
 	
 
@@ -177,7 +177,7 @@ public class mainDemoClass {
 		forwardStartPos = 1;
 		*/
 		int targetX = 5;			// final design: value is 5
-		//d1 = 8;						// final design: [5,8]
+		d1 = 8;						// final design: [5,8]
 		int fireLineY = 10-d1;		// final design: value is 10-d1
 		int defLineY = 10-w2;
 		
@@ -247,7 +247,8 @@ public class mainDemoClass {
 					
 					// load the 3 balls into the robot and get ready to fire them
 					if(navi.wentToDisp && !launch.loaded3){				
-						launch.load();			
+						launch.load();
+						
 					}
 					
 					// navigate to one tile below the firing line and then turn off the usSensor
@@ -285,9 +286,7 @@ public class mainDemoClass {
 					}
 				}			
 			}
-		}
-		
-		if(defenderNum == 9){
+		}else if(defenderNum == 9){
 					
 			while(true){	
 				
@@ -297,7 +296,56 @@ public class mainDemoClass {
 					}
 				}
 			}
-		}
-			
+		}else{
+			while(true){	
+				
+				while(!odo.collision){
+				
+					// drive to the the ball dispenser
+					if(!navi.wentToDisp){			
+						navi.goToDisp(bx, by, fireLineY, dispOrientation);				
+					}
+					
+					// load the 3 balls into the robot and get ready to fire them
+					if(navi.wentToDisp && !launch.loaded3){				
+						launch.load();
+						((EV3UltrasonicSensor) usSensor).disable();
+					}
+					
+					// navigate to one tile below the firing line and then turn off the usSensor
+					if(navi.wentToDisp && launch.loaded3 && !navi.wentToFireLine){			
+						navi.goToFireLine(targetX, fireLineY);
+					}
+					
+					// if the robot has received 3 balls and gone to one square below the firing line, shoot the 3 balls
+					if(navi.wentToDisp && launch.loaded3 && navi.wentToFireLine && !launch.fired3){			
+						launch.launcher3(targetX, fireLineY);
+					}
+					
+					try {
+						Thread.sleep(4000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+						
+					// if the 3 balls have been successfully fired, reset the booleans indicating which steps have been completed
+					// and turn the usSensor back on
+					if(launch.fired3){							
+						navi.wentToDisp = false;
+						launch.loaded3 = false;
+						navi.wentToFireLine = false;
+						launch.fired3 = false;
+						((EV3UltrasonicSensor) usSensor).enable();
+						
+						// wait for 4 seconds to ensure there are no threading conflicts
+						try {
+							Thread.sleep(4000);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+				}			
+			}
+		}		
 	}
 }

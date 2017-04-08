@@ -50,6 +50,7 @@ public class demoTestMotors {
 				
 		lightCorrector corrector = new lightCorrector(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		
+		Sound.setVolume(100);
 		
 		double clearDist = 10.0;		// desired distance from the dispenser
 		
@@ -191,7 +192,7 @@ public class demoTestMotors {
 		}else if(fireLineY == 3){
 			rotationOffset = 600;
 		}else if(fireLineY == 2){
-			rotationOffset = 500;		// 540 too much
+			rotationOffset = 360;		// 540 too much
 		}
 		
 		// use light correction to ensure we are directly facing the target

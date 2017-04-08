@@ -62,17 +62,17 @@ public class wallObstacle extends Thread {
 					navi.turnTo(180, true);
 					Thread.sleep(3000);
 					
-					navi.goForward(squareSize*2/3);
+					navi.goForward(squareSize);
 					Thread.sleep(3000);
 					
-					odo.setPosition(new double [] {initX - squareSize*2/3, initY, 180}, new boolean [] {true, false, true});
+					odo.setPosition(new double [] {initX - squareSize, initY, 180}, new boolean [] {true, false, true});
 					Thread.sleep(3000);
 					
 					navi.turnTo(90, true);
 					Thread.sleep(3000);
 					navi.goForward(2*squareSize);
 					Thread.sleep(3000);
-					odo.setPosition(new double [] {initX - squareSize*2/3, initY + 2*squareSize, 90}, new boolean [] {true, true, true});
+					odo.setPosition(new double [] {initX - squareSize, initY + 2*squareSize, 90}, new boolean [] {true, true, true});
 					
 					Sound.beep();
 				}
@@ -81,16 +81,16 @@ public class wallObstacle extends Thread {
 					
 					navi.turnTo(180, true);
 					Thread.sleep(3000);
-					navi.goForward(squareSize*2/3);
+					navi.goForward(squareSize);
 					Thread.sleep(3000);
-					odo.setPosition(new double [] {initX - squareSize*2/3, initY, 180}, new boolean [] {true, false, true});
+					odo.setPosition(new double [] {initX - squareSize, initY, 180}, new boolean [] {true, false, true});
 					Thread.sleep(3000);
 					
 					navi.turnTo(270, true);
 					Thread.sleep(3000);
 					navi.goForward(2*squareSize);
 					Thread.sleep(3000);
-					odo.setPosition(new double [] {initX - squareSize*2/3, initY - 2*squareSize, 270}, new boolean [] {true, true, true});
+					odo.setPosition(new double [] {initX - squareSize, initY - 2*squareSize, 270}, new boolean [] {true, true, true});
 					
 					Sound.beep();
 				}
@@ -100,16 +100,16 @@ public class wallObstacle extends Thread {
 					
 					navi.turnTo(0, true);
 					Thread.sleep(3000);
-					navi.goForward(squareSize*2/3);
+					navi.goForward(squareSize);
 					Thread.sleep(3000);
-					odo.setPosition(new double [] {initX + squareSize*2/3, initY, 0}, new boolean [] {true, false, true});
+					odo.setPosition(new double [] {initX + squareSize, initY, 0}, new boolean [] {true, false, true});
 					Thread.sleep(3000);
 					
 					navi.turnTo(90, true);
 					Thread.sleep(3000);
 					navi.goForward(2*squareSize);
 					Thread.sleep(3000);
-					odo.setPosition(new double [] {initX + squareSize*2/3, initY + 2*squareSize, 90}, new boolean [] {true, true, true});
+					odo.setPosition(new double [] {initX + squareSize, initY + 2*squareSize, 90}, new boolean [] {true, true, true});
 					
 					Sound.beep();
 				}
@@ -117,17 +117,17 @@ public class wallObstacle extends Thread {
 				else if(initX <= squareSize*2 && Math.abs(initAng -270)<5){
 					
 					navi.turnTo(0, true);
-					Thread.sleep(3000);
-					navi.goForward(squareSize*2/3);
-					Thread.sleep(3000);
-					odo.setPosition(new double [] {initX + squareSize*2/3, initY, 0}, new boolean [] {true, false, true});
-					Thread.sleep(3000);
+					Thread.sleep(5000);
+					navi.goForward(squareSize);
+					Thread.sleep(5000);
+					odo.setPosition(new double [] {initX + squareSize, initY, 0}, new boolean [] {true, false, true});
+					Thread.sleep(5000);
 					
 					navi.turnTo(270, true);
-					Thread.sleep(3000);
+					Thread.sleep(5000);
 					navi.goForward(2*squareSize);
-					Thread.sleep(3000);
-					odo.setPosition(new double [] {initX + squareSize*2/3, initY - 2*squareSize, 270}, new boolean [] {true, true, true});
+					Thread.sleep(5000);
+					odo.setPosition(new double [] {initX + squareSize, initY - 2*squareSize, 270}, new boolean [] {true, true, true});
 					
 					Sound.beep();
 				}

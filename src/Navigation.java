@@ -20,6 +20,7 @@ public class Navigation {
 	boolean wentToDefLine = false;
 	double travelingAngle = 0;
 	
+	
 	// Constants
 	static double squareSize = 30.48;
 
@@ -209,6 +210,7 @@ public class Navigation {
 	 */
 	
 	public void turnTo(double angle, boolean stop) {
+		
 		if(angle<0)
 			angle=angle+360;
 
@@ -238,6 +240,7 @@ public class Navigation {
 			rightMotor.stop();
 			leftMotor.endSynchronization();
 		}
+		
 	}
 	
 	public void clawOutTurnTo(double angle, boolean stop) {
@@ -285,6 +288,19 @@ public class Navigation {
 
 	public void goToDisp(int bx, int by, int fireLineY , String dispOrientation){
 				
+		if(dispOrientation.equals("E")){
+			bx = bx +1;
+		}
+		else if(dispOrientation.equals("W")){
+			bx = bx -1;
+		}
+		else if(dispOrientation.equals("N")){
+			by = by +1;	
+		}
+		else if(dispOrientation.equals("S")){
+			by = by-1;
+		}
+		
 		// travel to the dispenser
 		if( odometer.getY() > fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) > 1*squareSize){
 			travelToXY(odometer.getX(), (fireLineY-1)*squareSize, odometer);
