@@ -9,30 +9,48 @@ import lejos.robotics.SampleProvider;
 
 /**
  * @author Ege Ozer
- * This method is responsible for navigating the robot. 
+ * This method is responsible for navigating the robot to specific coordinates. 
  *
  */
-/**
- * @author Jason
- *
- */
+
 public class Navigation {
 	
 	final static int FAST = 200, SLOW = 100, clawTurnSpeed = 125, ACCELERATION = 6000;
+	/**
+	 * max tolerated error constant values in type double
+	 */
 	final static double DEG_ERR = 2.0, CM_ERR = 1.0;
 	private Odometer odometer;
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
 	private SampleProvider colorSensorRight,colorSensorLeft;
 	private float[] colorDataRight,colorDataLeft;
+	/**
+	 * boolean variable that is used to determine if robot went to dispenser
+	 */
 	boolean wentToDisp  = false;
+	/**
+	 * boolean variable that is used to determine if robot went to firing line
+	 */
 	boolean wentToFireLine = false;
+	/**
+	 * boolean variable that is used to determine if robot went to defense line
+	 */
 	boolean wentToDefLine = false;
+	/**
+	 * double variable that is used to determine the robots traveling angle
+	 */
 	double travelingAngle = 0;
-	
 	
 	// Constants
 	static double squareSize = 30.48;
 
+	/**
+	 * @param odo odometer values are passed through Odometer type
+	 * @param colorSensorRight right light sensor general initial information is passed through SampleProvider type
+	 * @param colorDataRight right light sensor fetching values are passed through float[] type
+	 * @param colorSensorLeft left light sensor general initial information is passed through SampleProvider type
+	 * @param colorDataLeft  left light sensor fetching values are passed through float[] type
+	 */
 	public Navigation(Odometer odo,  SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft) {
 		this.odometer = odo;
 
@@ -55,14 +73,10 @@ public class Navigation {
 	}
 	
 	
-
 	/*
 	 * Function to set the motor speeds jointly
 	 */
 	public void setSpeeds(int lSpd, int rSpd) {
-		
-		//leftMotor.startSynchronization();
-						
 		
 		this.leftMotor.setSpeed(lSpd);
 		this.rightMotor.setSpeed(rSpd);
@@ -75,8 +89,6 @@ public class Navigation {
 		else
 			this.rightMotor.forward();
 	
-		
-		//leftMotor.endSynchronization();
 	}
 
 	/*
@@ -107,13 +119,18 @@ public class Navigation {
 		}
 	}
 	
+	/**
+	 * This method is the main navigation method used for the final demo. This methods takes as parameters the x and y value
+	 * of the final destination and it will go there by moving only straight in x or y directions. It will first travel along
+	 * the x then go straight along the y direction. This way of navigation is strictly designed for avoiding restricted areas
+	 * @param finalX x coordinate parameter
+	 * @param finalY y coordinate parameter
+	 * @param odo odometer values are passed through this parameter
+	 */
 	public void travelToXY(double finalX, double finalY, Odometer odo) {
 		
 		lightCorrector corrector = new lightCorrector(odo, this, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
-		//if(!odometer.isTravelling){
-			//odometer.isTravelling=true;
-		// travel in the x-direction
-		
+		//if there is collision, this section is ignored
 		if(!odo.collision){
 			double initialX = odo.getX();
 			double initialY = odo.getY();
@@ -122,9 +139,10 @@ public class Navigation {
 			double odoXCorrect;
 			int squaresTravelledX = 0;
 			
-			// COMMENT
+			// the difference in initial and final x is smaller than the fixed error, do nothing
 			if(Math.abs(finalX - currentX) <= (CM_ERR*5)){
 				
+			//if current x has a smaller value than final x value then the destination is on the right and vice versa
 			}else if(currentX < finalX){
 				turnTo(0, true);
 				travelingAngle = 0;
@@ -135,16 +153,18 @@ public class Navigation {
 				odo.setTheta(travelingAngle);
 			}
 			
-			// COMMENT
+			//  while the initial x is enough far from final x, it loops inside this while loop
 			while (Math.abs(finalX - currentX) > (CM_ERR*5)){
+				//if collision occurs during travel, break out
 				if(odo.collision)
 					break;
-				
+				//correct heading by scanning the first black lines seen
 				corrector.travelCorrect();
-				
+				//increment sqaureTravelled since one correction = 1 tile passed
 				squaresTravelledX++;
+				//correct odometer
 				odoXCorrect = squaresTravelledX*squareSize;
-				
+				//set odometer the appropriate corrected value in x
 				if(initialX < finalX){
 					odo.setX(initialX+odoXCorrect);
 				}else{
@@ -167,7 +187,7 @@ public class Navigation {
 			double odoYCorrect;
 			int squaresTravelledY = 0;
 			
-			// COMMENT
+			// see X direction section , same logic applies
 			if(Math.abs(finalY - currentY) <= (CM_ERR*5)){
 				
 			}else if(currentY < finalY){
@@ -200,33 +220,30 @@ public class Navigation {
 				odo.setTheta(travelingAngle);
 				
 				currentY = odo.getY();
-				//System.out.println(currentY);
-				//System.out.println(currentX);
 			
-		
 			}
 
-	}
 	
-		//}
-		//odometer.isTravelling=false;
+		}
+
 	
 	}
 
-	/*
-	 * TurnTo function which takes an angle and boolean as arguments The boolean controls whether or not to stop the
-	 * motors when the turn is completed
-	 */
+
 	
+	/**
+	 * TurnTo function which takes an angle and boolean as arguments. The boolean controls whether or not to stop the
+	 * motors when the turn is completed
+	 * @param angle parameter that takes a specific angle for the robot to turn to
+	 * @param stop boolean value that is set to true to stop motors, false otherwise
+	 */
 	public void turnTo(double angle, boolean stop) {
 		
 		if(angle<0)
 			angle=angle+360;
 
 		double error = angle - this.odometer.getAng();
-		
-		//if(Math.abs(error) >350 && Math.abs(error)<360)
-			//	error = error-360;
+
 		while (Math.abs(error) > DEG_ERR) {
 			
 			error = angle - this.odometer.getAng();
@@ -243,7 +260,6 @@ public class Navigation {
 		}
 
 		if (stop) {
-			//this.setSpeeds(0, 0);
 			leftMotor.startSynchronization();
 			leftMotor.stop();
 			rightMotor.stop();
@@ -251,7 +267,13 @@ public class Navigation {
 		}
 		
 	}
-	
+	/**
+	 * TurnTo function which takes an angle and boolean as arguments. The only difference between the normal turn to
+	 * and this is that the track width value is different. The boolean controls whether or not to stop the
+	 * motors when the turn is completed
+	 * @param angle parameter that takes a specific angle for the robot to turn to
+	 * @param stop boolean value that is set to true to stop motors, false otherwise
+	 */
 	public void clawOutTurnTo(double angle, boolean stop) {
 
 		if(angle<0)
@@ -270,7 +292,6 @@ public class Navigation {
 			
 			error = angle - this.odometer.getAng();
 
-			//System.out.println(error);
 			if (error < -180.0) {
 				this.setSpeeds(-FAST, FAST);
 			} else if (error < 0.0) {
@@ -283,7 +304,6 @@ public class Navigation {
 		}
 
 		if (stop) {
-			//this.setSpeeds(0, 0);
 			leftMotor.startSynchronization();
 			leftMotor.stop();
 			rightMotor.stop();
@@ -310,7 +330,7 @@ public class Navigation {
 			by = by-1;
 		}
 		
-		// travel to the dispenser
+		// travel to the dispenser by avoiding restricted zones
 		if( odometer.getY() > fireLineY*squareSize && Math.abs(bx*squareSize-odometer.getX()) > 1*squareSize){
 			travelToXY(odometer.getX(), (fireLineY-1)*squareSize, odometer);
 			travelToXY(bx*squareSize, (fireLineY-1)*squareSize, odometer);
@@ -354,7 +374,7 @@ public class Navigation {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+		//if robot is at dispensor, set wentToDisp to true
 		if(Math.abs(  odometer.getX() - bx*squareSize  )<3 &&Math.abs(  odometer.getY() - by*squareSize  )<3){
 		
 		wentToDisp = true;
@@ -384,11 +404,10 @@ public class Navigation {
 			
 			e1.printStackTrace();
 		}
-		// turn towards the target
 		turnTo(90,true);
-		//if(Math.abs(  odometer.getX() - targetX*squareSize  )<3 && Math.abs(  odometer.getY() - (fireLineY-1)*squareSize  )<3){
+		if(Math.abs(  odometer.getX() - targetX*squareSize  )<3 && Math.abs(  odometer.getY() - (fireLineY-1)*squareSize  )<3){
 			wentToFireLine = true;
-	//	}
+	}
 		
 	}
 	
@@ -422,31 +441,34 @@ public class Navigation {
 		
 	}
 	
+	/**
+	 * Turn Immediate method is coded when it is required for the robot to turn a specific set angle, no matter
+	 * where the initial angle is.
+	 * @param angle parameter that takes an angle to turn the robot by
+	 */
 	public void turnImm(double angle) {
-		//leftMotor.startSynchronization();
-	//	leftMotor.setSpeed(SLOW);
-		//rightMotor.setSpeed(SLOW);
+
 		leftMotor.rotate(convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), true);
 		rightMotor.rotate(-convertAngle(odometer.getLeftRadius(), odometer.getWidth(), angle), false);
-		//leftMotor.endSynchronization();
+		
 	}
 	
-	
 	/*
-	 * Go foward or backward a set distance in cm
+	 * Go foward a set distance in cm
 	 */
 	public void goForward(double distance) {
 		
 		leftMotor.setSpeed(FAST);
 		rightMotor.setSpeed(FAST);
-		//leftMotor.startSynchronization();
+		
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
-		//leftMotor.endSynchronization();
 		
 
 	}
-	
+	/*
+	 * Go foward a set distance in cm
+	 */
 	public void goBackward(double distance) {
 		leftMotor.setSpeed(FAST);
 		rightMotor.setSpeed(FAST);
