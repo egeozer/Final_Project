@@ -6,6 +6,11 @@ import lejos.utility.Timer;
 import lejos.utility.TimerListener;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 
+/**
+ *
+ * @author Sean Lawlor, ECSE 211 - Design Principles and Methods, Head TA
+ *
+ */
 public class Odometer implements TimerListener {
 
 	private Timer timer;

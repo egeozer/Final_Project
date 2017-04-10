@@ -16,9 +16,7 @@ public class OdometryCorrection extends Thread {
 	private SampleProvider sampleProvider;
 	private Odometer odometer;
 	
-	//private double gridPositionX = 0;
-	//private double gridPostionY = 0;
-	//private double gridSize = 30.48; 
+
 	
 	// TODO: We will need to initialize values for the axisSquares depending on which corner we start in
 	private double xAxisSquares;

@@ -5,18 +5,55 @@ import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
 
+/**
+ * @author Ege Ozer
+ * 
+ * LightLocalizer ensures that the robot localizes at 0,0 with the right heading by using two light sensors.
+ */
 public class LightLocalizer {
+	/**
+	 * Odometer type that stores odometer related information
+	 */
 	private Odometer odo;
+	/**
+	 * Navigation type that stores navigation related information
+	 */
 	private Navigation navi;
+	/**
+	 * SampleProvider type that is used to store right light general initial sensor information
+	 */
+	/**
+	 * SampleProvider type that is used to store left light general initial sensor information
+	 */
 	private SampleProvider colorSensorRight,colorSensorLeft;
+	/**
+	 *  float[] type that is used to store right light fetching information
+	 */
+	/**
+	 *  float[] type that is used to store left light fetching information
+	 */
 	private float[] colorDataRight,colorDataLeft;
+	/**
+	 * EV3LargeRegulatedMotor type that stores the left wheel motor information
+	 */
+	/**
+	 * EV3LargeRegulatedMotor type that stores the left wheel motor information
+	 */
 	private EV3LargeRegulatedMotor leftMotor, rightMotor;
+	/**
+	 * double type that holds the distance to compensate for the distance from the wheelbase to the lightSensor
+	 */
 	double lightSensorDist = 6.00; 		//distance added to compensate for the distance from the wheelbase to the lightSensor, was 3.5cm
-	double x, y, xTheta, yTheta;
-	double eucDistance, heading;
-	int axisCounter;
+
 	
-	
+	/**
+	 * @param odo odometer values are passed through Odometer type
+	 * @param navi navigation values are passed though Navigation type
+	 * @param colorSensorRight right light sensor general initial information is passed through SampleProvider type
+	 * @param colorDataRight right light sensor fetching values are passed through float[] type
+	 * @param colorSensorLeft left light sensor general initial information is passed through SampleProvider type
+	 * @param colorDataLeft  left light sensor fetching values are passed through float[] type
+	 */
 	public LightLocalizer(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft) {
 		this.odo = odo;
 		this.navi = navi;
@@ -25,24 +62,22 @@ public class LightLocalizer {
 		this.colorSensorLeft = colorSensorLeft;
 		this.colorDataLeft = colorDataLeft;
 		Sound.setVolume(50);
-	}
-	
-	public void doLocalization(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft) {
-		this.odo = odo;
-		this.navi = navi;
-		this.colorSensorRight = colorSensorRight;
-		this.colorDataRight = colorDataRight;
-		this.colorSensorLeft = colorSensorLeft;
-		this.colorDataLeft = colorDataLeft;
 		EV3LargeRegulatedMotor[] motors = this.odo.getMotors();
 		this.leftMotor = motors[0];
 		this.rightMotor = motors[1];
-		
+	}
+	
+	/**
+	 *  It first goes forward
+	 * once USLocalizer finishes executing, then goes forward until it sees a black line. Robot aligns itself on the line, turns 
+	 * exactly 90 degrees, goes forward until it sees a black line again. It corrects itself again, goes lightSensorDist once, and the robot it localized
+	 */
+	public void doLocalization() {
+	
 		leftMotor.setSpeed(150);
 		rightMotor.setSpeed(150);
 		
-		//lightRight right = null;
-		//lightLeft left = null;
+		
 		lightRight right = new lightRight(colorSensorRight, colorDataRight, odo );
 		lightLeft left = new lightLeft(colorSensorLeft, colorDataLeft, odo );
 		
@@ -75,12 +110,10 @@ public class LightLocalizer {
 		right.scanLine=false;
 		left.scanLine=false;
 		
-		//Sound.beep();
-		//Sound.beep();
 		
 		// go to the zero on the y-axis
 		navi.goForward(lightSensorDist);
-		//odo.setPosition(new double [] {0,0,0}, new boolean [] {false, true, false});
+		
 		
 		try {
 			Thread.sleep(1000);
@@ -125,8 +158,6 @@ public class LightLocalizer {
 		right.scanLine=false;
 		left.scanLine=false;
 		
-		//Sound.beep();
-		//Sound.beep();
 		
 		// go to the zero on the x-axis
 		navi.goForward(lightSensorDist);

@@ -7,6 +7,15 @@ import lejos.hardware.sensor.BaseSensor;
 import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 
+/**
+ * @author Ege Ozer
+ * This method is responsible for navigating the robot. 
+ *
+ */
+/**
+ * @author Jason
+ *
+ */
 public class Navigation {
 	
 	final static int FAST = 200, SLOW = 100, clawTurnSpeed = 125, ACCELERATION = 6000;
@@ -72,7 +81,7 @@ public class Navigation {
 
 	/*
 	 * TravelTo function which takes as arguments the x and y position in cm Will travel to designated position, while
-	 * constantly updating it's heading
+	 * constantly updating it's heading NOTE:** this method is not used in the last version of the code, travelXY is used instead
 	 */
 	public void travelTo(double x, double y) {
 

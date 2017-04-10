@@ -14,6 +14,11 @@ import lejos.hardware.port.Port;
 import lejos.hardware.sensor.*;
 import lejos.robotics.SampleProvider;
 
+/**
+ * main method, at which each sensor is initialized and coordinates are given
+ * @author Ege Ozer
+ *
+ */
 public class mainDemoClass {
 
 	// Static Resources:
@@ -21,23 +26,50 @@ public class mainDemoClass {
 	// Right motor connected to output D
 	// Ultrasonic sensor port connected to input S1
 	// Color sensor port connected to input S2
+	/**
+	 * Left motor is assigned to port A
+	 */
 	private static final EV3LargeRegulatedMotor leftMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("A"));
+	/**
+	 * right motor is assigned to port D
+	 */
 	private static final EV3LargeRegulatedMotor rightMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("D"));
+	/**
+	 * ultrasonic controller is assigned to sensor slot 1
+	 */
 	private static final Port usPort = LocalEV3.get().getPort("S1");		
+	/**
+	 * right light sensor is assigned to slot 2
+	 */
 	private static final Port colorPortRight = LocalEV3.get().getPort("S2");		
+	/**
+	 * left light sensor is assigned to slot 3
+	 */
 	private static final Port colorPortLeft = LocalEV3.get().getPort("S3");		
-	private static final String SERVER_IP = "192.168.2.3";			//  TA Server: 192.168.2.3
+	/**
+	 * String that hold the server IP, demo IP is "192.168.2.3"
+	 */
+	private static final String SERVER_IP = "192.168.2.3";	
+	/**
+	 * final constant integer that holds team number
+	 */
 	private static final int TEAM_NUMBER = 9;
 	
-
-	// Enable/disable printing of debug info from the WiFi class
+	/**
+	 * Enable/disable printing of debug info from the WiFi class
+	 */
 	private static final boolean ENABLE_DEBUG_WIFI_PRINT = true;
 	
-	// Constants
+	/**
+	 * constant double value that holds the length of each tile
+	 */
 	static double squareSize = 30.48;
 	
 	// Initialize Variables given by WiFi
 	// Player variables:
+	/**
+	 * values obtained from wifi
+	 */
 	static int forwardNum;
 	static int forwardStartPos;
 	static int defenderNum;
@@ -96,19 +128,6 @@ public class mainDemoClass {
 		int buttonChoice;
 		Sound.setVolume(40);
 				
-		/*
-		 * getData() will connect to the server and wait until the user/TA
-		 * presses the "Start" button in the GUI on their laptop with the
-		 * data filled in. Once it's waiting, you can kill it by
-		 * pressing the upper left hand corner button (back/escape) on the EV3.
-		 * getData() will throw exceptions if it can't connect to the server
-		 * (e.g. wrong IP address, server not running on laptop, not connected
-		 * to WiFi router, etc.). It will also throw an exception if it connects 
-		 * but receives corrupted data or a message from the server saying something 
-		 * went wrong. For example, if TEAM_NUMBER is set to 1 above but the server expects
-		 * teams 17 and 5, this robot will receive a message saying an invalid team number 
-		 * was specified and getData() will throw an exception letting you know.
-		 */
 		
 		// Initialize the wifi connection class
 		WifiConnection conn = new WifiConnection(SERVER_IP, TEAM_NUMBER, ENABLE_DEBUG_WIFI_PRINT);
@@ -118,22 +137,6 @@ public class mainDemoClass {
 			
 			Map data = conn.getData();
 
-			// Example 1: Print out all received data
-			//System.out.println("Map:\n" + data);
-
-			// Example 2 : Print out specific values
-			//int fwdTeam = ((Long) data.get("FWD_TEAM")).intValue();
-			//System.out.println("Forward Team: " + fwdTeam);
-			//System.out.println("Defender zone size w1: " + w1);
-			
-			// Example 3: Compare value
-			/*String orientation = (String) data.get("omega");
-			if (orientation.equals("N")) {
-				System.out.println("Orientation is North");
-			}
-			else {
-				System.out.println("Orientation is not North");
-			}*/
 			
 			// Variables given by Wifi
 			// Player variables:
@@ -157,25 +160,6 @@ public class mainDemoClass {
 		}	
 		
 		
-		
-		////////////////////////////////////////////////
-		// Beginning of actual "functional" code
-		///////////////////////////////////////////////
-		
-		// Robot will set up the sensors and display before is ready to begin receiving instructions from WiFi
-		//Sound.setVolume(80);
-		//Sound.beep();
-		
-		// important constants for testing the dispenser and ball launcher
-		/*dispOrientation = "N";
-		bx = 5;
-		by = 0;
-		w2 = 2;
-		
-		forwardNum = 9;
-		defenderNum = 0;
-		forwardStartPos = 1;
-		*/
 		int targetX = 5;			// final design: value is 5
 		d1 = 8;						// final design: [5,8]
 		int fireLineY = 10-d1;		// final design: value is 10-d1
@@ -194,7 +178,7 @@ public class mainDemoClass {
 		outer:while(true){			
 			if (usl.isLocalized) {
 				LightLocalizer lsl = new LightLocalizer(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);		
-				lsl.doLocalization(odo, navi, colorValueRight, colorDataRight,colorValueLeft, colorDataLeft);
+				lsl.doLocalization();
 				
 				// beep once to indicate localizaion has been completed
 				Sound.setVolume(80);
