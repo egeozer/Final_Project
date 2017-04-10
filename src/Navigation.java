@@ -1,29 +1,53 @@
 
-
-
-import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.sensor.BaseSensor;
-import lejos.robotics.RegulatedMotor;
 import lejos.robotics.SampleProvider;
 
 /**
+ * This class is responsible for navigating the robot to specific coordinates.
+ * 
  * @author Ege Ozer
- * This method is responsible for navigating the robot to specific coordinates. 
- *
+ * @author Mitchell Keeley
+ * 
  */
 
 public class Navigation {
 	
+	/**
+	 *  desired speeds and acceleration values in type int
+	 */
 	final static int FAST = 200, SLOW = 100, clawTurnSpeed = 125, ACCELERATION = 6000;
 	/**
 	 * max tolerated error constant values in type double
 	 */
 	final static double DEG_ERR = 2.0, CM_ERR = 1.0;
+	/**
+	 * Odometer type that stores odometer related information
+	 */
 	private Odometer odometer;
-	private EV3LargeRegulatedMotor leftMotor, rightMotor;
-	private SampleProvider colorSensorRight,colorSensorLeft;
-	private float[] colorDataRight,colorDataLeft;
+	/**
+	 * SampleProvider type that is used to store right light general initial sensor information
+	 */
+	private SampleProvider colorSensorRight;
+	/**
+	 * SampleProvider type that is used to store left light general initial sensor information
+	 */
+	private SampleProvider colorSensorLeft;
+	/**
+	 *  float[] type that is used to store right light fetching information
+	 */
+	private float[] colorDataRight;
+	/**
+	 *  float[] type that is used to store left light fetching information
+	 */
+	private float[] colorDataLeft;
+	/**
+	 * EV3LargeRegulatedMotor type that stores the left wheel motor information
+	 */
+	private EV3LargeRegulatedMotor leftMotor;
+	/**
+	 * EV3LargeRegulatedMotor type that stores the right wheel motor information
+	 */
+	private EV3LargeRegulatedMotor rightMotor;
 	/**
 	 * boolean variable that is used to determine if robot went to dispenser
 	 */
@@ -41,7 +65,9 @@ public class Navigation {
 	 */
 	double travelingAngle = 0;
 	
-	// Constants
+	/**
+	 * double type that holds the size of a square playing tile
+	 */
 	static double squareSize = 30.48;
 
 	/**
@@ -73,7 +99,7 @@ public class Navigation {
 	}
 	
 	
-	/*
+	/**
 	 * Function to set the motor speeds jointly
 	 */
 	public void setSpeeds(int lSpd, int rSpd) {
@@ -91,7 +117,7 @@ public class Navigation {
 	
 	}
 
-	/*
+	/**
 	 * TravelTo function which takes as arguments the x and y position in cm Will travel to designated position, while
 	 * constantly updating it's heading NOTE:** this method is not used in the last version of the code, travelXY is used instead
 	 */
@@ -229,8 +255,6 @@ public class Navigation {
 	
 	}
 
-
-	
 	/**
 	 * TurnTo function which takes an angle and boolean as arguments. The boolean controls whether or not to stop the
 	 * motors when the turn is completed
@@ -315,8 +339,21 @@ public class Navigation {
 		
 	}
 
+	
+	/**
+	 * method to determine how the robot travels to the dispencer while avoiding
+	 * the restricted areas of the playing field, and orients itself based on the
+	 * specified orientation of the ball dispenser. Also indicates whether the robot
+	 * has completed its attempt to reach the ball dispenser.
+	 * 
+	 * @param bx is the grid line position of the ball dispenser on the x-axis
+	 * @param by is the grid line position of the ball dispenser on the y-axis
+	 * @param fireLineY is the grid line position of the firing line on the y-axis
+	 * @param dispOrientation is the cardinal orientation of the ball dispenser
+	 */
 	public void goToDisp(int bx, int by, int fireLineY , String dispOrientation){
-				
+					
+		// last minute fix to correct the discrepancy in the clarifications for the competition
 		if(dispOrientation.equals("E")){
 			bx = bx +1;
 		}
@@ -347,10 +384,10 @@ public class Navigation {
 		}
 			try {
 				Thread.sleep(1000);
-			} catch (InterruptedException e1) {
-				
+			} catch (InterruptedException e1) {	
 				e1.printStackTrace();
 			}
+		
 		// prepare to start loading balls from the dispenser, offsets are now 0 because of the change in disp. coord specs
 		if(dispOrientation.equals("E")){
 			turnTo(0, true);
@@ -382,6 +419,15 @@ public class Navigation {
 		
 	}
 	
+	/**
+	 * method to determine how the robot travels to the firing line and
+	 * is correctly facing upfield, while avoiding the restricted areas 
+	 * of the playing field. Also indicates whether the robot has completed
+	 * its attempt to reach the firing line.
+	 * 
+	 * @param targetX is the grid line position of the target on the x-axis
+	 * @param fireLineY is the grid line position of the firing line on the y-axis
+	 */
 	public void goToFireLine(int targetX, int fireLineY){
 		
 		// travel to the firing position, one tile below the firing line
@@ -400,8 +446,7 @@ public class Navigation {
 		}
 		try {
 			Thread.sleep(1000);
-		} catch (InterruptedException e1) {
-			
+		} catch (InterruptedException e1) {		
 			e1.printStackTrace();
 		}
 		turnTo(90,true);
@@ -411,6 +456,16 @@ public class Navigation {
 		
 	}
 	
+	
+	/**
+	 * method to determine how the robot travels to the desired defense
+	 * position and is correctly facing downfield, while avoiding the restricted areas 
+	 * of the playing field. Also indicates whether the robot has completed
+	 * its attempt to reach a defense position.
+	 * 
+	 * @param targetX is the grid line position of the target on the x-axis
+	 * @param defLineY is the grid line position of the desired defense position on the y-axis
+	 */
 	public void goToDefLine(int targetX, int defLineY){
 		
 		// travel to the firing position, one tile below the firing line
@@ -453,36 +508,54 @@ public class Navigation {
 		
 	}
 	
-	/*
-	 * Go foward a set distance in cm
+	/**
+	 * Go forward a set distance in cm
+	 * 
+	 * @param distance is the distance to go forward
 	 */
 	public void goForward(double distance) {
 		
 		leftMotor.setSpeed(FAST);
 		rightMotor.setSpeed(FAST);
-		
+		leftMotor.startSynchronization();
 		leftMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(convertDistance(odometer.getLeftRadius(), distance), false);
-		
+		leftMotor.endSynchronization();
 
 	}
-	/*
-	 * Go foward a set distance in cm
+	/**
+	 * Go backward a set distance in cm
+	 * 
+	 * @param distance is the distance to go backward
 	 */
 	public void goBackward(double distance) {
 		leftMotor.setSpeed(FAST);
 		rightMotor.setSpeed(FAST);
-		//leftMotor.startSynchronization();
+		leftMotor.startSynchronization();
 		leftMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), true);
 		rightMotor.rotate(-convertDistance(odometer.getLeftRadius(), distance), false);
-		//leftMotor.endSynchronization();
+		leftMotor.endSynchronization();
 
 	}
-	
+	/**
+	 * Converts a desired distance in cm into the radians required to move the robot said distance
+	 * 
+	 * @param radius is the radius of the wheels
+	 * @param distance is the distance to be traveled
+	 * @return
+	 */
 	private static int convertDistance(double radius, double distance) {
 		return (int) ((180.0 * distance) / (Math.PI * radius));
 	}
 
+	/**
+	 * Converts a desired change in heading in degrees into the radians required to rotate the robot said amount 
+	 * 
+	 * @param radius is the radius of the wheels
+	 * @param width is the track width of the robot
+	 * @param angle is the angle for the robot to turn
+	 * @return
+	 */
 	private static int convertAngle(double radius, double width, double angle) {
 		return convertDistance(radius, Math.PI * width * angle / 360.0);
 	}

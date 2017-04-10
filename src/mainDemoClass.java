@@ -1,14 +1,7 @@
 
-
-import java.io.IOException;
-import java.net.UnknownHostException;
 import java.util.Map;
-
-import org.json.simple.parser.ParseException;
-
 import lejos.hardware.*;
 import lejos.hardware.ev3.LocalEV3;
-import lejos.hardware.lcd.TextLCD;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.hardware.port.Port;
 import lejos.hardware.sensor.*;
@@ -16,16 +9,14 @@ import lejos.robotics.SampleProvider;
 
 /**
  * main method, at which each sensor is initialized and coordinates are given
+ * 
  * @author Ege Ozer
+ * @author Mitchell Keeley
  *
  */
 public class mainDemoClass {
 
 	// Static Resources:
-	// Left motor connected to output A
-	// Right motor connected to output D
-	// Ultrasonic sensor port connected to input S1
-	// Color sensor port connected to input S2
 	/**
 	 * Left motor is assigned to port A
 	 */
@@ -54,31 +45,27 @@ public class mainDemoClass {
 	 * final constant integer that holds team number
 	 */
 	private static final int TEAM_NUMBER = 9;
-	
 	/**
 	 * Enable/disable printing of debug info from the WiFi class
 	 */
 	private static final boolean ENABLE_DEBUG_WIFI_PRINT = true;
-	
 	/**
 	 * constant double value that holds the length of each tile
 	 */
 	static double squareSize = 30.48;
 	
 	// Initialize Variables given by WiFi
+	
 	// Player variables:
-	/**
-	 * values obtained from wifi
-	 */
 	static int forwardNum;
 	static int forwardStartPos;
 	static int defenderNum;
 	static int defenderStartPos;
 	
 	// Playing field variables:
-	static int d1;					// forward line position
-	static int w1;					// defender zone dimensions
-	static int w2;
+	static int d1;					// distance from the target to the forward line
+	static int w1;					// defender zone height
+	static int w2;					// defender zone width
 	
 	// Ball dispenser variables:
 	static int bx;
@@ -125,7 +112,6 @@ public class mainDemoClass {
 		
 		// initialize display
 		LCDInfo lcd = new LCDInfo(odo);
-		int buttonChoice;
 		Sound.setVolume(40);
 				
 		
@@ -161,9 +147,9 @@ public class mainDemoClass {
 		
 		
 		int targetX = 5;			// final design: value is 5
-		d1 = 8;						// final design: [5,8]
+		d1 = 8;						// final design: [5,8] set desired value will always be 8 to ensure more reliable performance
 		int fireLineY = 10-d1;		// final design: value is 10-d1
-		int defLineY = 10-w2;
+		int defLineY = 10-w2;		// final design: value is 10-w2
 		
 		///////////////////////////////////////////////
 		// Robot will beep once it has received the Wifi instructions and is ready to localize

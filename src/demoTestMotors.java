@@ -1,34 +1,99 @@
 
-
-
 import lejos.hardware.ev3.LocalEV3;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
 import lejos.robotics.SampleProvider;
-import lejos.hardware.Button;
 import lejos.hardware.Sound;
-import lejos.hardware.lcd.TextLCD;
+
+/**
+ * Controls how the robot interacts with the balls during each round
+ * @author Mitchell Keeley
+ *
+ */
 
 public class demoTestMotors {
 	
-	// Loading motor is connected to output B
+	/**
+	 * Loading motor is assigned to port B, it controls the movement of the loading arm
+	 */
 	public static final EV3LargeRegulatedMotor loadingMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("B"));
-	// Gear motor is connected to output C
+	/**
+	 * Winch motor is assigned to port C, it controls the winch mechanism used to pull back the elastic
+	 */
 	public static final EV3LargeRegulatedMotor winchMotor = new EV3LargeRegulatedMotor(LocalEV3.get().getPort("C"));
-	
+	/**
+	 * Odometer type that stores odometer related information
+	 */
 	private Odometer odo;
+	/**
+	 * Navigation type that stores navigation related information
+	 */
 	private Navigation navi;
+	/**
+	 * SampleProvider type that is used to store right light general initial sensor information
+	 */
 	private SampleProvider colorSensorRight;
+	/**
+	 * SampleProvider type that is used to store left light general initial sensor information
+	 */
 	private SampleProvider colorSensorLeft;
+	/**
+	 *  float[] type that is used to store right light fetching information
+	 */
 	private float[] colorDataRight;
+	/**
+	 *  float[] type that is used to store left light fetching information
+	 */
 	private float[] colorDataLeft;
+
+	/**
+	 *  string used to indicate the cardinal orientation of the ball dispenser
+	 */
 	String dispOrientation;
-	int bx; int by;
+	/**
+	 * bx is the grid line position of the ball dispenser on the x-axis
+	 */
+	int bx;
+	/**
+	 * by is the grid line position of the ball dispenser on the y-axis
+	 */	
+	int by;
+	/**
+	 * double type that holds the size of a square playing tile
+	 */
 	final double squareSize = 30.48;
+	/**
+	 * double type that holds the desired distance between the robot and the dispenser, when facing the same orientation
+	 */
+	final double clearDist = 10.00;
+	/**
+	 * double type that holds the distance to compensate for the distance from the wheelbase to the lightSensor
+	 */
 	final double lightSensorDist = 6.00;
+	/**
+	 * boolean type that determines whether the robot has completed it's attempt to load 3 balls from the dispenser
+	 */
 	boolean loaded3 = false;
+	/**
+	 * boolean type that determines whether the robot has completed it's attempt to fire 3 balls at the target
+	 */
 	boolean fired3 = false;
 	
-	public demoTestMotors(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft, float[] colorDataLeft,String dispOrientation, int bx, int by){
+	/**
+	 * 
+	 * @param odo odometer values are passed thourgh Odometer type
+	 * @param navi navigation values are passed though Navigation type
+	 * @param colorSensorRight right light sensor general initial information is passed through SampleProvider type
+	 * @param colorDataRight right light sensor fetching values are passed through float[] type
+	 * @param colorSensorLeft left light sensor general initial information is passed through SampleProvider type
+	 * @param colorDataLeft  left light sensor fetching values are passed through float[] type
+	 * @param dispOrientation is the cardinal orientation of the ball dispenser
+	 * @param bx is the grid line position of the ball dispenser on the x-axis
+	 * @param by is the grid line position of the ball dispenser on the y-axis
+	 * 
+	 */
+	
+	public demoTestMotors(Odometer odo, Navigation navi, SampleProvider colorSensorRight, float[] colorDataRight,SampleProvider colorSensorLeft,
+			float[] colorDataLeft,String dispOrientation, int bx, int by){
 		
 		this.odo = odo;
 		this.navi = navi;
@@ -39,20 +104,19 @@ public class demoTestMotors {
 		this.dispOrientation = dispOrientation;
 		this.bx = bx;
 		this.by = by;
-
-		
 		
 	}
 	
-	//final static TextLCD t = LocalEV3.get().getTextLCD();
-		
-	public void load( ){
+	/**
+	 * Controls how the robot positions itself to receive balls from the dispenser 
+	 * once it has arrived at the specified location. It also directs the loading
+	 * arm to ensure it is positioned correctly during the loading procedure.
+	 */		
+	public void load(){
 				
 		lightCorrector corrector = new lightCorrector(odo, navi, colorSensorRight, colorDataRight, colorSensorLeft, colorDataLeft);
 		
 		Sound.setVolume(100);
-		
-		double clearDist = 10.0;		// desired distance from the dispenser
 		
 		// set winchMotor acceleration and speed
 		winchMotor.setAcceleration(300);
@@ -76,11 +140,9 @@ public class demoTestMotors {
 		} catch(InterruptedException ex) {
 		    Thread.currentThread().interrupt();
 		}
-		
-		// get the angle to load from the dispenser
-		double initAng = odo.getAng();
 					
 		// ready the loading arm to receive the ball, and make sure it doesn't hit the floor
+		// execute the motion in two parts to ensure the claw lowers itself sufficiently to not hit the dispenser
 		loadingMotor.rotate(115);
 		
 		try {
@@ -100,7 +162,7 @@ public class demoTestMotors {
 		// once the claw is in place, go back 20cm to receive balls from the dispenser
 		navi.goBackward(2*clearDist);
 		
-		// beep 3 times, and wait 6 seconds to receive the balls
+		// beep and then wait 2 seconds 3 times to receive the balls
 		Sound.beep();
 		
 		try {
@@ -135,32 +197,19 @@ public class demoTestMotors {
 			e.printStackTrace();
 		}
 				
-		// turn away from the dispenser and wait 2 seconds
-		//navi.clawOutTurnTo((initAng + 45), true);
+		// go forward to clear the dispenser
 		navi.goForward(2*clearDist);
-		
-		/*try {
-			Thread.sleep(4000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}*/
 			
 		// load the ball into the launcher and hold the elastic in position
 		loadingMotor.setAcceleration(650);				// with elastic, was 650 accel, 250 spd
 		loadingMotor.setSpeed(250);
 		loadingMotor.rotate(-125);		
 		
-		// turn back to the initial heading
-		//navi.turnTo(initAng, true);
-		
 		try {
 			Thread.sleep(4000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-				
-		// move to the middle of the tile
-		//navi.goForward(clearDist/2);
 					
 		// implement an odometry correction base on dispenser orientation to ensure proper traveling to the firing line
 		if(dispOrientation.equals("E")){
@@ -176,36 +225,41 @@ public class demoTestMotors {
 			odo.setPosition(new double [] {bx*squareSize, (by - 0)*squareSize, 270}, new boolean [] {true, true, true});
 		}
 		
+		// indicates the robot has completed it's attempt at loading 3 balls from the dispenser
 		loaded3 = true;
 
 	}
 		
+	/**
+	 * 
+	 * Controls how the robot fires the 3 balls it has received from the dispenser.
+	 * It reloads after each shot, and once all the balls have been fired, the robot resets
+	 * the loading arm and winch position.
+	 * 
+	 * @param targetX is the grid line position of the target along the x-axis
+	 * @param fireLineY is the grid line position of the firing line along the y-axis
+	 * 
+	 */
 	public void launcher3(int targetX, int fireLineY){
 		
 		// set unwinding rotations based on the distance from the target
 		int rotationOffset = 0;
 		
 		if(fireLineY == 5){
-			rotationOffset = 800;
-		}else if(fireLineY== 4){
-			rotationOffset = 700;
-		}else if(fireLineY == 3){
 			rotationOffset = 600;
+		}else if(fireLineY== 4){
+			rotationOffset = 540;
+		}else if(fireLineY == 3){
+			rotationOffset = 450;
 		}else if(fireLineY == 2){
-			rotationOffset = 360;		// 540 too much
+			rotationOffset = 360;	
 		}
 		
 		// use light correction to ensure we are directly facing the target
 		navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
 		navi.goBackward(3*lightSensorDist);
-		//odo.setPosition(new double [] {targetX*squareSize, (fireLineY-1)*squareSize, 90}, new boolean [] {true, true, true});
-		//corrector.travelCorrect();
-		
-		
+
 		// launch routine for balls 1 and 2
-	
-		//lightCorrector corrector = new lightCorrector(odometer, navigation, colorSensorRight, colorDataRight,colorSensorLeft, colorDataLeft);
-		
 		for(int balls = 0; balls < 2; balls++){
 			
 			// unwind the winch to ensure the launcher can fire at the desired power
@@ -215,20 +269,12 @@ public class demoTestMotors {
 			loadingMotor.setAcceleration(9000);
 			loadingMotor.setSpeed(1200);
 			loadingMotor.rotate(100);
-			
 			try {
 				Thread.sleep(500);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
 			loadingMotor.rotate(50);
-			
-			
-			
-			// wait 3 sec, then reset the arm acceleration, speed and position
-			
 			
 			// rewind the winch to fire
 			winchMotor.rotate(1550 - rotationOffset);		// full wind is (1550)
@@ -246,21 +292,7 @@ public class demoTestMotors {
 						
 		}
 		
-		/////////////////////////////////////////
-		// launch routine for ball 3, using less power since less weight in the claw
-		
-		// use light correction to ensure we are directly facing the target
-		//navi.travelToXY(targetX*squareSize, fireLineY*squareSize, odo);
-		//navi.goBackward(3*lightSensorDist);
-		//odo.setPosition(new double [] {targetX*squareSize, (fireLineY-1)*squareSize, 90}, new boolean [] {true, true, true});
-		
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}	
-		
-		//corrector.fireCorrect();
+		// launch routine for ball 3, using less power since less weight in the claw	
 		
 		// unwind the winch to ensure the launcher can fire at full power
 		winchMotor.rotate(-1550 + rotationOffset); 		// full unwind is (-1550)
@@ -273,7 +305,6 @@ public class demoTestMotors {
 		try {
 			Thread.sleep(500);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
@@ -289,10 +320,12 @@ public class demoTestMotors {
 		// reset the loading arm and winch position
 		loadingMotor.setAcceleration(400);
 		loadingMotor.setSpeed(200);	
-		
-		winchMotor.rotate(0 - rotationOffset);		// fully unwind as if it was (0)
+	
+		// fully unwind the winch motor, as if there was no offset in the rotation
+		winchMotor.rotate(0 - rotationOffset);		
 		loadingMotor.rotate(-120);
 		
+		// indicate that the robot has finished trying to launch the 3 balls
 		fired3 = true;
 		
 	}

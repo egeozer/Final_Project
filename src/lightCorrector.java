@@ -1,12 +1,14 @@
 
-
-
 import lejos.hardware.Sound;
 import lejos.hardware.motor.EV3LargeRegulatedMotor;
-import lejos.hardware.sensor.BaseSensor;
-import lejos.hardware.sensor.EV3ColorSensor;
-import lejos.hardware.sensor.SensorModes;
 import lejos.robotics.SampleProvider;
+
+/**
+ * This class is responsible for the methods used by the robot to correct its heading
+ * 
+ * @author Ege Ozer
+ * 
+ */
 
 public class lightCorrector {
 	/**
@@ -21,25 +23,28 @@ public class lightCorrector {
 	/**
 	 * SampleProvider type that is used to store right light general initial sensor information
 	 */
+	private SampleProvider colorSensorRight;
 	/**
 	 * SampleProvider type that is used to store left light general initial sensor information
 	 */
-	private SampleProvider colorSensorRight, colorSensorLeft;
+	private SampleProvider colorSensorLeft;
 
 	/**
 	 *  float[] type that is used to store right light fetching information
 	 */
+	private float[] colorDataRight;
 	/**
 	 *  float[] type that is used to store left light fetching information
 	 */
-	private float[] colorDataRight,colorDataLeft;
+	private float[] colorDataLeft;
 	/**
 	 * EV3LargeRegulatedMotor type that stores the left wheel motor information
 	 */
+	private EV3LargeRegulatedMotor leftMotor;
 	/**
-	 * EV3LargeRegulatedMotor type that stores the left wheel motor information
+	 * EV3LargeRegulatedMotor type that stores the right wheel motor information
 	 */
-	private EV3LargeRegulatedMotor leftMotor, rightMotor;
+	private EV3LargeRegulatedMotor rightMotor;
 	/**
 	 * double type that holds the distance to compensate for the distance from the wheelbase to the lightSensor
 	 */
